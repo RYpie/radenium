@@ -1,5 +1,9 @@
 # radenium
 
+Radenium is a test project to fuzzle a bit with ffmpeg...
+
+# Copyright
+
 Copyright 2017 Andries Bron
 This file is part of Radenium.
 
