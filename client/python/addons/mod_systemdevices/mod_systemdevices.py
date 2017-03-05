@@ -15,15 +15,28 @@ This file is part of Radenium.
     along with Radenium.  If not, see <http://www.gnu.org/licenses/>.
     """
 
+import logging
 import threading
 import os
 import sys
 import time
 
+if __name__ == "__main__":
+    sys.path.append('../mod_ffmpegwrapper')
 
 #! Local imports
-import module_ffmpegwrapper as ffmpeg_wrapper
+import mod_ffmpegwrapper as ffmpeg_wrapper
 
+
+class mod_systemdevices:
+    def __init__(self):
+        pass
+
+    def run(self):
+        pass
 
 if __name__ == "__main__":
-    pass
+    ffmpeg = ffmpeg_wrapper.ffmpeg_info()
+    print ffmpeg.getSystem()
+    print ffmpeg.getSystemDevices()
+    logging.error("now in system")
