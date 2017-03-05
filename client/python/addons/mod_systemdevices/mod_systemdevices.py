@@ -36,8 +36,9 @@ class mod_systemdevices:
 
     def getSystemInfo(self):
         ffmpeg = ffmpeg_wrapper.ffmpeg_info()
-        self.devices = ffmpeg.getSystemDevices()
         self.system = ffmpeg.getSystem()
+        self.devices = ffmpeg.getSystemDevices()
+        #! \todo And now check for other devices as well.
     
     def run(self):
         pass
