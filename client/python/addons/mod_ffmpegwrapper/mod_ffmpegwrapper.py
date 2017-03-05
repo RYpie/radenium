@@ -19,9 +19,9 @@ This file is part of Radenium.
 
 
 import logging
+import datetime
 import sys
 import threading
-import time
 import subprocess
 from subprocess import Popen, PIPE, STDOUT, call
 import os
@@ -33,7 +33,6 @@ except ImportError:
     from queue import Queue, Empty
 
 
-logging.basicConfig(filename='test.log',level=logging.DEBUG)
 __MAC_OS__ = 'Darwin'
 __WINDOWS__ = 'win32'
 __LINUX__ = 'linux'
@@ -43,23 +42,39 @@ class ffmpeg_info:
     """! Class to obtain video & audio devices independent of system. """
     
     def __init__(self):
-        logging.info("started")
+        self.log( "Starting..." )
     
+    def log( self, text, level="info" ):
+        log_text = str( datetime.datetime.now() )
+        log_text += " "
+        log_text += str( self.__class__.__name__ )
+        log_text += " "
+        log_text += text
+        if level == "warning":
+            logging.warning( log_text )
+        
+        elif level == "error":
+            logging.error( log_text )
+
+        else:
+            logging.info( log_text )
+
     def getSystem(self):
         """! Return the system name of the operating platform. """
-        return platform.system()
+        thisSystem = platform.system()
+        self.log("System: " + str( thisSystem ) )
+        return thisSystem
     
     def getSystemDevices(self):
         """! getSystemDevices() returns a dictionary containing all system devices, for example: {"audio": [["0", "Built-in Microphone"], ["1", "Aggregate Device"]], "video": [["0", "FaceTime HD Camera"], ["1", "Capture screen 0"]]} """
-        
-        if "LinuxMint" in platform.platform():
+        videodevices = []
+        audiodevices = []
+        if platform.system() == __LINUX__:
             #! For this to work on Linux requires to install video for Linux utilities.
             #! installation of video for Linux utilities: sudo apt install v4l-utils
             #! list camera devices: #list camera devices: v4l2-ctl --list-devices
             #! list usb video capabilities: v4l2-ctl --list-formats-ext
             #! or use: ffmpeg -f v4l2 -list_formats all -i /dev/video0
-            videodevices = []
-            audiodevices = []
             
             #! Get a list of all video devices:
             command = ["v4l2-ctl", "-list-devices"]
@@ -77,7 +92,7 @@ class ffmpeg_info:
                         videodevices.append(["/dev/video"+str(_dev), "Linux Camera Device " + str(_dev) ])
         
             else:
-                logging.error("Video utils not installed, use: sudo apt install v4l-utils")
+                self.log("Video utils not installed, use: sudo apt install v4l-utils", level="error" )
         
             #! Screen grabber is not listed, therefore append it now.
             videodevices.append(["x11grab", "Linux Capture screen"])
@@ -98,15 +113,12 @@ class ffmpeg_info:
 
 
         elif platform.system() == __MAC_OS__:
-            logging.error("This is not an error :-)")
             #! Command: ffmpeg -f avfoundation -list_devices true -i ""
             ffmpegCommand = ["ffmpeg", "-f", "avfoundation", "-list_devices", "true", "-i", ""]
             p = subprocess.Popen( ffmpegCommand, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             out = p.communicate()
 
             #! Parsing terminal output
-            videodevices = []
-            audiodevices = []
             startVideoList = False
             startAudioList = False
             
@@ -129,14 +141,19 @@ class ffmpeg_info:
                         startVideoList = False
                         startAudioList = False
 
-            return {"video":videodevices, "audio":audiodevices}
-
         elif platform.system() == __WINDOWS__:
             #! \todo implement the windows version.
+            self.log( "Oops, our bad... Detection of devices on Windows not yet implemented... ", level="error" )
             pass
 
         else:
             pass
+
+        sysDevs = {"video":videodevices, "audio":audiodevices}
+        self.log( "Devices: " + str( sysDevs ) )
+        return sysDevs
+
+
 
 if __name__ == "__main__":
     pass

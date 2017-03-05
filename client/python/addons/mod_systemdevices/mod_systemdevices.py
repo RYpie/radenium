@@ -16,6 +16,7 @@ This file is part of Radenium.
     """
 
 import logging
+import datetime
 import threading
 import os
 import sys
@@ -33,6 +34,22 @@ class mod_systemdevices:
         self.system = ""
         self.devices = {}
         self.getSystemDevices()
+        self.log("Starting...")
+    
+    def log( self, text, level="info" ):
+        log_text = str( datetime.datetime.now() )
+        log_text += " "
+        log_text += str( self.__class__.__name__ )
+        log_text += " "
+        log_text += text
+        if level == "warning":
+            logging.warning( log_text )
+        
+        elif level == "error":
+            logging.error( log_text )
+        
+        else:
+            logging.info( log_text )
 
     def getSystemInfo(self):
         ffmpeg = ffmpeg_wrapper.ffmpeg_info()
@@ -44,6 +61,7 @@ class mod_systemdevices:
         pass
 
 if __name__ == "__main__":
+    logging.basicConfig(filename='mod_systemdevices.log',level=logging.DEBUG)
     ffmpeg = ffmpeg_wrapper.ffmpeg_info()
     print ffmpeg.getSystem()
     print ffmpeg.getSystemDevices()
