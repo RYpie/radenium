@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+
 """
 Copyright 2017 Andries Bron
 This file is part of Radenium.
@@ -14,6 +16,8 @@ This file is part of Radenium.
     You should have received a copy of the GNU General Public License
     along with Radenium.  If not, see <http://www.gnu.org/licenses/>.
     """
+
+
 import sys
 import threading
 import time
