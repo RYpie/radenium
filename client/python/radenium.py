@@ -20,4 +20,4 @@ This file is part of Radenium.
         
 
 if __name__ == "__main__":
-    pass
+    print "Hi this is my first line of code for this awesome project lets test and commit!"

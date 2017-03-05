@@ -1,0 +1,72 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		B349BE851E6C714900317C36 /* python */ = {isa = PBXFileReference; lastKnownFileType = folder; name = python; path = ../client/python; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		B349BE7E1E6C711C00317C36 = {
+			isa = PBXGroup;
+			children = (
+				B349BE851E6C714900317C36 /* python */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		B349BE7F1E6C711C00317C36 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0820;
+			};
+			buildConfigurationList = B349BE821E6C711C00317C36 /* Build configuration list for PBXProject "Radenium" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = B349BE7E1E6C711C00317C36;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		B349BE831E6C711C00317C36 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		B349BE841E6C711C00317C36 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B349BE821E6C711C00317C36 /* Build configuration list for PBXProject "Radenium" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B349BE831E6C711C00317C36 /* Debug */,
+				B349BE841E6C711C00317C36 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B349BE7F1E6C711C00317C36 /* Project object */;
+}
