@@ -1,7 +1,6 @@
 # radenium
 
 Copyright 2017 Andries Bron
-
 This file is part of Radenium.
 
     Radenium is free software: you can redistribute it and/or modify
