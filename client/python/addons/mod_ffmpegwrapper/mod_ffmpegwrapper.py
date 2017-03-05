@@ -156,5 +156,8 @@ class ffmpeg_info:
 
 
 if __name__ == "__main__":
-    pass
+    logging.basicConfig(filename='mod_ffmpegwrapper.log',level=logging.DEBUG)
+    info = ffmpeg_info()
+    print info.getSystem()
+    print info.getSystemDevices()
     
