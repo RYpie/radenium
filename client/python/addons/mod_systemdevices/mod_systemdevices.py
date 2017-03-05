@@ -30,8 +30,15 @@ import mod_ffmpegwrapper as ffmpeg_wrapper
 
 class mod_systemdevices:
     def __init__(self):
-        pass
+        self.system = ""
+        self.devices = {}
+        self.getSystemDevices()
 
+    def getSystemInfo(self):
+        ffmpeg = ffmpeg_wrapper.ffmpeg_info()
+        self.devices = ffmpeg.getSystemDevices()
+        self.system = ffmpeg.getSystem()
+    
     def run(self):
         pass
 
@@ -39,4 +46,3 @@ if __name__ == "__main__":
     ffmpeg = ffmpeg_wrapper.ffmpeg_info()
     print ffmpeg.getSystem()
     print ffmpeg.getSystemDevices()
-    logging.error("now in system")

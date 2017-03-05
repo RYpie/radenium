@@ -46,14 +46,15 @@ class ffmpeg_info:
         logging.info("started")
     
     def getSystem(self):
+        """! Return the system name of the operating platform. """
         return platform.system()
     
     def getSystemDevices(self):
         """! getSystemDevices() returns a dictionary containing all system devices, for example: {"audio": [["0", "Built-in Microphone"], ["1", "Aggregate Device"]], "video": [["0", "FaceTime HD Camera"], ["1", "Capture screen 0"]]} """
         
         if "LinuxMint" in platform.platform():
-            #! For this to work on Linux it requires to install video for Linux utilities.
-            #! install video utils: sudo apt install v4l-utils
+            #! For this to work on Linux requires to install video for Linux utilities.
+            #! installation of video for Linux utilities: sudo apt install v4l-utils
             #! list camera devices: #list camera devices: v4l2-ctl --list-devices
             #! list usb video capabilities: v4l2-ctl --list-formats-ext
             #! or use: ffmpeg -f v4l2 -list_formats all -i /dev/video0
