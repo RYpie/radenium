@@ -20,7 +20,6 @@ This file is part of Radenium.
         
 
 if __name__ == "__main__":
-    print "Hi this is my first line of code for this awesome project lets test and commit!"
-    print "Trying again"
-    print "and againkjhlkjhhj"
+    #! Which it always is:
+    print "Running Radenium!"
     
