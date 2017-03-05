@@ -1,6 +1,6 @@
 # Radenium
 
-Radenium is a test project to fuzzle a bit with ffmpeg...
+Radenium is a project to fiddle with python and ffmpeg...
 
 # Copyright
 
