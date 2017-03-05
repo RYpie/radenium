@@ -1,4 +1,4 @@
-# radenium
+# Radenium
 
 Radenium is a test project to fuzzle a bit with ffmpeg...
 
