@@ -2,6 +2,14 @@
 
 Radenium is a project to fiddle with python and ffmpeg...
 
+# For now
+
+In the addons directory are some modules. You can run and test each module by running it as a main script. E.g. the command:
+
+$ python mod_ffpmegwrapper.py
+
+demonstrates the capabilities of the mod_ffpmegwrapper.py module.
+
 # Copyright
 
 Copyright 2017 Andries Bron
