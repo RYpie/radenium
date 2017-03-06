@@ -45,7 +45,7 @@ class m3u8:
         f = open( file_location,'w' )
         m3u8_text = f.write( contents )
         f.close()
-        
+    
     def getm3u8file( self, file_location ):
         """! Actually this is a generic solution to read from a file. """
         f = open( file_location,'r' )

@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+
+
 """
 Copyright 2017 Andries Bron
 This file is part of Radenium.
@@ -15,13 +17,13 @@ This file is part of Radenium.
     along with Radenium.  If not, see <http://www.gnu.org/licenses/>.
     """
 
+
 import logging
 import datetime
 import threading
 import os
 import sys
 import time
-
 if __name__ == "__main__":
     sys.path.append('../mod_ffmpegwrapper')
 
@@ -65,3 +67,4 @@ if __name__ == "__main__":
     ffmpeg = ffmpeg_wrapper.ffmpeg_info()
     print ffmpeg.getSystem()
     print ffmpeg.getSystemDevices()
+

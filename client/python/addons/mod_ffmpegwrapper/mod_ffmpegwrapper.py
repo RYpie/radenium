@@ -29,6 +29,7 @@ from threading import Thread
 import platform
 try:
     from Queue import Queue, Empty
+
 except ImportError:
     from queue import Queue, Empty
 
@@ -152,7 +153,6 @@ class ffmpeg_info:
         sysDevs = {"video":videodevices, "audio":audiodevices}
         self.log( "Devices: " + str( sysDevs ) )
         return sysDevs
-
 
 
 if __name__ == "__main__":
