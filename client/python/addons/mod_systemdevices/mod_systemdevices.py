@@ -63,8 +63,7 @@ class mod_systemdevices:
         pass
 
 if __name__ == "__main__":
-    logging.basicConfig(filename='mod_systemdevices.log',level=logging.DEBUG)
-    ffmpeg = ffmpeg_wrapper.ffmpeg_info()
-    print ffmpeg.getSystem()
-    print ffmpeg.getSystemDevices()
+    logging.basicConfig( filename = 'mod_systemdevices.log', level = logging.DEBUG)
+    print "Nothing to debug, so a useless addon..."
+
 
