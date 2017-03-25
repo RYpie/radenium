@@ -36,6 +36,9 @@ __DEVICE_OCCUPIED_KEY__ = "occupied"
 __DEVICE_AVAIBLE_KEY__  = "available"
 
 class mod_encoderdeck:
+    """
+    Intantiates ffmpeg processes.
+    """
     def __init__(self):
         self.log( "Starting..." )
         self.system = ""
@@ -62,7 +65,9 @@ class mod_encoderdeck:
             logging.info( log_text )
 
     def refreshDevices( self ):
-        """! Finds system devices and registers them into a status register. By default are newly found devices available, because it is assumed that this application occupies and frees system devices. """
+        """
+        Finds system devices and registers them into a status register. By default are newly found devices available, because it is assumed that this application occupies and frees system devices.
+        """
         
         ffmpeg = ffmpeg_wrapper.ffmpeg_info()
         self.system = ffmpeg.getSystem()
@@ -93,7 +98,7 @@ class mod_encoderdeck:
     def encoderStart( self, method, inputVideoDevice=None, inputAudioDevice=None, inputFile=None, options={} ):
         """ 
         Starts encoding an input device or a combination of input devices, if possible, into an output file by a particular method.
-        @param method abstract string representing a ffmpeg process. For example 'HLS' represents a whole arsenal of options to encode to HLS    
+        @param method abstract string representing a ffmpeg process. For example 'HLS' represents a whole arsenal of options to encode to HLS
         """
 
 
@@ -137,6 +142,13 @@ class mod_encoderdeck:
     def encodeStop( self ):
         print "Stopping encoding..."
 
+    def encoderDeckShutdown( self ):
+        pipeid = 0
+        for pipe in self.encoderPipes:
+            pipe.stopStream()
+            del self.encoderPipes[ pipeid ]
+            pipeid += 1
+
 
 if __name__ == "__main__":
     logging.basicConfig( filename = 'mod_encoderdeck.log', level = logging.DEBUG)
@@ -150,6 +162,9 @@ if __name__ == "__main__":
     print enc.getDevicesStatus()
     print "\n"
     print enc.encoderStart('HLS',inputVideoDevice='0::FaceTime HD Camera',inputAudioDevice='0::Built-in Microphone')
+    print enc.encoderPipes
+    enc.encoderDeckShutdown()
+    print enc.encoderPipes
 
 
 
