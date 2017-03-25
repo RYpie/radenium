@@ -43,6 +43,7 @@ class mod_encoderdeck:
         self.audio_devices = []
         self.video_devices_status = {}
         self.audio_devices_status = {}
+        self.encoderPipes = []
         self.refreshDevices()
     
     def log( self, text, level="info" ):
@@ -75,7 +76,8 @@ class mod_encoderdeck:
                 self.video_devices_status[ dev_key ] = { "status":__DEVICE_AVAIBLE_KEY__, "sys_id":dev[0] }
         
         for dev in system_devices[ 'audio' ]:
-            self.audio_devices.append( str( dev[0] ) + "::" + str( dev[1] ) )
+            dev_key = str( dev[0] ) + "::" + str( dev[1] )
+            self.audio_devices.append( dev_key )
             if not dev_key in self.audio_devices_status:
                 self.audio_devices_status[ dev_key ] = { "status":__DEVICE_AVAIBLE_KEY__, "sys_id":dev[0] }
 
@@ -88,14 +90,31 @@ class mod_encoderdeck:
     def getDevices( self ):
         return { 'video':self.video_devices,'audio':self.audio_devices }
 
-    def encodeStart( method, inputVideoDevice=None, inputAudioDevice=None, inputFile=None, options={} ):
+    def encoderStart( self, method, inputVideoDevice=None, inputAudioDevice=None, inputFile=None, options={} ):
         """! Starts encoding an input device or a combination of input devices, if possible, into an output file by a particular method. """
         print "Starting encoding... target directory should be in config file read by ffmpeg_wrapper"
         if inputVideoDevice != None:
-            self.audio_devices_status[inputVideoDevice]['status'] = __DEVICE_OCCUPIED_KEY__
-
+            self.video_devices_status[inputVideoDevice]['status'] = __DEVICE_OCCUPIED_KEY__
+        
         if inputAudioDevice != None:
-            self.audio_devices_status['status'] = __DEVICE_OCCUPIED_KEY__
+            self.audio_devices_status[inputAudioDevice]['status'] = __DEVICE_OCCUPIED_KEY__
+
+        """def __init__(self,
+             streamID,
+             sys_video      = __DEFAULT_SYSTEM_VIDEO_DEVICE__,
+             sys_audio      = __DEFAULT_SYSTEM_AUDIO_DEVICE__,
+             url            = None,
+             resolution     = __DEFAULT_BROADCAST_RESOLUTION__,
+             cb_Rdy         = None,
+             altSettings    = {} ):"""
+        
+        if method == "HLS":
+            streamid = str( len( self.encoderPipes ) )
+            self.encoderPipes.append(
+                                        ffmpeg_wrapper.FFmpegStreamProcess( "streamid"+ streamid,
+                                        sys_video=self.video_devices_status[inputVideoDevice]['sys_id'],
+                                        sys_audio=self.audio_devices_status[inputAudioDevice]['sys_id'])
+                                    )
 
     def encodeStop( self ):
         print "Stopping encoding..."
@@ -105,10 +124,14 @@ if __name__ == "__main__":
     logging.basicConfig( filename = 'mod_encoderdeck.log', level = logging.DEBUG)
     enc = mod_encoderdeck()
     print "\nRunning Encoder deck on " + str( enc.getSystem() )
+    print "\n"
     print "\nSystem devices:"
     print enc.getDevices()
+    print "\n"
     print "\nAvailability:"
     print enc.getDevicesStatus()
+    print "\n"
+    print enc.encoderStart('HLS',inputVideoDevice='0::FaceTime HD Camera',inputAudioDevice='0::Built-in Microphone')
 
 
 
