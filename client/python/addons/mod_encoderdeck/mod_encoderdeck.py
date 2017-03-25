@@ -91,13 +91,29 @@ class mod_encoderdeck:
         return { 'video':self.video_devices,'audio':self.audio_devices }
 
     def encoderStart( self, method, inputVideoDevice=None, inputAudioDevice=None, inputFile=None, options={} ):
-        """! Starts encoding an input device or a combination of input devices, if possible, into an output file by a particular method. """
+        """ 
+        Starts encoding an input device or a combination of input devices, if possible, into an output file by a particular method.
+        @param method abstract string representing a ffmpeg process. For example 'HLS' represents a whole arsenal of options to encode to HLS    
+        """
+
+
         print "Starting encoding... target directory should be in config file read by ffmpeg_wrapper"
+
+
+        Vdev = None
+        Adev = None
+        URLdev = None
+
+        #! Check if the system devices are available, meaning, they are not already used in an encoderpipe
         if inputVideoDevice != None:
-            self.video_devices_status[inputVideoDevice]['status'] = __DEVICE_OCCUPIED_KEY__
-        
+            if self.video_devices_status[inputVideoDevice]['status'] != __DEVICE_OCCUPIED_KEY__:
+                self.video_devices_status[inputVideoDevice]['status'] = __DEVICE_OCCUPIED_KEY__
+                Vdev = self.video_devices_status[inputVideoDevice]['sys_id']
+    
         if inputAudioDevice != None:
-            self.audio_devices_status[inputAudioDevice]['status'] = __DEVICE_OCCUPIED_KEY__
+            if self.audio_devices_status[inputAudioDevice]['status'] != __DEVICE_OCCUPIED_KEY__:
+                self.audio_devices_status[inputAudioDevice]['status'] = __DEVICE_OCCUPIED_KEY__
+                Adev = self.audio_devices_status[inputAudioDevice]['sys_id']
 
         """def __init__(self,
              streamID,
@@ -108,12 +124,14 @@ class mod_encoderdeck:
              cb_Rdy         = None,
              altSettings    = {} ):"""
         
+        
+        #! Check by which method encode.
         if method == "HLS":
             streamid = str( len( self.encoderPipes ) )
             self.encoderPipes.append(
                                         ffmpeg_wrapper.FFmpegStreamProcess( "streamid"+ streamid,
-                                        sys_video=self.video_devices_status[inputVideoDevice]['sys_id'],
-                                        sys_audio=self.audio_devices_status[inputAudioDevice]['sys_id'])
+                                        sys_video=Vdev,
+                                        sys_audio=Adev)
                                     )
 
     def encodeStop( self ):
