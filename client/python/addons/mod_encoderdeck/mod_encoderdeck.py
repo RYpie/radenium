@@ -129,12 +129,11 @@ class mod_encoderdeck:
              cb_Rdy         = None,
              altSettings    = {} ):"""
         
-        
         #! Check by which method encode.
         if method == "HLS":
             streamid = str( len( self.encoderPipes ) )
             self.encoderPipes.append(
-                                        ffmpeg_wrapper.FFmpegStreamProcess( "streamid"+ streamid,
+                                        ffmpeg_wrapper.FFmpegStreamProcess( "process_id_"+ streamid,
                                         sys_video=Vdev,
                                         sys_audio=Adev)
                                     )
@@ -143,11 +142,19 @@ class mod_encoderdeck:
         print "Stopping encoding..."
 
     def encoderDeckShutdown( self ):
+        """
+        Brute shutdown of all the streaming processes. Most likely called when the main application has to shutdown.
+        """
         pipeid = 0
         for pipe in self.encoderPipes:
             pipe.stopStream()
             del self.encoderPipes[ pipeid ]
             pipeid += 1
+
+        #! Release all system devices.
+        for dev in self.video_devices_status:
+            self.video_devices_status[dev]['status'] = __DEVICE_AVAIBLE_KEY__
+
 
 
 if __name__ == "__main__":
