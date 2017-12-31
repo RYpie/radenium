@@ -98,6 +98,7 @@ class mod_mediadevices:
 
         for service in ret:
             print(service.getEPR() + ":" + service.getXAddrs()[0])
+        #self.devices.append({"sys_id":None, "name":None, "type":"onvif", "id":None})
 
         wsd.stop()
 
