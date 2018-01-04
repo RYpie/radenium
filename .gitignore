@@ -3,3 +3,4 @@ RadeniumClientPython.xcodeproj
 project.pbxproj
 RadeniumClientPython.xcscheme
 *.pyc
+__pycache__
