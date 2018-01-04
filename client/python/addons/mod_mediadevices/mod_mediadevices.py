@@ -26,28 +26,124 @@ import os
 import sys
 import time
 
+
 #! Local imports
 if __name__ == "__main__":
     sys.path.append('../mod_ffmpegwrapper')
     sys.path.append('../mod_wsdiscovery')
+    sys.path.append('../mod_dbaccess')
 
-import mod_ffmpegwrapper as ffmpeg_wrapper
+
+import mod_ffmpegwrapper
+import mod_dbaccess
+
 
 #! Try importing wsdiscovery for python3 otherwise a modified version by myself.
 try:
-    import WSDiscovery, QName, Scope
+    import WSDiscovery
 
-except:
+except Exception as e:
+    print (e)
     from mod_wsdiscovery_01 import WSDiscovery
 
 
+class mod_mediamuxer:
+    def __init__(self):
+        self.encprocesses = []
+        self.mediadevices = mod_mediadevices()
+        self.encprocessids=0
+        self.livemuxtable = {}
+    
+    
+    def devices(self):
+        return self.mediadevices.mediaDevices()
+    
+    
+    def refreshDevices(self):
+        return self.mediadevices
+    
+    
+    def getmuxtable(self):
+        return self.livemuxtable
+    
+    
+    def setrecordmux(self, streamId, format,vid=None, aid=None, file=None):
+        vid_id=None
+        aid_id=None
+        for dev in self.devices():
+            if dev["type"] == "video":
+                if dev["idstr"] == vid:
+                    vid_id=dev["sys_id"]
+        
+            if dev["type"] == "audio":
+                if dev["idstr"] == aid:
+                    aid_id=dev["sys_id"]
+        
+        if vid_id != None and aid_id != None:
+            if not str(streamId) in self.livemuxtable:
+                self.livemuxtable[str(streamId)] = {
+                    "format":format
+                    , "vid":vid_id
+                    , "aid":aid_id
+                    , "file":None
+                    , "process":None
+                    , "streamlocation":str(streamId)
+                }
+
+
+        #! Every time I start a stream I should check if the input devices are not already occupied to a process.
+        #!
+
+
+    def startencode(self, streamId):
+        print("launching", streamId)
+        for key, value in self.livemuxtable.items():
+            print(key)
+            if str(key) == str(streamId):
+                print("starting ", streamId)
+                try:
+                    encode_proc = mod_ffmpegwrapper.FFmpegStreamProcess(self.livemuxtable[key])
+                    encode_proc.run()
+
+                except Exception as e:
+                    print(e)
+                
+                self.livemuxtable[key]["process"]=encode_proc
+
+    
+    def stopencode(self, streamId):
+        print("yoooooo")
+        for key, value in self.livemuxtable.items():
+            if str(key) == str(streamId):
+                print("Stopping ", streamId)
+                self.livemuxtable[key]["process"].stopStream()
+    
+    
+    def shutdown(self):
+        for key, value in self.livemuxtable.items():
+            try:
+                self.livemuxtable[key]["process"].stopStream()
+            
+            except:
+                pass
+
+
 class mod_mediadevices:
+    '''
+    Muxer class for all media devices, keeps also track of which devices currently are used.
+    Should be renamed to media muxer.
+    '''
     def __init__(self):
         self.log("Starting...")
         self.system = ""
-        self.devices = []
-        self._get_FfmpegSystemInfo()
-        self.wsdiscovery()
+        self.devices = [] #! All camera devices
+        self.formats = [] #! All output formats
+        self.refreshDevices()
+    
+    def refreshDevices(self):
+        self._get_FfmpegDevices()
+        self._get_FfmpegFormats()
+        #self.wsdiscovery()
     
     
     def log( self, text, level="info" ):
@@ -66,17 +162,26 @@ class mod_mediadevices:
             logging.info( log_text )
 
 
-    def _get_FfmpegSystemInfo(self):
-        ffmpeg = ffmpeg_wrapper.ffmpeg_info()
+    def _get_FfmpegFormats(self):
+        ffmpegCommands=mod_ffmpegwrapper.FFmpegCommand()
+        #print(ffmpegCommands.appleHLS(0,0,'abc') )
+
+
+    def _deviceDict(self, type, sysid, name, available):
+        ids = str(sysid)+"_"+str(name).lower().replace(" ","_")
+        return {"sys_id":sysid, "name":name, "type":type, "idstr":ids, "available":available}
+
+
+    def _get_FfmpegDevices(self):
+        ffmpeg = mod_ffmpegwrapper.ffmpeg_info()
         self.system = ffmpeg.getSystem()
         devices = ffmpeg.getSystemDevices()
+        #print(devices)
         for dev in devices['video']:
-            ids = str(dev[0])+"_"+str(dev[1]).lower().replace(" ","_")
-            self.devices.append({"sys_id":dev[0], "name":dev[1], "type":"video", "id":ids})
+            self.devices.append(self._deviceDict("video", dev[0], dev[1], True))
         
         for dev in devices['audio']:
-            ids = str(dev[0])+"_"+str(dev[1]).lower().replace(" ","_")
-            self.devices.append({"sys_id":dev[0], "name":dev[1], "type":"audio", "id":ids})
+            self.devices.append(self._deviceDict("audio", dev[0], dev[1], True))
 
 
     def wsdiscovery(self):
@@ -98,22 +203,26 @@ class mod_mediadevices:
 
         for service in ret:
             print(service.getEPR() + ":" + service.getXAddrs()[0])
-        #self.devices.append({"sys_id":None, "name":None, "type":"onvif", "id":None})
-
+            #!todo test onvif camera's
+            #self.devices.append(self._deviceDict("onvif", None, None, True))
+            
         wsd.stop()
 
 
+    def systemPlatform(self):
+        return self.system
+
+
     def mediaDevices(self):
-        
-        return {"system":self.system, "devices":self.devices}
+        return self.devices
     
     
     def run(self):
         pass
 
-if __name__ == "__main__":
-    logging.basicConfig( filename = 'mod_mediadevices.log', level = logging.DEBUG)
-    devices = mod_mediadevices()
-    print (devices.mediaDevices())
-    
 
+if __name__ == "__main__":
+    pass
+    #logging.basicConfig( filename = 'mod_mediadevices.log', level = logging.DEBUG)
+    #devices = mod_mediadevices()
+    #print (devices.mediaDevices())
