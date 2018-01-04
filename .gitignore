@@ -2,4 +2,4 @@
 RadeniumClientPython.xcodeproj
 project.pbxproj
 RadeniumClientPython.xcscheme
-
+*.pyc
