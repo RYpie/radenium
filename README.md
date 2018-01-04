@@ -1,14 +1,27 @@
 # Radenium
 
-Radenium is a project to fiddle with python and ffmpeg...
+Working on something incredible huge here. Unfortunately I cannot tell you what, but it is opensource, or so.
+Radenium is made to work on a mac, linux follows soon after.
+
 
 # For now
 
-In the addons directory are some modules. You can run and test each module by running it as a main script. E.g. the command:
+Check it out, run:
 
-$ python mod_ffpmegwrapper.py
+$ python3 radenium.py
 
-demonstrates the capabilities of the mod_ffpmegwrapper.py module.
+And push a key on the keyboard, e.g. 'g' that should start a livestream of your camera.
+It doesn't? That's weird, it works on my mac osx...
+I think quite some dependencies, not sure which one. Will all follow...
+
+'s' should stop the livestream.
+
+Currently working on the architecture of the application.
+
+Roadmap:
+- Use a real ffmpeg wrapper.
+- Things that are top secret for now, really.
+
 
 # Copyright
 
