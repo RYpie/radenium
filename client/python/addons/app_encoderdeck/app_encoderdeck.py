@@ -72,68 +72,73 @@ class app_encoderdeck(mod_app.mod_app):
     def __init__(self, outqueue=None):
         super().__init__(self.worker, outqueue, sleeptime=400)
         self.muxer=mod_mediadevices.mod_mediamuxer()
-
         self.initdb()
     
     
     def initdb(self):
-        try:
-            dbdevs=self.db.select(_DBTBL_ENCODERDECK_MEDIADEVICES, "*")
-        
-        except Exception as e:
-            #! Jajaja this is dirty but you are more dirty...
-            if "1146" in str(e):
-                self.db.createtable(_DB_TABLES)
+        if self.db != None:
+            try:
+                dbdevs=self.db.select(_DBTBL_ENCODERDECK_MEDIADEVICES, "*")
+            
+            except Exception as e:
+                #! Jajaja this is dirty but you are more dirty...
+                if "1146" in str(e):
+                    self.db.createtable(_DB_TABLES)
 
 
     def getdbdevices(self):
-        return self.db.select(_DBTBL_ENCODERDECK_MEDIADEVICES, "*")
+        dbresult=[]
+        if self.db != None:
+            dbresult = self.db.select(_DBTBL_ENCODERDECK_MEDIADEVICES, "*")
+    
+        return dbresult
 
 
     def db_savedevices(self,options):
         """ Writes available devices into the database
         """
-        #! Fetch the data currently in the database, perhaps the system changed configuration.
-        dbdevices=self.getdbdevices()   #! List of tuples
-        muxdevices=self.muxer.devices() #! List of dictionary with keys.
-        deletedevs=[]
-        adddevs=[]
+        if self.db != None:
+            #! Fetch the data currently in the database, perhaps the system changed configuration.
+            dbdevices=self.getdbdevices()   #! List of tuples
+            muxdevices=self.muxer.devices() #! List of dictionary with keys.
+            deletedevs=[]
+            adddevs=[]
 
-        #! Registering the devices I require to add
-        for d in muxdevices:
-            deviceknown=False
-            for dbd in dbdevices:
-                if d["idstr"] == dbd[3] and d["sys_id"] == dbd[4]:
-                    deviceknown=True
-                    break #! Get out of the loop
-        
-            if not deviceknown:
-                adddevs.append(d)
-    
-        #! Next devices to be to deleted
-        for dbd in dbdevices:
-            deviceknown=False
-            for d in self.muxer.devices():
-                if str(d["idstr"]) == str(dbd[3]) and str(d["sys_id"]) == str(dbd[4]):
-                    deviceknown=True
-                    break #! Get out of the loop
-        
-            if not deviceknown:
-                #! Append the id of the database device
-                deletedevs.append(dbd[0])
-
-        for d in adddevs:
-            cols=["name","type","idstr","sys_id"]
-            vals=[d["name"],d["type"],d["idstr"],d["sys_id"]]
-            self.db.insert(_DBTBL_ENCODERDECK_MEDIADEVICES, cols, vals)
-
-        for dbd in deletedevs:
-            try:
-                self.db.delete(_DBTBL_ENCODERDECK_MEDIADEVICES, where="id="+str(dbd))
-                pass
+            #! Registering the devices I require to add
+            for d in muxdevices:
+                deviceknown=False
+                for dbd in dbdevices:
+                    if d["idstr"] == dbd[3] and d["sys_id"] == dbd[4]:
+                        deviceknown=True
+                        break #! Get out of the loop
             
-            except Exception as e:
-                print (e)
+                if not deviceknown:
+                    adddevs.append(d)
+        
+            #! Next devices to be to deleted
+            for dbd in dbdevices:
+                deviceknown=False
+                for d in self.muxer.devices():
+                    if str(d["idstr"]) == str(dbd[3]) and str(d["sys_id"]) == str(dbd[4]):
+                        deviceknown=True
+                        break #! Get out of the loop
+            
+                if not deviceknown:
+                    #! Append the id of the database device
+                    deletedevs.append(dbd[0])
+
+            for d in adddevs:
+                cols=["name","type","idstr","sys_id"]
+                vals=[d["name"],d["type"],d["idstr"],d["sys_id"]]
+                self.db.insert(_DBTBL_ENCODERDECK_MEDIADEVICES, cols, vals)
+
+            for dbd in deletedevs:
+                try:
+                    self.db.delete(_DBTBL_ENCODERDECK_MEDIADEVICES, where="id="+str(dbd))
+                    pass
+                
+                except Exception as e:
+                    print (e)
 
 
     def task_test_encode_syscam(self, options):

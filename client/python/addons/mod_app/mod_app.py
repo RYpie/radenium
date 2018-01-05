@@ -51,8 +51,12 @@ class mod_app(threading.Thread):
         #! Announcing a reference to the inqueue of this class.
         self.pushEvent({"queue":{"dir":"in","ref":self.inqueue, "name":self.name()}})
         self.runCB = runCB
-        self.db = mod_dbaccess.mod_dbaccess()
-    
+        try:
+            self.db = mod_dbaccess.mod_dbaccess()
+        
+        except:
+            self.db = None
+
     
     def name(self):
         """ Returns the name of this application.
