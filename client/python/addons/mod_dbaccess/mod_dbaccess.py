@@ -18,21 +18,12 @@ _IOP_VIDEO_RECORD = {
 
 _PREFIX = ""
 
-'''
-from mysql.connector import (connection)
-cnx = connection.MySQLConnection(user='root', password='root', host='localhost', port='8889', database='iop')
-cursor = cnx.cursor()
-query = ("SELECT * FROM dcgbn_inourplace_iop_domain")
-cursor.execute(query)
-cursor.fetchall()
-'''
 
 class mod_dbaccess(object):
     def __init__( self, dbname="iop" ):
         # Open database connection
         self.cnx = connection.MySQLConnection(user='root', password='root', host='localhost', port='8889', database=dbname)
-        
-
+    
         
     def select(self, fromtable, select="*", where=""):
         cursor = self.cnx.cursor()
@@ -122,12 +113,6 @@ class mod_dbaccess(object):
         
 
 class dbApi(object):
-    """
-    @todo: primary keyword en secondary keywords 
-    @todo: stukje text meenemen waar keywoord in is gevonden. 
-    @todo: visualiseren van de resultaten, de sitebouwer dan titels opvragen van paginas waar links naar verwijzen. 
-    """
-    
     def __init__( self ):  
         try:
             self.db = dbaccess.dBAccess()
@@ -135,32 +120,8 @@ class dbApi(object):
         except:
             pass
             
-            
-    def getDomains(self, notCrawledAfter=None):
-        '''
-        param notCrawledAfter date string 
-        Returns a list of url's that have to be crawled, should be those that have not
-        recently been crawled.
-        
-        '''
-        return {}
-            
+
     def saveSearchResults( self, domain_info, domain_index=None, domain_spy=None ):
-        
-        '''
-        pprint(domain_index["topics"])
-        
-        #! Getting all the interesting media links here, including podcast links.
-        
-        social_media_links=[]
-        if "feeds" in domain_index["topics"]:
-            social_media_links.append(domain_index["topics"]["feeds"])
-        if "social" in domain_index["topics"]:
-            social_media_links.append(domain_index["topics"]["social"])
-        if "syndicated_content" in domain_index["topics"]:
-            social_media_links.append(domain_index["topics"]["syndicated_content"])
-        '''
-            
         url_parsed = urlparse( domain_info["url"] )
         #print(domain_index)
         
@@ -273,7 +234,7 @@ class dbApi(object):
                     , table_rows
                     , exists[0][0] )
             except Exception as e:
-                print( "IOP Error in: " + self.__class__.__name__ + " function is_addDomain() while writing to the database: "+ str( e ) )
+                print( "Error in: " + self.__class__.__name__ + " function is_addDomain() while writing to the database: "+ str( e ) )
             
             #! Set the id obtain from the call to see if this domain already exists.
             result['id']=exists[0][0]
@@ -285,76 +246,7 @@ class dbApi(object):
                 , table_rows )
         
         return result
-        
-        
-    def saveVideos(self, domainRecord, videos):
-        '''creates articles in joomla'''
-        id = domainRecord[0]
-        print("check if video exists")
-        newvideos = []
-        for v in videos:
-        
-            newvideos.append(v)
-            #! query database
-            #! If a result available then pop video from list
-            
-        i = 0
-        #! Create articles of each new video
-        for nv in newvideos:
-            print("creating articles")
-            alias = nv["src"].replace("&","")
-            alias = alias.replace("http://","")
-            alias = alias.replace("https://","")
-            alias = alias.replace("www.","")
-            alias = alias.replace("=","-")
-            alias = alias.replace(".","-")
-            alias = alias.replace("/","-")
-            
-            _JOOMLA_ARTICLE_RECORD["alias"] = alias
-            _JOOMLA_ARTICLE_RECORD["introtext"] = "{iop type=iframe url=" + nv["src"] + "}{/iop}"
-            
-            if "page" in nv:
-                if "info" in nv["page"]:
-                    if "title" in nv["info"]:
-                        _JOOMLA_ARTICLE_RECORD["title"] = nv["info"]["title"]
-                        _JOOMLA_ARTICLE_RECORD["metadesc"] = nv["info"]["title"]
-            
-            #_JOOMLA_ARTICLE_RECORD["introtext"] = "test text"
-            cols = []
-            vals = []
-            for key in _JOOMLA_ARTICLE_RECORD:
-                cols.append("`"+key+"`")
-                vals.append(_JOOMLA_ARTICLE_RECORD[key])
-                
-            cols1 = []
-            vals1 = []
-            for key in _IOP_VIDEO_RECORD:
-                cols1.append(key)
-                vals1.append(_IOP_VIDEO_RECORD[key])
-            
-            if i == 0:
-                #pprint( _JOOMLA_ARTICLE_RECORD )
-                print ( self.db.save( _JOOMLA_ARTICLE_TABLE, cols, vals ) )
-                
-                #print( cols1, vals1)
-                #print ( self.db.save( _IOP_VIDEO_TABLE, cols1, vals1 ) )
-                '''
-                result = self.db.save( "dcgbn_inourplace_iop_videos"
-                , ['aid','type', 'description', 'user_id']
-                , ['1', '0', 'bla', '0'] )
-                '''
-                
-            newvideos[i]["article_id"] = 16 + i
-            #! Add article ID
-            i += 1
-        
-        #! Save all new videos:
-        pprint( newvideos )
-        '''
-        result = self.db.save( "dcgbn_inourplace_iop_videos"
-            , ['domain_id','article_id','type', 'description', 'user_id']
-            , [id, 'newtitle','newdescription'] )
-        '''
+    
         
     def getDomainRecord(self, domain):
         dr = self.db.select("dcgbn_isearch_domains", select="*", where="host_url='" + domain + "'" )

@@ -13,7 +13,7 @@ except:
 
 
 class app_anapp(mod_app.mod_app):
-    """ Example class that implements the mod_app usage
+    """ Example class that implements the mod_app class usage
     Mod_app is the default threaded application class used by radenium.py to integrate all applications.
     """
     def __init__(self, outqueue=None):
