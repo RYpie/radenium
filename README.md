@@ -12,7 +12,7 @@ Check it out, either run:
 
 $ python3 radenium.py
 
-And push a key on the keyboard, e.g. 'g' that should start a livestream of your camera.
+And push the 'g' key on the keyboard, that should start a livestream of your camera. Files stored in client/python/media (same directory where the addons directory resides).
 
 's' should stop the livestream.
 
