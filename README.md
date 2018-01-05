@@ -3,18 +3,21 @@
 Working on something incredible huge here. Unfortunately I cannot tell you what, but it is opensource, or so.
 Radenium is made to work on a mac, linux follows soon after.
 
+Radenium comprises a media devices multiplexer app build around ffmpeg. Well, built... I am busy building it...
+
 
 # For now
 
-Check it out, run:
+Check it out, either run:
 
 $ python3 radenium.py
 
 And push a key on the keyboard, e.g. 'g' that should start a livestream of your camera.
-It doesn't? That's weird, it works on my mac osx...
-I think quite some dependencies, not sure which one. Will all follow...
 
 's' should stop the livestream.
+
+Or run the encoderdeck_app or use the muxer in mod_mediadevices.
+
 
 Currently working on the architecture of the application.
 
