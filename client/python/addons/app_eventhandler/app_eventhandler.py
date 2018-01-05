@@ -1,6 +1,24 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+
+"""
+    Copyright 2017 Andries Bron
+    This file is part of Radenium.
+    
+    Radenium is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    Radenium is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with Radenium.  If not, see <http://www.gnu.org/licenses/>.
+    """
+
+
 #! For the keyboard hit etc.
 import glob
 import sys, termios, atexit
@@ -55,6 +73,9 @@ class app_eventhandler(mod_app.mod_app):
                     , "format":"apple_hls"
                 }}})
 
+            elif letter == 'd':
+                #! Test to store devices to the database.
+                self.pushEvent({"task":{"to":"app_encoderdeck", "value":"db_savedevices", "options":{}}})
 
     def kbhit(self):
         dr,dw,de = select([sys.stdin], [], [], 0)

@@ -1,6 +1,27 @@
 #!/usr/bin/env python
+
+
+"""
+    Copyright 2017 Andries Bron
+    This file is part of Radenium.
+    
+    Radenium is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    Radenium is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+    You should have received a copy of the GNU General Public License
+    along with Radenium.  If not, see <http://www.gnu.org/licenses/>.
+    """
+
+
 import mysql.connector
 from mysql.connector import (connection)
+from mysql.connector import errorcode
+
 import json
 import datetime
 import re
@@ -16,28 +37,76 @@ _IOP_VIDEO_RECORD = {
     
 }
 
-_PREFIX = ""
+
+_PREFIX = "nt4pz"
 
 
 class mod_dbaccess(object):
-    def __init__( self, dbname="iop" ):
+    def __init__( self, dbname="radenium" ):
         # Open database connection
         self.cnx = connection.MySQLConnection(user='root', password='root', host='localhost', port='8889', database=dbname)
     
+    
+    def createtable(self, tables):
+        """ Creates a set of tables in the database.
+        @param tables A dictionary with key name as table name and its value a tuple with the mysql create table query.
+        """
+        tname=""
+        tddl=""
+        cursor = self.cnx.cursor()
+        try:
+            for name, ddl in tables.items():
+                if not _PREFIX in str(name):
+                    tname = str(name).replace(str(name), _PREFIX+"_"+str(name))
+                    tddl = str(ddl).replace(str(name), _PREFIX+"_"+str(name))
+                
+                try:
+                    print("Creating table {}: ".format(tname), end='')
+                    cursor.execute(tddl)
+            
+                except mysql.connector.Error as err:
+                    if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
+                        print("already exists.")
+                    
+                    else:
+                        print(err.msg)
+    
+        except Exception as e:
+            print(e)
+
+        cursor.close()
+    
+    
+    def delete(self, table, where=""):
+        cursor = self.cnx.cursor()
+        #! Verifying database prefix
+        if not _PREFIX in table:
+            query = ("DELETE FROM " + _PREFIX + "_" + str(table) )
         
+        else:
+            query = ("DELETE FROM " + str(table) )
+        
+        if where != "":
+            query += " WHERE " + where
+        print(query)
+        cursor.execute(query)
+        self.cnx.commit()
+        cursor.close()
+    
+    
     def select(self, fromtable, select="*", where=""):
         cursor = self.cnx.cursor()
-        
-        query = ("SELECT " + select + " FROM "+str(fromtable))
+        query = ("SELECT " + select + " FROM " + _PREFIX + "_" + str(fromtable))
         if where != "":
             query += " WHERE " + where
             
-        #print("QUERY=", query)
+        print("QUERY=", query)
         
         cursor.execute(query)
         result = cursor.fetchall()
         cursor.close()
-        return result;
+        
+        return result
         
         
     def update(self, totable, columns, values, id ):
@@ -76,8 +145,9 @@ class mod_dbaccess(object):
         retval['id'] = emp_no
         
         return retval
-        
-    def save(self, totable, columns, values):
+    
+    
+    def insert(self, totable, columns, values):
         retval = {}
         cursor = self.cnx.cursor()
         cols = ", ".join(columns)
@@ -88,7 +158,7 @@ class mod_dbaccess(object):
             vals += "%s"
             
             
-        add_domain = ("INSERT INTO " + str(totable) + " "
+        add_domain = ("INSERT INTO " + _PREFIX + "_" + str(totable) + " "
                "(" + cols + ") "
                "VALUES (" + vals + ")")
                

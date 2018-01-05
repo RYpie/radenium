@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+#! WSDiscovery.py is not part of Radenium
+#! See LICENSE file
+
 import urllib.request, urllib.parse, urllib.error
 from xml.dom import minidom
 import io
