@@ -183,6 +183,8 @@ class mod_mediadevices:
 
 
     def _deviceDict(self, type, sysid, name, available):
+        #! An ID string is created from the combined information of the system ID and the name of the device. This to identify a system modification, e.g. when a device obtains a different system id as a result of connecting multiple devices to the system.
+        #! @todo How to distinguish multiple of the same devices.
         ids = str(sysid)+"_"+str(name).lower().replace(" ","_")
         return {"sys_id":sysid, "name":name, "type":type, "idstr":ids, "available":available}
 
