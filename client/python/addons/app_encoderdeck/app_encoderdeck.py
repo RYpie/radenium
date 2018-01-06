@@ -61,6 +61,7 @@ _DB_TABLES[_DBTBL_ENCODERDECK_MEDIADEVICES] = (
                                             "  `type` varchar(50) NOT NULL,"
                                             "  `idstr` varchar(50) NOT NULL,"
                                             "  `sys_id` varchar(50) NOT NULL,"
+                                            "  `user_id` int(11) NOT NULL,"
                                             "  PRIMARY KEY (`id`)"
                                             ") ENGINE=InnoDB")
 
@@ -74,6 +75,7 @@ _DB_TABLES[_DBTBL_ENCODERDECK_ENCODETASKS] = (
                                                "  `aid` varchar(50) NOT NULL,"
                                                "  `prog_id_str` varchar(50) NOT NULL,"
                                                "  `format` varchar(50) NOT NULL,"
+                                               "  `user_id` int(11) NOT NULL,"
                                                "  `taskdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
                                                "  PRIMARY KEY (`id`)"
                                                ") ENGINE=InnoDB")

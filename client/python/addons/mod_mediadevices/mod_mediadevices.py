@@ -118,7 +118,6 @@ class mod_mediamuxer:
         for key, value in self.livemuxtable.items():
             if str(key) == str(streamId):
                 print("Stopping ", streamId)
-                #print(self.livemuxtable[key]["process"].filename())
                 self.livemuxtable[key]["process"].stopStream()
                 #! Creating a subdirectory for storing the stream
                 infilelocation=self.livemuxtable[key]["process"].filename()
@@ -130,7 +129,8 @@ class mod_mediamuxer:
                 #! Subdirectory format = /[start date]/[start time]/[fraction of seconds]
                 outfilelocation=infilelocation.replace("out/", dt)
                 shutil.move( infilelocation, outfilelocation )
-    
+
+
     def shutdown(self):
         for key, value in self.livemuxtable.items():
             try:
@@ -153,6 +153,7 @@ class mod_mediadevices:
         self.devices = [] #! All camera devices
         self.formats = [] #! All output formats
         self.refreshDevices()
+    
     
     def refreshDevices(self):
         self._get_FfmpegDevices()

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form name = "encdck_encodetasks">
+	<fieldset name="task">
+		<field
+			name="publish"
+			type="number"
+			label="COM_RADENIUM_FIELD_TASK_PUBLISH"
+			description="COM_RADENIUM_FIELD_TASK_PUBLISH"
+			required="true"
+		/>
+		<field
+			name="state"
+			type="number"
+			label="COM_RADENIUM_FIELD_TASK_STATE"
+			description="COM_RADENIUM_FIELD_TASK_STATE"
+		/>
+		<field
+			name="vid"
+			type="text"
+			label="COM_RADENIUM_FIELD_TASK_VID"
+			description="COM_RADENIUM_FIELD_TASK_VID"
+		/>
+		<field
+			name="aid"
+			type="text"
+			label="COM_RADENIUM_FIELD_TASK_AID"
+			description="COM_RADENIUM_FIELD_TASK_AID"
+		/>
+		<field
+			name="prog_id_str"
+			type="text"
+			label="COM_RADENIUM_FIELD_TASK_PROG_ID_STR"
+			description="COM_RADENIUM_FIELD_TASK_PROG_ID_STR"
+		/>
+		<field
+			name="format"
+			type="text"
+			label="COM_RADENIUM_FIELD_TASK_FORMAT"
+			description="COM_RADENIUM_FIELD_TASK_FORMAT"
+		/>
+	</fieldset>
+    <fieldset name="hidden">
+        <field
+            name="user_id"
+            type="hidden" />
+    </fieldset>
+</form>
