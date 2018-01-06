@@ -55,14 +55,28 @@ _DBTBL_ENCODERDECK_ENCODETASKS = "radenium_encdck_encodetasks"
 
 _DB_TABLES={}
 _DB_TABLES[_DBTBL_ENCODERDECK_MEDIADEVICES] = (
-                    "CREATE TABLE `"+_DBTBL_ENCODERDECK_MEDIADEVICES+"` ("
-                    "  `id` int(11) NOT NULL AUTO_INCREMENT,"
-                    "  `name` varchar(50) NOT NULL,"
-                    "  `type` varchar(50) NOT NULL,"
-                    "  `idstr` varchar(50) NOT NULL,"
-                    "  `sys_id` varchar(50) NOT NULL,"
-                    "  PRIMARY KEY (`id`)"
-                    ") ENGINE=InnoDB")
+                                            "CREATE TABLE `"+_DBTBL_ENCODERDECK_MEDIADEVICES+"` ("
+                                            "  `id` int(11) NOT NULL AUTO_INCREMENT,"
+                                            "  `name` varchar(50) NOT NULL,"
+                                            "  `type` varchar(50) NOT NULL,"
+                                            "  `idstr` varchar(50) NOT NULL,"
+                                            "  `sys_id` varchar(50) NOT NULL,"
+                                            "  PRIMARY KEY (`id`)"
+                                            ") ENGINE=InnoDB")
+
+
+_DB_TABLES[_DBTBL_ENCODERDECK_ENCODETASKS] = (
+                                               "CREATE TABLE `"+_DBTBL_ENCODERDECK_ENCODETASKS+"` ("
+                                               "  `id` int(11) NOT NULL AUTO_INCREMENT,"
+                                               "  `publish` int(1) NOT NULL,"
+                                               "  `state` int(1) NOT NULL,"
+                                               "  `vid` varchar(50) NOT NULL,"
+                                               "  `aid` varchar(50) NOT NULL,"
+                                               "  `prog_id_str` varchar(50) NOT NULL,"
+                                               "  `format` varchar(50) NOT NULL,"
+                                               "  `taskdate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,"
+                                               "  PRIMARY KEY (`id`)"
+                                               ") ENGINE=InnoDB")
 
 
 class app_encoderdeck(mod_app.mod_app):
@@ -78,12 +92,15 @@ class app_encoderdeck(mod_app.mod_app):
     def initdb(self):
         if self.db != None:
             try:
-                dbdevs=self.db.select(_DBTBL_ENCODERDECK_MEDIADEVICES, "*")
-            
+                #! Loop over all database table to see if one does not exists.
+                for dbtable, ddl in _DB_TABLES.items():
+                    dbcall=self.db.select(dbtable, "*", where="id=1")
+        
             except Exception as e:
+                print(e)
                 #! Jajaja this is dirty but you are more dirty...
                 if "1146" in str(e):
-                    self.db.createtable(_DB_TABLES)
+                    self.db.createtables(_DB_TABLES)
 
 
     def getdbdevices(self):
@@ -92,7 +109,45 @@ class app_encoderdeck(mod_app.mod_app):
             dbresult = self.db.select(_DBTBL_ENCODERDECK_MEDIADEVICES, "*")
     
         return dbresult
+    
+    
+    def get_encoderdecktasks(self):
+        tasks=[]
+        try:
+            #! state 0 means freshly added, state 2 means, freshly stopped.
+            dbtasks=self.db.select(_DBTBL_ENCODERDECK_ENCODETASKS, "*", where="state=0 OR state=2")
+        
+        except Exception as e:
+            print(e)
 
+        for t in dbtasks:
+            tasks.append(
+                {
+                    "dbid": t[0]
+                    , "state":t[2]
+                    , "publish":t[1]
+                    , "prog_id_str":t[5]
+                    , "format":t[6]
+                    , "vid":t[3]
+                    , "aid":t[4]
+                    , "taskdate":t[7]
+                }
+            )
+        
+        return tasks
+    
+    def set_encoderdecktaskstate(self, task, state):
+        try:
+            if state == 'started':
+                if "dbid" in task:
+                    self.db.update(_DBTBL_ENCODERDECK_ENCODETASKS, ['state'], [1], task["dbid"])
+        
+            elif state== "stopped":
+                if "dbid" in task:
+                    self.db.update(_DBTBL_ENCODERDECK_ENCODETASKS, ['state'], [3], task["dbid"])
+    
+        except Exception as e:
+            print(e)
 
     def db_savedevices(self,options):
         """ Writes available devices into the database
@@ -164,10 +219,23 @@ class app_encoderdeck(mod_app.mod_app):
         
     
     def worker(self, event=None):
-        #print("in worker of encoder deck")
-        pass
-    
-    
+        tasks=self.get_encoderdecktasks()
+        if len(tasks) > 0:
+            for t in tasks:
+                print(t)
+                if t["state"] == 0:
+                    print("Starting task ", t)
+                    self.task_encode_start(t)
+                    self.set_encoderdecktaskstate(t, 'started')
+
+                elif t["state"] == 2:
+                    print("Stopping task ", t)
+                    self.task_encode_stop(t)
+                    self.set_encoderdecktaskstate(t, 'stopped')
+
+
+
+
     def stopApplication(self):
         self.muxer.shutdown()
 

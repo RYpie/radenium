@@ -21,7 +21,6 @@
 import mysql.connector
 from mysql.connector import (connection)
 from mysql.connector import errorcode
-
 import json
 import datetime
 import re
@@ -45,9 +44,13 @@ class mod_dbaccess(object):
     def __init__( self, dbname="radenium" ):
         # Open database connection
         self.cnx = connection.MySQLConnection(user='root', password='root', host='localhost', port='8889', database=dbname)
+        
+        #! Get immediately access to changes made to the database
+        self.cnx.start_transaction(isolation_level='READ COMMITTED')
+        print("Make sure other side, joomla, also read comitted")
+        #! In phpmyadmin: SET GLOBAL TRANSACTION ISOLATION LEVEL READ COMMITTED
     
-    
-    def createtable(self, tables):
+    def createtables(self, tables):
         """ Creates a set of tables in the database.
         @param tables A dictionary with key name as table name and its value a tuple with the mysql create table query.
         """
@@ -100,7 +103,7 @@ class mod_dbaccess(object):
         if where != "":
             query += " WHERE " + where
             
-        print("QUERY=", query)
+            #print("QUERY=", query)
         
         cursor.execute(query)
         result = cursor.fetchall()
@@ -128,7 +131,7 @@ class mod_dbaccess(object):
             i += 1
             
             
-        add_domain = ("UPDATE " + str(totable) + " SET "
+        add_domain = ("UPDATE " + _PREFIX + "_" + str(totable) + " SET "
             + set_string
             + " WHERE id=" + str(id) )
                

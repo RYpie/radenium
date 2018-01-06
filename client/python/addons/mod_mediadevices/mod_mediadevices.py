@@ -25,6 +25,7 @@ import threading
 import os
 import sys
 import time
+import shutil
 
 
 #! Local imports
@@ -109,20 +110,33 @@ class mod_mediamuxer:
                     print(e)
                 
                 self.livemuxtable[key]["process"]=encode_proc
+                dt = str( datetime.datetime.now() )
+                self.livemuxtable[key]["tstart"]=dt
 
     
     def stopencode(self, streamId):
-        print("yoooooo")
         for key, value in self.livemuxtable.items():
             if str(key) == str(streamId):
                 print("Stopping ", streamId)
+                #print(self.livemuxtable[key]["process"].filename())
                 self.livemuxtable[key]["process"].stopStream()
-    
+                #! Creating a subdirectory for storing the stream
+                infilelocation=self.livemuxtable[key]["process"].filename()
+                dt = str( self.livemuxtable[key]["tstart"] )
+                dt = dt.replace('-','_')
+                dt = dt.replace(' ','/')
+                dt = dt.replace(':','_')
+                dt = dt.replace('.','/')
+                #! Subdirectory format = /[start date]/[start time]/[fraction of seconds]
+                outfilelocation=infilelocation.replace("out/", dt)
+                shutil.move( infilelocation, outfilelocation )
     
     def shutdown(self):
         for key, value in self.livemuxtable.items():
             try:
-                self.livemuxtable[key]["process"].stopStream()
+                #! Stop all streams and store the results into another directory.
+                self.stopencode(key)
+                #self.livemuxtable[key]["process"].stopStream()
             
             except:
                 pass

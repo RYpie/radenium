@@ -128,6 +128,10 @@ class FFmpegStreamProcess(object):
         self.queue = Queue()
         self.process = None
     
+    def filename(self):
+        return __MEDIA_NETWORK_STREAMS_LOCATION__ + self.options["filelocation"] + "/"
+    
+    
     def amStopped(self):
         return self.myProcessStopped
     
