@@ -6,7 +6,22 @@ Radenium is made to work on a mac, linux follows soon after.
 Radenium comprises a media devices multiplexer app build around ffmpeg. Well, built... I am busy building it...
 
 
-# For now
+# Radenium
+
+Radenium is currently a prototype of a prototype, just to be clear.
+Idea of Radenium is to control a video publishing platform using python using a Joomla! component.
+Currently it works on a mac, my mac to be clear.
+
+Requires:
+
+- ffmpeg
+- python mysqlconnector
+- python 3
+
+Maybe more, I forgot at the moment.
+The python modules and apps have been made in such a way you should be able to use them independent as well.
+
+## Python client
 
 Check it out, either run:
 
@@ -18,8 +33,13 @@ And push the 'g' key on the keyboard, that should start a livestream of your cam
 
 Or run the encoderdeck_app or use the muxer in mod_mediadevices.
 
+## PHP Joomla! server
+Joomla package is intended to be used on the same system as where the python is running.
+If you are able to install it, add a menu, the default menu of radenium encoder task. 
+Next add a task of which you can find an example in the python addons/app_eventhandler
 
-Currently working on the architecture of the application.
+
+
 
 Roadmap:
 - Use a real ffmpeg wrapper.
