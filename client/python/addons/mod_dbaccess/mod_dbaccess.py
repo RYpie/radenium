@@ -42,6 +42,7 @@ _PREFIX = "nt4pz"
 
 class mod_dbaccess(object):
     def __init__( self, dbname="radenium" ):
+        self.dbname=dbname
         # Open database connection
         self.cnx = connection.MySQLConnection(user='root', password='root', host='localhost', port='8889', database=dbname)
         
@@ -49,6 +50,21 @@ class mod_dbaccess(object):
         self.cnx.start_transaction(isolation_level='READ COMMITTED')
         print("Make sure other side, joomla, also read comitted")
         #! In phpmyadmin: SET GLOBAL TRANSACTION ISOLATION LEVEL READ COMMITTED
+    
+    def select_rec(self, fromtable, select="*", where=""):
+        cnx = connection.MySQLConnection(user='root', password='root', host='localhost', port='8889', database=self.dbname)
+        cursor = cnx.cursor()
+        query = ("SELECT " + select + " FROM " + _PREFIX + "_" + str(fromtable))
+        if where != "":
+            query += " WHERE " + where
+        
+        #print("QUERY=", query)
+        
+        cursor.execute(query)
+        result = cursor.fetchall()
+        cursor.close()
+        
+        return result
     
     def createtables(self, tables):
         """ Creates a set of tables in the database.

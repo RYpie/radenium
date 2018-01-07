@@ -117,7 +117,7 @@ class app_encoderdeck(mod_app.mod_app):
         tasks=[]
         try:
             #! state 0 means freshly added, state 2 means, freshly stopped.
-            dbtasks=self.db.select(_DBTBL_ENCODERDECK_ENCODETASKS, "*", where="state=0 OR state=2")
+            dbtasks=self.db.select_rec(_DBTBL_ENCODERDECK_ENCODETASKS, "*", where="state=0 OR state=2")
         
         except Exception as e:
             print(e)
@@ -222,6 +222,7 @@ class app_encoderdeck(mod_app.mod_app):
     
     def worker(self, event=None):
         tasks=self.get_encoderdecktasks()
+        print(tasks)
         if len(tasks) > 0:
             for t in tasks:
                 print(t)
