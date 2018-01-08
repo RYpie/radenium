@@ -41,7 +41,10 @@ __LINUX__                                   = 'linux'
 __DEFAULT_SYSTEM_VIDEO_DEVICE__             = 0
 __DEFAULT_SYSTEM_AUDIO_DEVICE__             = 0
 __DEFAULT_BROADCAST_RESOLUTION__            = "640X320"
-__MEDIA_NETWORK_STREAMS_LOCATION__          = "media/"
+
+#! Attention trailing slash!
+#__MEDIA_NETWORK_STREAMS_LOCATION__          = "media/"
+__MEDIA_NETWORK_STREAMS_LOCATION__ = "/Applications/MAMP/htdocs/radenium/media/com_radenium/media/"
 __MEDIA_NETWORK_STREAMS_SEGMENT_DURATION__  = 10
 
 
