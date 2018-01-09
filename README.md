@@ -1,16 +1,16 @@
-# Radenium
+# Introduction
 
 Working on something incredible huge here. Unfortunately I cannot tell you what, but it is opensource, or so.
 Radenium is made to work on a mac, linux follows soon after.
 
-Radenium comprises a media devices multiplexer app build around ffmpeg. Well, built... I am busy building it...
+Radenium comprises a media devices multiplexer app built around ffmpeg. Well, built is quite a statement, I mean I am busy building it...
 
 
 # Radenium
 
 Radenium is currently a prototype of a prototype, just to be clear.
-Idea of Radenium is to control a video publishing platform using python using a Joomla! component.
-Currently it works on a mac, my mac to be clear.
+Idea of Radenium is to control a video publishing platform using python and a Joomla! component.
+Currently it works on a mac, my mac to be clear. So due to its state, I assume you to have knowledge on python, Joomla! and mysql. Otherwise I would not put too much effort in this for now, check out in a while again, for I aim to add installation instructions and more complete installation packages for you to hook in.
 
 Requires:
 
