@@ -19,7 +19,7 @@ This file is part of Radenium.
     """
 
 
-class mod_php_push:
+class mod_php_publish:
     def __init__(self):
         pass
 
