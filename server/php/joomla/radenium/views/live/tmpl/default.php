@@ -13,8 +13,12 @@ defined('_JEXEC') or die('Restricted access');
 
 
 ?><h1><?php echo JText::_('COM_RADENIUM_VIEW_LIVE_LAYOUT_LIVE_NOW'); ?></h1><?php
-
+echo "<pre>";
 print_r( $this->live_now ); 
+echo "<h2>Media</h2>";
+print_r($this->media);
+echo "</pre>";
+
 ?>
 
 <div id="view_live_layout_default">

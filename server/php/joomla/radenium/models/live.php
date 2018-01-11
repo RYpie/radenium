@@ -45,8 +45,32 @@ class RadeniumModelLive extends JModelForm
 
     public function getCurrentLives() {
         $retVal = array("live"=>array());
+        $curDir = getcwd();
+        $liveDir = "media/com_radenium/live/";
+        $m3u8 = 'playlist.m3u8';
+        //Maybe put a file of the channel when publishing.
+        
+        $channels = scandir($liveDir);
+        
+        $retVal["curdir"] = $curDir;
+        $retVal["channels"] = $channels;
         return $retVal;
     }
+    
+    
+    public function getCurrentMedia() {
+        $retVal = array("live"=>array());
+        $curDir = getcwd();
+        $liveDir = "media/com_radenium/media/";
+        $m3u8 = 'playlist.m3u8';
+        
+        
+        $root = scandir($liveDir);
+        $retVal["curdir"] = $curDir;
+        $retVal["channels"] = $root;
+        return $retVal;
+    }
+        
         
     /**
      * @name __construct
