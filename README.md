@@ -32,7 +32,7 @@ Download mysql-connector-python-2.0.4 and cd yourself into the package directory
 @todo
 
 ### All platforms
-- Download and install a AMP package, preferably XAMP or MAMP
+- Download and install a webserver, preferably XAMP, MAMP or a NGINX solution with MYSQL
 - Download and install Joomla! (http://www.joomla.org)
 - Modify mod_settings.py in the addons/mod_setting directory
 - Download radenium and follow instruction in chapter Python client.
