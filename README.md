@@ -1,6 +1,6 @@
 # Introduction
 
-Working on something incredible huge here. Unfortunately I cannot tell you what, but it is opensource, or so.
+Working on something incredible huge here. Unfortunately I cannot tell you what, but it is opensource or so.
 Radenium is made to work on a mac, linux follows soon after.
 
 Radenium comprises a media devices multiplexer app built around ffmpeg. Well, built is quite a statement, I mean I am busy building it...
@@ -12,14 +12,31 @@ Radenium is currently a prototype of a prototype, just to be clear.
 Idea of Radenium is to control a video publishing platform using python and a Joomla! component.
 Currently it works on a mac, my mac to be clear. So due to its state, I assume you to have knowledge on python, Joomla! and mysql. Otherwise I would not put too much effort in this for now, check out in a while again, for I aim to add installation instructions and more complete installation packages for you to hook in.
 
-Requires:
+## Installation
 
-- ffmpeg
-- python mysqlconnector
-- python 3
+Take notice that radenium should work without database and Joomla! The database and Joomla! is only used to create a webui and manage the files etcetera.
 
-Maybe more, I forgot at the moment.
-The python modules and apps have been made in such a way you should be able to use them independent as well.
+Aim is to create a simple, nodatabase required, solution to publish a stream to the web.
+
+### MAC OSX
+If you don't have python3 installed:
+$ brew install python3
+
+If you don't have ffmpeg installed:
+$ brew install ffmpeg   # if you don't have ffmpeg already
+
+Download mysql-connector-python-2.0.4 and cd yourself into the package directory, then:
+$ python3 setup.py install
+
+### Linux
+@todo
+
+### All platforms
+Download and install a AMP package, preferably XAMP or MAMP
+Download and install Joomla! (http://www.joomla.org)
+Modify mod_settings.py in the addons/mod_setting directory
+Download radenium and follow instruction in chapter Python client.
+
 
 ## Python client
 
