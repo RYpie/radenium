@@ -1,3 +1,5 @@
+![GitHub license](https://img.shields.io/badge/license-GPL-blue.svg)
+
 # Introduction
 
 Working on something incredible huge here. Unfortunately I cannot tell you what, but it is opensource or so.
