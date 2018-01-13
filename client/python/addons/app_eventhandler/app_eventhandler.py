@@ -30,6 +30,7 @@ import queue
 sys.path.append('../mod_app')
 try:
     import mod_app
+
 except:
     pass
 

@@ -19,10 +19,24 @@ This file is part of Radenium.
     """
 
 
-class mod_php_publish:
+"""mod_ffmpegwrapper"""
+#! Attention trailing slash!
+MEDIA_NETWORK_OUTPUT_LOCATION = "/Applications/MAMP/htdocs/radenium/media/com_radenium/media/"
+HLS_SEGMENT_DURATION  = 10
+
+
+"""mod_dbaccess"""
+DB_USER = "root"
+DB_PASSWORD = "root"
+DB_NAME = "radenium"
+DB_PREFIX = "nt4pz"
+DB_HOST = "localhost"
+DB_PORT = "8889"
+
+
+class mod_settings:
     def __init__(self):
         pass
-
 
 
 if __name__ == "__main__":

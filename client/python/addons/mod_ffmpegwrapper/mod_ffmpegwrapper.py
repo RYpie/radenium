@@ -42,10 +42,25 @@ __DEFAULT_SYSTEM_VIDEO_DEVICE__             = 0
 __DEFAULT_SYSTEM_AUDIO_DEVICE__             = 0
 __DEFAULT_BROADCAST_RESOLUTION__            = "640X320"
 
-#! Attention trailing slash!
-#__MEDIA_NETWORK_STREAMS_LOCATION__          = "media/"
-__MEDIA_NETWORK_STREAMS_LOCATION__ = "/Applications/MAMP/htdocs/radenium/media/com_radenium/media/"
+
+__MEDIA_NETWORK_STREAMS_LOCATION__ = "media/"
 __MEDIA_NETWORK_STREAMS_SEGMENT_DURATION__  = 10
+
+
+
+
+try:
+    sys.path.append('../mod_settings')
+    import mod_settings
+    
+    __MEDIA_NETWORK_STREAMS_LOCATION__ = mod_settings.MEDIA_NETWORK_OUTPUT_LOCATION
+    __MEDIA_NETWORK_STREAMS_SEGMENT_DURATION__ = mod_settings.HLS_SEGMENT_DURATION
+
+except:
+    print("- ATTENTION: No mod_settings found, using settings in mod_ffmpegwrapper")
+    #! Attention trailing slash!
+    __MEDIA_NETWORK_STREAMS_LOCATION__ = "media/"
+    __MEDIA_NETWORK_STREAMS_SEGMENT_DURATION__  = 10
 
 
 class FFmpegCommand:

@@ -21,6 +21,7 @@
 import mysql.connector
 from mysql.connector import (connection)
 from mysql.connector import errorcode
+
 import json
 import datetime
 import re
@@ -36,15 +37,34 @@ _IOP_VIDEO_RECORD = {
     
 }
 
+import sys
+sys.path.append('../mod_settings')
 
-_PREFIX = "nt4pz"
+try:
+    import mod_settings
 
+    __DB_USER__ = mod_settings.DB_USER
+    __DB_PASSWORD__ = mod_settings.DB_PASSWORD
+    __DB_NAME__ = mod_settings.DB_NAME
+    _PREFIX = mod_settings.DB_PREFIX
+    __DB_HOST__ = mod_settings.DB_HOST
+    __DB_PORT__ = mod_settings.DB_PORT
+
+except:
+    print("- ATTENTION: No mod_settings found, using settings in mod_dbaccess")
+    __DB_USER__ = "root"
+    __DB_PASSWORD__ = "root"
+    __DB_NAME__ = "radenium"
+    _PREFIX = "nt4pz"
+    __DB_HOST__ = "localhost"
+    __DB_PORT__ = "8889"
+    
 
 class mod_dbaccess(object):
     def __init__( self, dbname="radenium" ):
         self.dbname=dbname
         # Open database connection
-        self.cnx = connection.MySQLConnection(user='root', password='root', host='localhost', port='8889', database=dbname)
+        self.cnx = connection.MySQLConnection(user=__DB_USER__, password=__DB_PASSWORD__, host='localhost', port='8889', database=dbname)
         
         #! Get immediately access to changes made to the database
         self.cnx.start_transaction(isolation_level='READ COMMITTED')
