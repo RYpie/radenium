@@ -14,7 +14,7 @@ Currently it works on a mac, my mac to be clear. So due to its state, I assume y
 
 ## Installation
 
-Take notice that radenium should work without database and Joomla! The database and Joomla! is only used to create a webui and manage the files etcetera.
+Take notice that radenium should work without database and Joomla! The database and Joomla! is only used to create a webui and manage the files etcetera. By the way, at this point it's really nothing worth putting  efforts in.
 
 Aim is to create a simple, nodatabase required, solution to publish a stream to the web.
 
