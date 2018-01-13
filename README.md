@@ -20,35 +20,35 @@ Aim is to create a simple, nodatabase required, solution to publish a stream to 
 
 ### MAC OSX
 If you don't have python3 installed:
-$ brew install python3
+- $ brew install python3
 
 If you don't have ffmpeg installed:
-$ brew install ffmpeg   # if you don't have ffmpeg already
+- $ brew install ffmpeg   # if you don't have ffmpeg already
 
 Download mysql-connector-python-2.0.4 and cd yourself into the package directory, then:
-$ python3 setup.py install
+- $ python3 setup.py install
 
 ### Linux
 @todo
 
 ### All platforms
-Download and install a AMP package, preferably XAMP or MAMP
-Download and install Joomla! (http://www.joomla.org)
-Modify mod_settings.py in the addons/mod_setting directory
-Download radenium and follow instruction in chapter Python client.
+- Download and install a AMP package, preferably XAMP or MAMP
+- Download and install Joomla! (http://www.joomla.org)
+- Modify mod_settings.py in the addons/mod_setting directory
+- Download radenium and follow instruction in chapter Python client.
 
 
 ## Python client
 
 Check it out, either run:
 
-$ python3 radenium.py
+- $ python3 radenium.py
 
-And push the 'g' key on the keyboard, that should start a livestream of your camera. Files stored in client/python/media (same directory where the addons directory resides).
+- Press 'g' and ENTER should start a livestream of your camera. Files stored in client/python/media (same directory where the addons directory resides).
 
-'s' should stop the livestream.
+- Press 's' and ENTER should stop the livestream.
 
-Or run the encoderdeck_app or use the muxer in mod_mediadevices.
+- Or run the encoderdeck_app or use the muxer in mod_mediadevices.
 
 ## PHP Joomla! server
 Joomla package is intended to be used on the same system as where the python is running.
