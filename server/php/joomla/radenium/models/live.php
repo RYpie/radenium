@@ -57,17 +57,80 @@ class RadeniumModelLive extends JModelForm
         return $retVal;
     }
     
+    private function getDir($dir, &$results = array(), $finddir = False){
+        $files = scandir($dir);
+        foreach($files as $key => $value){
+            $path = realpath($dir.DIRECTORY_SEPARATOR.$value);
+            
+            if(!is_dir($path)) {
+
+            } else if($value != "." && $value != ".." && $value != ".DS_Store") {
+                $this->getDir($path, $results, $finddir);
+                if ( $finddir != False ){
+                    if ( $value == $finddir ){
+                        $results[] = $path;
+                    }
+                }
+            }
+        }
+        
+        return $results;
+    }
+    
+    private function getDirContents($dir, &$results = array(), $findfile = False){
+        $files = scandir($dir);
+        foreach($files as $key => $value){
+            $path = realpath($dir.DIRECTORY_SEPARATOR.$value);
+            
+            if(!is_dir($path)) {
+                if ( $findfile !== False ){
+                    if ($value == $findfile) {
+                        $results[] = $path;
+                    }
+                } else {
+                    $results[] = $path;
+                }
+            } else if($value != "." && $value != ".." && $value != ".DS_Store") {
+                $this->getDirContents($path, $results, $findfile);
+                if ( $findfile == False ){
+                    $results[] = $path;
+                }
+            }
+        }
+        
+        return $results;
+    }
+    
+    private function ls($dir) {
+        $retVal = array();
+        $list = scandir($dir);
+        foreach ($list as $l) {
+            if (($l != ".") && ($l != "..") && ( $l != ".DS_Store")) {
+                $retVal[] = $l;
+            }
+        }
+        return $retVal;
+    }
+    
     
     public function getCurrentMedia() {
         $retVal = array("live"=>array());
         $curDir = getcwd();
         $liveDir = "media/com_radenium/media/";
+        $retVal["dir"]=array();
         $m3u8 = 'playlist.m3u8';
         
+        $media=array();
         
-        $root = scandir($liveDir);
+        //Get a list of all the media files:
+        $this->getDirContents($liveDir, $media, $findfile ="playlist.m3u8");
+        $retVal["media"] = $media;
+        
+        $outnow=array();
+        $this->getDir($liveDir, $outnow, $finddir ="out");
+        $retVal["now"] = $outnow;
         $retVal["curdir"] = $curDir;
-        $retVal["channels"] = $root;
+        //$retVal["channels"] = $root;
         return $retVal;
     }
         
