@@ -42,26 +42,12 @@ class RadeniumModelLive extends JModelForm
         }
         return $form;
     }
-
-    public function getCurrentLives() {
-        $retVal = array("live"=>array());
-        $curDir = getcwd();
-        $liveDir = "media/com_radenium/live/";
-        $m3u8 = 'playlist.m3u8';
-        //Maybe put a file of the channel when publishing.
-        
-        $channels = scandir($liveDir);
-        
-        $retVal["curdir"] = $curDir;
-        $retVal["channels"] = $channels;
-        return $retVal;
-    }
+    
     
     private function getDir($dir, &$results = array(), $finddir = False){
         $files = scandir($dir);
         foreach($files as $key => $value){
-            $path = realpath($dir.DIRECTORY_SEPARATOR.$value);
-            
+            $path = $dir.DIRECTORY_SEPARATOR.$value;//realpath($dir.DIRECTORY_SEPARATOR.$value);
             if(!is_dir($path)) {
 
             } else if($value != "." && $value != ".." && $value != ".DS_Store") {
@@ -80,7 +66,7 @@ class RadeniumModelLive extends JModelForm
     private function getDirContents($dir, &$results = array(), $findfile = False){
         $files = scandir($dir);
         foreach($files as $key => $value){
-            $path = realpath($dir.DIRECTORY_SEPARATOR.$value);
+            $path = $dir.DIRECTORY_SEPARATOR.$value;//realpath($dir.DIRECTORY_SEPARATOR.$value);
             
             if(!is_dir($path)) {
                 if ( $findfile !== False ){
@@ -113,22 +99,27 @@ class RadeniumModelLive extends JModelForm
     }
     
     
+    
+    
     public function getCurrentMedia() {
         $retVal = array("live"=>array());
         $curDir = getcwd();
         $liveDir = "media/com_radenium/media/";
-        $retVal["dir"]=array();
         $m3u8 = 'playlist.m3u8';
         
         $media=array();
-        
         //Get a list of all the media files:
         $this->getDirContents($liveDir, $media, $findfile ="playlist.m3u8");
         $retVal["media"] = $media;
         
         $outnow=array();
         $this->getDir($liveDir, $outnow, $finddir ="out");
-        $retVal["now"] = $outnow;
+        $retVal["out"] = $outnow;
+        
+        $livenow=array();
+        $this->getDir($liveDir, $livenow, $finddir ="live");
+        $retVal["live"] = $livenow;
+        
         $retVal["curdir"] = $curDir;
         //$retVal["channels"] = $root;
         return $retVal;

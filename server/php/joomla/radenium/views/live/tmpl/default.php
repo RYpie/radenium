@@ -19,6 +19,13 @@ echo "<h2>Media</h2>";
 print_r($this->media);
 echo "</pre>";
 
+foreach($this->media["media"] as $m ) {
+echo "<div>";
+echo "<video src=\"".$m."\" controls width=\"320\" height=\"240\">";
+echo "</video>";
+echo "</div>";
+}
+
 ?>
 
 <div id="view_live_layout_default">
