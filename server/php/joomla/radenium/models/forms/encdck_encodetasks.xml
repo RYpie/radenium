@@ -2,12 +2,24 @@
 <form name = "encdck_encodetasks">
 	<fieldset name="task">
 		<field
+			name="selectsource"
+			type="radio"
+			class="btn-group"
+			default="0"
+			label="COM_RADENIUM_FIELD_TASK_SELECT_SOURCE"
+			description="COM_RADENIUM_FIELD_TASK_SELECT_SOURCE">
+                <option value="0">System Devices</option>
+                <option value="1">File System</option>
+		</field>
+		<field
+		    showon="selectsource:0"
 			name="vid"
 			type="videodevices"
 			label="COM_RADENIUM_FIELD_TASK_VID"
 			description="COM_RADENIUM_FIELD_TASK_VID"
 		/>
 		<field
+		    showon="selectsource:0"
 			name="aid"
 			type="text"
 			label="COM_RADENIUM_FIELD_TASK_AID"
