@@ -60,7 +60,6 @@ class RadeniumViewLive extends JViewLegacy
 
             default:
                 $this->media = $this->get("CurrentMedia");
-                $this->live_now = $this->get("CurrentLives");
                 $this->live_entries = $this->get("AllEntries");
                 break;
         }

@@ -71,23 +71,23 @@ class RadeniumModelEncdck_encodetasks extends JModelForm
         $query = $db->getQuery(true);
         // Prepare table data:
         $columns = array(
-            publish
-            , state
-            , vid
+            vid
             , aid
             , prog_id_str
             , format
+            , publish
+            , state
             , user_id
 
         );
 
         $values = array(
-            intval($data["publish"])
-            , intval($data["state"])
-            , $db->quote($data["vid"])
+            $db->quote($data["vid"])
             , $db->quote($data["aid"])
             , $db->quote($data["prog_id_str"])
-            , $db->quote($data["format"])
+            , intval($data["format"])
+            , intval($data["publish"])
+            , intval($data["state"])
             , intval($data["user_id"])
 
         );
@@ -121,12 +121,12 @@ class RadeniumModelEncdck_encodetasks extends JModelForm
         $query = $db->getQuery(true);
         // Prepare table data:
         $fields = array(
-            $db->quoteName('publish') . ' = ' . intval($data["publish"])
-            , $db->quoteName('state') . ' = ' . intval($data["state"])
-            , $db->quoteName('vid') . ' = ' . $db->quote($data["vid"])
+            $db->quoteName('vid') . ' = ' . $db->quote($data["vid"])
             , $db->quoteName('aid') . ' = ' . $db->quote($data["aid"])
             , $db->quoteName('prog_id_str') . ' = ' . $db->quote($data["prog_id_str"])
-            , $db->quoteName('format') . ' = ' . $db->quote($data["format"])
+            , $db->quoteName('format') . ' = ' . intval($data["format"])
+            , $db->quoteName('publish') . ' = ' . intval($data["publish"])
+            , $db->quoteName('state') . ' = ' . intval($data["state"])
             , $db->quoteName('user_id') . ' = ' . intval($data["user_id"])
 
         );
@@ -265,29 +265,13 @@ class RadeniumModelEncdck_encodetasks extends JModelForm
         (
             [0] => Array
                 (
-                    [name] => publish
-                    [type] => number
-                    [label] => COM_RADENIUM_FIELD_TASK_PUBLISH
-                    [description] => COM_RADENIUM_FIELD_TASK_PUBLISH
-                )
-
-            [1] => Array
-                (
-                    [name] => state
-                    [type] => number
-                    [label] => COM_RADENIUM_FIELD_TASK_STATE
-                    [description] => COM_RADENIUM_FIELD_TASK_STATE
-                )
-
-            [2] => Array
-                (
                     [name] => vid
                     [type] => text
                     [label] => COM_RADENIUM_FIELD_TASK_VID
                     [description] => COM_RADENIUM_FIELD_TASK_VID
                 )
 
-            [3] => Array
+            [1] => Array
                 (
                     [name] => aid
                     [type] => text
@@ -295,7 +279,7 @@ class RadeniumModelEncdck_encodetasks extends JModelForm
                     [description] => COM_RADENIUM_FIELD_TASK_AID
                 )
 
-            [4] => Array
+            [2] => Array
                 (
                     [name] => prog_id_str
                     [type] => text
@@ -303,12 +287,80 @@ class RadeniumModelEncdck_encodetasks extends JModelForm
                     [description] => COM_RADENIUM_FIELD_TASK_PROG_ID_STR
                 )
 
-            [5] => Array
+            [3] => Array
                 (
                     [name] => format
-                    [type] => text
+                    [type] => mediaformat
                     [label] => COM_RADENIUM_FIELD_TASK_FORMAT
                     [description] => COM_RADENIUM_FIELD_TASK_FORMAT
+                )
+
+        )
+
+)
+
+*/
+
+        
+
+        return True;
+    }
+
+        
+    /**
+     * @name getlivestreaming
+     * @desc Function description.
+     */
+    public function getlivestreaming()
+    {
+        // Returns a particular fieldset to render as form. 
+
+        // should return a form with only the fieldset 
+/*Array
+(
+    [name] => livestreaming
+    [variables] => Array
+        (
+            [0] => Array
+                (
+                    [name] => publish
+                    [type] => radio
+                    [label] => COM_RADENIUM_FIELD_TASK_PUBLISH
+                    [description] => COM_RADENIUM_FIELD_TASK_PUBLISH
+                )
+
+        )
+
+)
+
+*/
+
+        
+
+        return True;
+    }
+
+        
+    /**
+     * @name getrunningtask
+     * @desc Function description.
+     */
+    public function getrunningtask()
+    {
+        // Returns a particular fieldset to render as form. 
+
+        // should return a form with only the fieldset 
+/*Array
+(
+    [name] => runningtask
+    [variables] => Array
+        (
+            [0] => Array
+                (
+                    [name] => state
+                    [type] => radio
+                    [label] => COM_RADENIUM_FIELD_TASK_STATE
+                    [description] => COM_RADENIUM_FIELD_TASK_STATE
                 )
 
         )

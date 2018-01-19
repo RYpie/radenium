@@ -58,6 +58,16 @@ class RadeniumViewEncdck_encodetasks extends JViewLegacy
                 $this->form = $this->get("Form");
                 break;
 
+            case "livestreaming":
+                $this->livestreaming_data = $this->get("livestreaming");
+                $this->form = $this->get("Form");
+                break;
+
+            case "runningtask":
+                $this->runningtask_data = $this->get("runningtask");
+                $this->form = $this->get("Form");
+                break;
+
             case "hidden":
                 $this->hidden_data = $this->get("hidden");
                 $this->form = $this->get("Form");

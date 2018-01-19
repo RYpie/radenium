@@ -45,6 +45,9 @@ class RadeniumModelLive extends JModelForm
     
     
     private function getDir($dir, &$results = array(), $finddir = False){
+        if(substr($dir, -1) == '/') {
+            $dir = substr($dir, 0, -1);
+        }
         $files = scandir($dir);
         foreach($files as $key => $value){
             $path = $dir.DIRECTORY_SEPARATOR.$value;//realpath($dir.DIRECTORY_SEPARATOR.$value);
@@ -64,6 +67,9 @@ class RadeniumModelLive extends JModelForm
     }
     
     private function getDirContents($dir, &$results = array(), $findfile = False){
+        if(substr($dir, -1) == '/') {
+            $dir = substr($dir, 0, -1);
+        }
         $files = scandir($dir);
         foreach($files as $key => $value){
             $path = $dir.DIRECTORY_SEPARATOR.$value;//realpath($dir.DIRECTORY_SEPARATOR.$value);

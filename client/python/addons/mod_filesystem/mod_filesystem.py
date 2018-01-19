@@ -19,17 +19,36 @@ This file is part of Radenium.
     """
 
 
-class mod_php_publish:
+import os
+
+
+class mod_filesystem:
     def __init__(self):
-        pass
-        '''
-            do something with 
-            http://www.ip2nation.com
-            https://ipinfo.io
-            https://blog.miguelgrinberg.com/post/how-to-build-and-run-mjpg-streamer-on-the-raspberry-pi
-        '''
+        self.drives = []
+        self.scansystem()
+
+    def scansystem(self):
+        """ Scans which drives are available and whether there is radenium media on it.
+        """
+        try:
+            import psutil
+            self.drives = psutil.disk_partitions()
+
+        except:
+            self.drives = os.listdir('/Volumes')
+
+        print self.drives
+
+        for drive in self.drives:
+            if os.path.exists("/Volumes/" + str(drive) ):
+                print "Found one on: " + str(drive)
+            
+            print os.listdir("/Volumes/" + str(drive))
+
 
 
 
 if __name__ == "__main__":
-    print ("\nNot really something here to demonstrate...\n")
+    pass
+    fs = mod_filesystem()
+

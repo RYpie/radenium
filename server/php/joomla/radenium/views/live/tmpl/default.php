@@ -13,6 +13,16 @@ defined('_JEXEC') or die('Restricted access');
 
 
 ?><h1><?php echo JText::_('COM_RADENIUM_VIEW_LIVE_LAYOUT_LIVE_NOW'); ?></h1><?php
+
+?>
+encoder task toevoegen onder programma naam en episode naam. 
+Fields maken voor devices en voor de video types.
+Description ook toevoegen.
+kweetniet, displayen zonder database? ik denk het  toch niet...
+Lijst ophalen, alleen wat live gepublised wordt hoeft niet de database in, want immers dat wordt al ge-encode.
+
+
+<?php
 echo "<pre>";
 print_r( $this->live_now ); 
 echo "<h2>Media</h2>";
@@ -21,7 +31,9 @@ echo "</pre>";
 
 foreach($this->media["media"] as $m ) {
 echo "<div>";
-echo "<video src=\"".$m."\" controls width=\"320\" height=\"240\">";
+//echo "<video controls width=\"320\" height=\"240\">";
+echo "<video controls>";
+echo "  <source src=\"".$m."\" type=\"video/mp4\">";
 echo "</video>";
 echo "</div>";
 }

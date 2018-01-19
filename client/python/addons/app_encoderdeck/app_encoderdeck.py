@@ -139,6 +139,8 @@ class app_encoderdeck(mod_app.mod_app):
         return tasks
     
     def set_encoderdecktaskstate(self, task, state):
+        """ Changes the task that is running to a different state.
+        """
         try:
             if state == 'started':
                 if "dbid" in task:
@@ -207,13 +209,23 @@ class app_encoderdeck(mod_app.mod_app):
     
     
     def task_encode_start(self, options):
+        """ Sets first the multiplexer into the state to record.
+            setrecordmux creates a new ffmpegthread, startencode, starts it.
+        """
+        if "dbid" in options:
+            recordId = "id_"+str(options["dbid"])
+        
+        else:
+            recordId = options["prog_id_str"]
+        
         self.muxer.setrecordmux(
-                options["prog_id_str"]
+                recordId
                 , options["format"]
                 , options["vid"]
                 , options["aid"]
             )
-        self.muxer.startencode(options["prog_id_str"])
+            
+        self.muxer.startencode(recordId)
 
     
     def task_encode_stop(self, options):

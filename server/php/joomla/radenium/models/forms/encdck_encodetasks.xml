@@ -2,21 +2,8 @@
 <form name = "encdck_encodetasks">
 	<fieldset name="task">
 		<field
-			name="publish"
-			type="number"
-			label="COM_RADENIUM_FIELD_TASK_PUBLISH"
-			description="COM_RADENIUM_FIELD_TASK_PUBLISH"
-			required="true"
-		/>
-		<field
-			name="state"
-			type="number"
-			label="COM_RADENIUM_FIELD_TASK_STATE"
-			description="COM_RADENIUM_FIELD_TASK_STATE"
-		/>
-		<field
 			name="vid"
-			type="text"
+			type="videodevices"
 			label="COM_RADENIUM_FIELD_TASK_VID"
 			description="COM_RADENIUM_FIELD_TASK_VID"
 		/>
@@ -34,10 +21,36 @@
 		/>
 		<field
 			name="format"
-			type="text"
+			type="mediaformat"
 			label="COM_RADENIUM_FIELD_TASK_FORMAT"
 			description="COM_RADENIUM_FIELD_TASK_FORMAT"
 		/>
+	</fieldset>
+    <fieldset name="livestreaming">
+		<field
+			name="publish"
+			type="radio"
+			class="btn-group"
+			label="COM_RADENIUM_FIELD_TASK_PUBLISH"
+			description="COM_RADENIUM_FIELD_TASK_PUBLISH"
+			required="true"
+			default="0">
+                <option value="0">Off</option>
+                <option value="1">Go Live</option>
+		</field>
+    </fieldset>
+	<fieldset name="runningtask">
+		<field
+			name="state"
+			type="radio"
+			class="btn-group"
+			label="COM_RADENIUM_FIELD_TASK_STATE"
+			description="COM_RADENIUM_FIELD_TASK_STATE"
+			default="0">
+                <option value="0">Start</option>
+                <option value="1">Stop</option>
+                <option value="3">Finished</option>
+		</field>
 	</fieldset>
     <fieldset name="hidden">
         <field
