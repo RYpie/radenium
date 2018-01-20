@@ -22,6 +22,7 @@
 
 import sys
 import queue
+import pprint
 
 #! Local imports
 if __name__ == "__main__":
@@ -51,7 +52,7 @@ except:
 
 _DBTBL_ENCODERDECK_MEDIADEVICES = "radenium_encdck_mediadevices"
 _DBTBL_ENCODERDECK_ENCODETASKS = "radenium_encdck_encodetasks"
-
+_DBTBL_TAKES = "radenium_takes"
 
 _DB_TABLES={}
 _DB_TABLES[_DBTBL_ENCODERDECK_MEDIADEVICES] = (
@@ -117,22 +118,25 @@ class app_encoderdeck(mod_app.mod_app):
         tasks=[]
         try:
             #! state 0 means freshly added, state 2 means, freshly stopped.
-            dbtasks=self.db.select_rec(_DBTBL_ENCODERDECK_ENCODETASKS, "*", where="state=0 OR state=2")
+            # dbtasks=self.db.select_rec(_DBTBL_ENCODERDECK_ENCODETASKS, "*", where="state=0 OR state=2")
+            dbtasks=self.db.select_rec(_DBTBL_TAKES, "*", where="state=0 OR state=2")
         
         except Exception as e:
             print(e)
-
+        
+        
+        #return tasks
         for t in dbtasks:
             tasks.append(
                 {
                     "dbid": t[0]
-                    , "state":t[2]
-                    , "publish":t[1]
-                    , "prog_id_str":t[5]
-                    , "format":t[6]
-                    , "vid":t[3]
-                    , "aid":t[4]
-                    , "taskdate":t[7]
+                    , "state":t[7]
+                    , "publish":t[6]
+                    #, "prog_id_str":t[5]
+                    , "format":t[5]
+                    , "vid":t[2]
+                    , "aid":t[3]
+                    , "taskdate":t[9]
                 }
             )
         
@@ -144,11 +148,11 @@ class app_encoderdeck(mod_app.mod_app):
         try:
             if state == 'started':
                 if "dbid" in task:
-                    self.db.update(_DBTBL_ENCODERDECK_ENCODETASKS, ['state'], [1], task["dbid"])
+                    self.db.update(_DBTBL_TAKES, ['state'], [1], task["dbid"])
         
             elif state== "stopped":
                 if "dbid" in task:
-                    self.db.update(_DBTBL_ENCODERDECK_ENCODETASKS, ['state'], [3], task["dbid"])
+                    self.db.update(_DBTBL_TAKES, ['state'], [3], task["dbid"])
     
         except Exception as e:
             print(e)
@@ -212,12 +216,7 @@ class app_encoderdeck(mod_app.mod_app):
         """ Sets first the multiplexer into the state to record.
             setrecordmux creates a new ffmpegthread, startencode, starts it.
         """
-        if "dbid" in options:
-            recordId = "id_"+str(options["dbid"])
-        
-        else:
-            recordId = options["prog_id_str"]
-        
+        recordId = "takes/" + "id_"+str(options["dbid"])
         self.muxer.setrecordmux(
                 recordId
                 , options["format"]
@@ -229,7 +228,9 @@ class app_encoderdeck(mod_app.mod_app):
 
     
     def task_encode_stop(self, options):
-        self.muxer.stopencode(options["prog_id_str"])
+        recordId = "takes/" + "id_"+str(options["dbid"])
+        
+        self.muxer.stopencode(recordId)
         
     
     def worker(self, event=None):

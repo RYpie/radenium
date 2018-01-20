@@ -16,8 +16,8 @@ defined('_JEXEC') or die('Restricted access');
 JFormHelper::loadFieldClass('list');
 
 //https://docs.joomla.org/Creating_a_custom_form_field_type
-class JFormFieldVideodevices extends JFormFieldList {
-	protected $type = 'Videodevices';
+class JFormFieldAudiodevices extends JFormFieldList {
+	protected $type = 'Audiodevices';
 	
 	public function getOptions() {		
 		$list_options = array();
@@ -26,13 +26,13 @@ class JFormFieldVideodevices extends JFormFieldList {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true);
-		$query->select('idstr,name')->from('`#__radenium_encdck_mediadevices`')->where('type = "video"');
+		$query->select('idstr,name')->from('`#__radenium_encdck_mediadevices`')->where('type = "audio"');
 		$rows = $db->setQuery($query)->loadObjectlist();
 		
 		foreach($rows as $row){
 			$list_options[strval($row->idstr)] = $row->name;
 		}
-		
+
 		//Using the options causes the values of the list to start with 0.
 		// Merge any additional options in the XML definition.
 		//$options = array_merge(parent::getOptions(), $templates);
@@ -43,7 +43,7 @@ class JFormFieldVideodevices extends JFormFieldList {
 	}
 	
 	public function getLabel() {
-		return "Select Video Device";
+		return "Select Audio Device";
 	}
 	
 	// getLabel() left out

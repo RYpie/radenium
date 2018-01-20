@@ -13,11 +13,11 @@ defined('_JEXEC') or die('Restricted access');
  		
 ?>
 
-<div id="view_encdck_encodetasks_layout_default">
-    <h1><?php echo JText::_('COM_RADENIUM_VIEW_ENCDCK_ENCODETASKS_LAYOUT_NEW_TITLE'); ?></h1>
-    <form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="encdck_encodetasks" name="encdck_encodetasks">
+<div id="view_takes_layout_default">
+    <h1><?php echo JText::_('COM_RADENIUM_VIEW_TAKES_LAYOUT_NEW_TITLE'); ?></h1>
+    <form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="takes" name="takes">
 
-    <input type="hidden" name="view" value="encdck_encodetasks" />
+    <input type="hidden" name="view" value="takes" />
 <div>
     <button type="submit" name="layout" value="new" class="button"><?php echo JText::_('COM_RADENIUM_VIEW_BUTTON_NEW_ENTRY'); ?></button>
     &nbsp;<button type="submit" name="task" value="edit" class="button"><?php echo JText::_('COM_RADENIUM_VIEW_BUTTON_EDIT_ENTRY'); ?></button>
@@ -29,13 +29,13 @@ defined('_JEXEC') or die('Restricted access');
 
     <?php
 
-    foreach ( $this->encdck_encodetasks_entries as $entry ) {
-            $encdck_encodetasks_id = $entry->id;        ?>
-        <input type="checkbox" name="encdck_encodetasks_id" value="<?php echo $encdck_encodetasks_id; ?>" />
-
+    foreach ( $this->takes_entries as $entry ) {
+            $takes_id = $entry->id;        ?>
+        <input type="checkbox" name="takes_id" value="<?php echo $takes_id; ?>" />
+        
         <?php
         print_r($entry);
-        echo "<br />";
+            echo "<br />";
         ?>
         <div class="clr">&nbsp;</div><?php
     }

@@ -17,7 +17,7 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.controllerform');
 
 
-class RadeniumControllerEncdck_encodetasks extends JControllerForm
+class RadeniumControllerTakes extends JControllerForm
 {
 
 
@@ -32,11 +32,11 @@ class RadeniumControllerEncdck_encodetasks extends JControllerForm
     {
         if ($this->checkToken()) {
             $option = JFactory::getApplication()->input->get('option','string');
-            $model = $this->getModel("encdck_encodetasks");
+            $model = $this->getModel("takes");
             $data = JFactory::getApplication()->input->get('jform','', 'array');
             $model->save($data);
             
-            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=encdck_encodetasks&layout=default', false));
+            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=default', false));
         }
 
     }
@@ -46,11 +46,11 @@ class RadeniumControllerEncdck_encodetasks extends JControllerForm
     {
         if ($this->checkToken()) {
             $option = JFactory::getApplication()->input->get('option','string');
-            $model = $this->getModel("encdck_encodetasks");
+            $model = $this->getModel("takes");
             $data = JFactory::getApplication()->input->get('jform','', 'array');
-            $model->edit( JFactory::getApplication()->input->get("encdck_encodetasks_id"),$data );
+            $model->edit( JFactory::getApplication()->input->get("takes_id"),$data );
             
-            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=encdck_encodetasks&layout=default', false));
+            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=default', false));
         }
 
     }
@@ -61,9 +61,9 @@ class RadeniumControllerEncdck_encodetasks extends JControllerForm
         if ($this->checkToken()) {
             // Not sure what to all in this function. Basically the data could be retrieved by the view, like with new form.
             $option = JFactory::getApplication()->input->get('option','string');
-            $id = JFactory::getApplication()->input->get('encdck_encodetasks_id');
+            $id = JFactory::getApplication()->input->get('takes_id');
             
-            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=encdck_encodetasks&layout=edit&encdck_encodetasks_id='.$id, false));
+            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=edit&takes_id='.$id, false));
         }
 
     }
@@ -73,11 +73,11 @@ class RadeniumControllerEncdck_encodetasks extends JControllerForm
     {
         if ($this->checkToken()) {
             $option = JFactory::getApplication()->input->get('option','string');
-            $model = $this->getModel("encdck_encodetasks");
-            $id = JFactory::getApplication()->input->get('encdck_encodetasks_id');
+            $model = $this->getModel("takes");
+            $id = JFactory::getApplication()->input->get('takes_id');
             $model->delete($id);
             
-            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=encdck_encodetasks&layout=default', false));
+            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=default', false));
         }
 
     }
@@ -87,7 +87,7 @@ class RadeniumControllerEncdck_encodetasks extends JControllerForm
     {
         //
         // Do you want to override the default controller?
-        // $view = $this->getView("Encdck_encodetasks","html");
+        // $view = $this->getView("Takes","html");
         // $view->display();
         // Then comment the parent to be executed.
         // @attention: execution of parent overrides any view or layout variable set. 

@@ -11,7 +11,7 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
  		
-// JForm model description of Encdck_encodetasks
+// JForm model description of Takes
 
 
 // Include dependancy of the main model form
@@ -27,7 +27,7 @@ jimport('joomla.event.dispatcher');
  *
  * @since  0.0.1
  */
-class RadeniumModelEncdck_encodetasks extends JModelForm
+class RadeniumModelTakes extends JModelForm
 {
 		
     public function getForm($data = array(), $loadData = true)
@@ -36,7 +36,7 @@ class RadeniumModelEncdck_encodetasks extends JModelForm
         $app = JFactory::getApplication('site');
 		
         // Get the form.
-        $form = $this->loadForm('radenium.encdck_encodetasks', 'encdck_encodetasks', array('control' => 'jform', 'load_data' => true));
+        $form = $this->loadForm('radenium.takes', 'takes', array('control' => 'jform', 'load_data' => true));
         if (empty($form)) {
             return false;
         }
@@ -71,9 +71,10 @@ class RadeniumModelEncdck_encodetasks extends JModelForm
         $query = $db->getQuery(true);
         // Prepare table data:
         $columns = array(
-            vid
+            selectsource
+            , vid
             , aid
-            , prog_id_str
+            , files
             , format
             , publish
             , state
@@ -82,19 +83,20 @@ class RadeniumModelEncdck_encodetasks extends JModelForm
         );
 
         $values = array(
-            $db->quote($data["vid"])
+            intval($data["selectsource"])
+            , $db->quote($data["vid"])
             , $db->quote($data["aid"])
-            , $db->quote($data["prog_id_str"])
-            , intval($data["format"])
+            , $db->quote($data["files"])
+            , $db->quote($data["format"])
             , intval($data["publish"])
             , intval($data["state"])
             , intval($data["user_id"])
 
         );
-
+        
         // Prepare the insert query.
         $query
-            ->insert($db->quoteName( '#__radenium_encdck_encodetasks'))
+            ->insert($db->quoteName( '#__radenium_takes'))
             ->columns($db->quoteName( $columns))
             ->values(implode(',', $values));
         // Set the query using our newly populated query object and execute it.
@@ -121,10 +123,11 @@ class RadeniumModelEncdck_encodetasks extends JModelForm
         $query = $db->getQuery(true);
         // Prepare table data:
         $fields = array(
-            $db->quoteName('vid') . ' = ' . $db->quote($data["vid"])
+            $db->quoteName('selectsource') . ' = ' . intval($data["selectsource"])
+            , $db->quoteName('vid') . ' = ' . $db->quote($data["vid"])
             , $db->quoteName('aid') . ' = ' . $db->quote($data["aid"])
-            , $db->quoteName('prog_id_str') . ' = ' . $db->quote($data["prog_id_str"])
-            , $db->quoteName('format') . ' = ' . intval($data["format"])
+            , $db->quoteName('files') . ' = ' . $db->quote($data["files"])
+            , $db->quoteName('format') . ' = ' . $db->quote($data["format"])
             , $db->quoteName('publish') . ' = ' . intval($data["publish"])
             , $db->quoteName('state') . ' = ' . intval($data["state"])
             , $db->quoteName('user_id') . ' = ' . intval($data["user_id"])
@@ -136,7 +139,7 @@ class RadeniumModelEncdck_encodetasks extends JModelForm
             $db->quoteName('id') .' = '. $id
         );
         // Prepare the insert query.
-        $query->update($db->quoteName( '#__radenium_encdck_encodetasks'))
+        $query->update($db->quoteName( '#__radenium_takes'))
             ->set($fields)
 			->where($conditions);
         // Set the query using our newly populated query object and execute it...
@@ -159,7 +162,7 @@ class RadeniumModelEncdck_encodetasks extends JModelForm
         $query = $db->getQuery(true);
         // Select all:
         $query->select('*');
-        $query->from($db->quoteName('#__radenium_encdck_encodetasks'));
+        $query->from($db->quoteName('#__radenium_takes'));
         $db->setQuery($query);
         $db->execute();
 
@@ -177,10 +180,10 @@ class RadeniumModelEncdck_encodetasks extends JModelForm
     public function getEntry($id=false)
     {
         if ( ( $id == false )
-        && ( JFactory::getApplication()->input->get("encdck_encodetasks_id") != "" )
+        && ( JFactory::getApplication()->input->get("takes_id") != "" )
         )
         {
-            JFactory::getApplication()->input->get("encdck_encodetasks_id");
+            JFactory::getApplication()->input->get("takes_id");
         }
         if ( $id != false ) {
             // Get a db connection:
@@ -192,7 +195,7 @@ class RadeniumModelEncdck_encodetasks extends JModelForm
             $db->quoteName('id') . ' = '.$id
             );
             $query->select('*');
-            $query->from($db->quoteName('#__radenium_encdck_encodetasks'));
+            $query->from($db->quoteName('#__radenium_takes'));
             $query->where($conditions);
             $db->setQuery($query);
             $db->execute();
@@ -208,11 +211,11 @@ class RadeniumModelEncdck_encodetasks extends JModelForm
         
     /**
      * @name getEntry_Entry_Id
-     * @desc Gets an entry by the request variable $_REQUEST["encdck_encodetasks_id"] from the database.
+     * @desc Gets an entry by the request variable $_REQUEST["takes_id"] from the database.
      */
     public function getEntry_Entry_Id()
     {
-        $id = JFactory::getApplication()->input->get('encdck_encodetasks_id');
+        $id = JFactory::getApplication()->input->get('takes_id');
         if ( $id != false ) {
             $results = $this->getEntry( $id );
         }
@@ -239,7 +242,7 @@ class RadeniumModelEncdck_encodetasks extends JModelForm
         $conditions = array(
             $db->quoteName('id') . ' = '.$id
         );
-        $query->delete($db->quoteName('#__radenium_encdck_encodetasks'));
+        $query->delete($db->quoteName('#__radenium_takes'));
         $query->where($conditions);
         $db->setQuery($query);
         $db->execute();
@@ -250,44 +253,52 @@ class RadeniumModelEncdck_encodetasks extends JModelForm
 
         
     /**
-     * @name gettask
+     * @name gettake
      * @desc Function description.
      */
-    public function gettask()
+    public function gettake()
     {
         // Returns a particular fieldset to render as form. 
 
         // should return a form with only the fieldset 
 /*Array
 (
-    [name] => task
+    [name] => take
     [variables] => Array
         (
             [0] => Array
                 (
-                    [name] => vid
-                    [type] => text
-                    [label] => COM_RADENIUM_FIELD_TASK_VID
-                    [description] => COM_RADENIUM_FIELD_TASK_VID
+                    [name] => selectsource
+                    [type] => radio
+                    [label] => COM_RADENIUM_FIELD_TASK_SELECT_SOURCE
+                    [description] => COM_RADENIUM_FIELD_TASK_SELECT_SOURCE
                 )
 
             [1] => Array
                 (
-                    [name] => aid
-                    [type] => text
-                    [label] => COM_RADENIUM_FIELD_TASK_AID
-                    [description] => COM_RADENIUM_FIELD_TASK_AID
+                    [name] => vid
+                    [type] => videodevices
+                    [label] => COM_RADENIUM_FIELD_TASK_VID
+                    [description] => COM_RADENIUM_FIELD_TASK_VID
                 )
 
             [2] => Array
                 (
-                    [name] => prog_id_str
-                    [type] => text
-                    [label] => COM_RADENIUM_FIELD_TASK_PROG_ID_STR
-                    [description] => COM_RADENIUM_FIELD_TASK_PROG_ID_STR
+                    [name] => aid
+                    [type] => audiodevices
+                    [label] => COM_RADENIUM_FIELD_TASK_AID
+                    [description] => COM_RADENIUM_FIELD_TASK_AID
                 )
 
             [3] => Array
+                (
+                    [name] => files
+                    [type] => filesystem
+                    [label] => COM_RADENIUM_FIELD_TASK_AID
+                    [description] => COM_RADENIUM_FIELD_TASK_AID
+                )
+
+            [4] => Array
                 (
                     [name] => format
                     [type] => mediaformat
@@ -308,17 +319,17 @@ class RadeniumModelEncdck_encodetasks extends JModelForm
 
         
     /**
-     * @name getlivestreaming
+     * @name getlivepublish
      * @desc Function description.
      */
-    public function getlivestreaming()
+    public function getlivepublish()
     {
         // Returns a particular fieldset to render as form. 
 
         // should return a form with only the fieldset 
 /*Array
 (
-    [name] => livestreaming
+    [name] => livepublish
     [variables] => Array
         (
             [0] => Array
@@ -342,17 +353,17 @@ class RadeniumModelEncdck_encodetasks extends JModelForm
 
         
     /**
-     * @name getrunningtask
+     * @name getrunningtake
      * @desc Function description.
      */
-    public function getrunningtask()
+    public function getrunningtake()
     {
         // Returns a particular fieldset to render as form. 
 
         // should return a form with only the fieldset 
 /*Array
 (
-    [name] => runningtask
+    [name] => runningtake
     [variables] => Array
         (
             [0] => Array

@@ -13,12 +13,12 @@ defined('_JEXEC') or die('Restricted access');
  		
 ?>
 
-<div id="encdck_encodetasks_new">
-    <form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="radenium_encdck_encodetasks" name="radenium_encdck_encodetasks">
+<div id="takes_new">
+    <form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="radenium_takes" name="radenium_takes">
     <div class="form_rendered_container">
-        <h3><?php echo JText::_('LIVESTREAMING'); ?></h3>
+        <h3><?php echo JText::_('LIVEPUBLISH'); ?></h3>
         <div class="form_rendered_container_form">
-            <?php $this->form->renderFieldSet("livestreaming"); ?>
+            <?php $this->form->renderFieldSet("livepublish"); ?>
         </div>
     </div>
     

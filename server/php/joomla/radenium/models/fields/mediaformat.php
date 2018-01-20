@@ -22,16 +22,8 @@ class JFormFieldMediaformat extends JFormFieldList {
 	public function getOptions() {		
 		$list_options = array(
 		    "apple_hls" => "Apple HLS"
-		
-		
+		    , "yessodothis"=>"make new field for vid size"
 		);
-		
-		
-		//Using the options causes the values of the list to start with 0.
-		// Merge any additional options in the XML definition.
-		//$options = array_merge(parent::getOptions(), $templates);
-		//return $options;
-        //Now the ID correspond with the database id's
 
 		return $list_options;
 	}

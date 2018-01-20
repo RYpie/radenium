@@ -16,8 +16,8 @@ defined('_JEXEC') or die('Restricted access');
 JFormHelper::loadFieldClass('list');
 
 //https://docs.joomla.org/Creating_a_custom_form_field_type
-class JFormFieldEncdck_encodetasks extends JFormFieldList {
-	protected $type = 'Encdck_encodetasks';
+class JFormFieldFilesystem extends JFormFieldList {
+	protected $type = 'Filesystem';
 	
 	public function getOptions() {		
 		$list_options = array();
@@ -26,7 +26,7 @@ class JFormFieldEncdck_encodetasks extends JFormFieldList {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true);
-		$query->select('id,name')->from('`#__radenium_encdck_encodetasks`')->where('user_id = "'.$user->id.'"');
+		$query->select('id,name')->from('`#__radenium_encdck_mediadevices`')->where('type = "drive"');
 		$rows = $db->setQuery($query)->loadObjectlist();
 		
 		foreach($rows as $row){
@@ -43,7 +43,7 @@ class JFormFieldEncdck_encodetasks extends JFormFieldList {
 	}
 	
 	public function getLabel() {
-		return "Select Encdck_encodetasks";
+		return "Select File System";
 	}
 	
 	// getLabel() left out

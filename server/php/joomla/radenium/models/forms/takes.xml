@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<form name = "encdck_encodetasks">
-	<fieldset name="task">
+<form name = "takes">
+	<fieldset name="take">
 		<field
 			name="selectsource"
 			type="radio"
@@ -21,15 +21,16 @@
 		<field
 		    showon="selectsource:0"
 			name="aid"
-			type="text"
+			type="audiodevices"
 			label="COM_RADENIUM_FIELD_TASK_AID"
 			description="COM_RADENIUM_FIELD_TASK_AID"
 		/>
 		<field
-			name="prog_id_str"
-			type="text"
-			label="COM_RADENIUM_FIELD_TASK_PROG_ID_STR"
-			description="COM_RADENIUM_FIELD_TASK_PROG_ID_STR"
+		    showon="selectsource:1"
+			name="files"
+			type="filesystem"
+			label="COM_RADENIUM_FIELD_TASK_AID"
+			description="COM_RADENIUM_FIELD_TASK_AID"
 		/>
 		<field
 			name="format"
@@ -37,8 +38,14 @@
 			label="COM_RADENIUM_FIELD_TASK_FORMAT"
 			description="COM_RADENIUM_FIELD_TASK_FORMAT"
 		/>
+		<field
+			name="takedate"
+			type="calendar"
+			label="COM_RADENIUM_FIELD_TAKE_DATE"
+			description="COM_RADENIUM_FIELD_TAKE_DATE"
+		/>
 	</fieldset>
-    <fieldset name="livestreaming">
+    <fieldset name="livepublish">
 		<field
 			name="publish"
 			type="radio"
@@ -47,11 +54,11 @@
 			description="COM_RADENIUM_FIELD_TASK_PUBLISH"
 			required="true"
 			default="0">
-                <option value="0">Off</option>
+                <option value="0">Stop Publishing</option>
                 <option value="1">Go Live</option>
 		</field>
     </fieldset>
-	<fieldset name="runningtask">
+	<fieldset name="runningtake">
 		<field
 			name="state"
 			type="radio"
@@ -59,9 +66,10 @@
 			label="COM_RADENIUM_FIELD_TASK_STATE"
 			description="COM_RADENIUM_FIELD_TASK_STATE"
 			default="0">
-                <option value="0">Start</option>
-                <option value="1">Stop</option>
-                <option value="3">Finished</option>
+                <option value="0">New Take</option>
+                <option value="1">Take Started</option>
+                <option value="2">Stop Take</option>
+                <option value="3">Take Finished</option>
 		</field>
 	</fieldset>
     <fieldset name="hidden">

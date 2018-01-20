@@ -17,7 +17,7 @@ defined('_JEXEC') or die('Restricted access');
  *
  * @since  0.0.1
  */
-class RadeniumViewEncdck_encodetasks extends JViewLegacy
+class RadeniumViewTakes extends JViewLegacy
 {
 	function __construct()
 	{
@@ -27,7 +27,7 @@ class RadeniumViewEncdck_encodetasks extends JViewLegacy
 	}
 
 	/**
-	 * Display the Encdck_encodetasks view
+	 * Display the Takes view
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
@@ -37,7 +37,7 @@ class RadeniumViewEncdck_encodetasks extends JViewLegacy
 	{
 	    $this->setLayout(JFactory::getApplication()->input->get("layout"));
 		// Assign data to the view
-		$this->msg = 'Encdck_encodetasks message';
+		$this->msg = 'Takes message';
 
         switch( JFactory::getApplication()->input->get("layout") )
         {
@@ -50,21 +50,21 @@ class RadeniumViewEncdck_encodetasks extends JViewLegacy
                 $this->edit_data = $this->get("edit");
                 $this->form = $this->get("Form");
                 $this->entry_data = $this->get("Entry_Entry_Id");
-                $this->encdck_encodetasks_id = JFactory::getApplication()->input->get("encdck_encodetasks_id");
+                $this->takes_id = JFactory::getApplication()->input->get("takes_id");
                 break;
 
-            case "task":
-                $this->task_data = $this->get("task");
+            case "take":
+                $this->take_data = $this->get("take");
                 $this->form = $this->get("Form");
                 break;
 
-            case "livestreaming":
-                $this->livestreaming_data = $this->get("livestreaming");
+            case "livepublish":
+                $this->livepublish_data = $this->get("livepublish");
                 $this->form = $this->get("Form");
                 break;
 
-            case "runningtask":
-                $this->runningtask_data = $this->get("runningtask");
+            case "runningtake":
+                $this->runningtake_data = $this->get("runningtake");
                 $this->form = $this->get("Form");
                 break;
 
@@ -76,7 +76,7 @@ class RadeniumViewEncdck_encodetasks extends JViewLegacy
 
 
             default:
-                $this->encdck_encodetasks_entries = $this->get("AllEntries");
+                $this->takes_entries = $this->get("AllEntries");
                 break;
         }
 				

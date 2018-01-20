@@ -133,7 +133,10 @@ class FFmpegStreamProcess(object):
                  cb_Rdy     = None):
         
         self.options=options
-        self.options["filelocation"]=options["streamlocation"]+"/"+options["format"]+"/out"
+        #self.options["filelocation"]=options["streamlocation"]+"/"+options["format"]
+        #! earlier videos were stored in video characteristical directories: "apple_hls/..."
+        #! not anymore.
+        self.options["filelocation"]=options["streamlocation"]
         self.command=FFmpegCommand().getCommand(options)
         print(self.command)
 

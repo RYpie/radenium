@@ -49,6 +49,8 @@ except Exception as e:
 
 
 class mod_mediamuxer:
+    """ Muxer voor registering the combinations of audio and video devices to keep them occupied while encoding.
+    """
     def __init__(self):
         self.encprocesses = []
         self.mediadevices = mod_mediadevices()
@@ -119,6 +121,8 @@ class mod_mediamuxer:
             if str(key) == str(streamId):
                 print("Stopping ", streamId)
                 self.livemuxtable[key]["process"].stopStream()
+                """
+                    earlier we moved a directory, not anymore...
                 #! Creating a subdirectory for storing the stream
                 infilelocation=self.livemuxtable[key]["process"].filename()
                 dt = str( self.livemuxtable[key]["tstart"] )
@@ -129,7 +133,7 @@ class mod_mediamuxer:
                 #! Subdirectory format = /[start date]/[start time]/[fraction of seconds]
                 outfilelocation=infilelocation.replace("out/", dt)
                 shutil.move( infilelocation, outfilelocation )
-
+                """
 
     def shutdown(self):
         for key, value in self.livemuxtable.items():
