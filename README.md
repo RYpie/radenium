@@ -1,18 +1,16 @@
 ![GitHub license](https://img.shields.io/badge/license-GPL-blue.svg)
 
-# Introduction
-
-Working on something incredible huge here. Unfortunately I cannot tell you what, but it is opensource or so.
-Radenium is made to work on a mac, linux follows soon after.
-
-Radenium comprises a media devices multiplexer app built around ffmpeg. Well, built is quite a statement, I mean I am busy building it...
-
-
 # Radenium
 
-Radenium is currently a prototype of a prototype, just to be clear.
-Idea of Radenium is to control a video publishing platform using python and a Joomla! component.
-Currently it works on a mac, my mac to be clear. So due to its state, I assume you to have knowledge on python, Joomla! and mysql. Otherwise I would not put too much effort in this for now, check out in a while again, for I aim to add installation instructions and more complete installation packages for you to hook in.
+Idea of Radenium is to implement an HLS livestreaming application based on FFMPEG, wrapped by a python application, controlled via a Joomla! component. The python application interacts with the Joomla! component via the database. Python application can also be used standalone.
+
+Development status is prototype
+
+Idea is to run the application on a barebone PC and via a webadmin control the livestreaming that is being pushed to a website.
+
+Currently it works on a mac, my mac to be clear. Without knowledge on python, Joomla! and mysql I would not put too much effort in this for now.
+
+Aim is to add installation instructions and more complete installation packages for users to hook in.
 
 ## Installation
 
