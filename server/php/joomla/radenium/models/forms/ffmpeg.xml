@@ -10,7 +10,7 @@
 		/>
 		<field
 			name="command"
-			type="text"
+			type="textarea"
 			label="COM_RADENIUM_FIELD_FFMPEG_TEMPLATE_COMMAND_LABEL"
 			description="COM_RADENIUM_FIELD_FFMPEG_TEMPLATE_COMMAND_DESC"
 			required="true"

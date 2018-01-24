@@ -40,7 +40,7 @@
 		/>
 		<field
 			name="format"
-			type="mediaformat"
+			type="ffmpeg"
 			label="COM_RADENIUM_FIELD_TASK_FORMAT"
 			description="COM_RADENIUM_FIELD_TASK_FORMAT"
 		/>

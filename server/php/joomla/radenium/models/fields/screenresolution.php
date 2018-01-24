@@ -47,7 +47,7 @@ class JFormFieldScreenResolution extends JFormFieldList {
 	}
 	
 	public function getLabel() {
-		return "Select Live";
+		return "Select Screen Resolution";
 	}
 	
 	// getLabel() left out
