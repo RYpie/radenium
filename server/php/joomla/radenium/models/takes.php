@@ -55,7 +55,52 @@ class RadeniumModelTakes extends JModelForm
         return True;
     }
 
+    
+    private function startTake( $id, $data ) {
+        $noterminal = " </dev/null >/dev/null 2>ffmpeg.log & echo $!";
+        $ffmpeg = "/usr/local/bin/ffmpeg";
         
+        mkdir("/Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."", 0757);
+        $ffmpegcom = "-r 30 -f avfoundation -i 0:0 -pix_fmt yuv420p -s 640X320 -hls_flags round_durations -hls_time 3 -hls_init_time 3 /Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."/playlist.m3u8";
+        
+        ini_set('max_execution_time', 0);
+        
+        echo $ffmpeg." ".$ffmpegcom.$noterminal;
+
+        $pid = exec($ffmpeg." ".$ffmpegcom.$noterminal, $out);
+        
+        return $pid;
+    }
+    
+    private function stopTake( $pid ) {
+        if ( $pid > 0 ) {
+            $pid = exec("kill ".$pid, $out);
+        }
+        
+        return true;
+    }
+    private function setPid($id, $pid) {
+        // Get a db connection:
+        $db = JFactory::getDbo();
+        // Create a new query object:
+        $query = $db->getQuery(true);
+        // Prepare table data:
+        $fields = array(
+            $db->quoteName('pid') . ' = ' . intval($pid)
+        );
+       // Conditions for which records should be updated:
+        $conditions = array(
+            $db->quoteName('id') .' = '. $id
+        );
+        // Prepare the insert query.
+        $query->update($db->quoteName( '#__radenium_takes'))
+            ->set($fields)
+            ->where($conditions);
+        // Set the query using our newly populated query object and execute it...
+        $db->setQuery($query);
+        $db->execute();
+    }
+            
     /**
      * @name save
      * @desc Creates a new form entry in the database.
@@ -77,7 +122,7 @@ class RadeniumModelTakes extends JModelForm
             , files
             , resolution
             , format
-            , takedate
+            //, takedate
             , publish
             , state
             , pid
@@ -92,7 +137,7 @@ class RadeniumModelTakes extends JModelForm
             , intval($data["files"])
             , intval($data["resolution"])
             , intval($data["format"])
-            , $db->quote($data["takedate"])
+            //, $db->quote($data["takedate"])
             , intval($data["publish"])
             , intval($data["state"])
             , intval($data["pid"])
@@ -109,6 +154,13 @@ class RadeniumModelTakes extends JModelForm
         $db->setQuery($query);
         $db->execute();
 
+        
+        if ( intval($data["pid"]) < 1 ) {
+            $lastRowId = $db->insertid();
+            $data["pid"] = $this->startTake($lastRowId, $data);
+            $this->setPid($lastRowId, $data["pid"]);
+        }
+        
         return True;
     }
 
@@ -121,6 +173,11 @@ class RadeniumModelTakes extends JModelForm
      */
     public function edit($id, $data)
     {
+        
+        if ( intval($data["state"]) == 2 ) {
+            $this->stopTake($data["pid"]);
+        }
+        
         //Set the joomla platform user id:
         $data["user_id"] = JFactory::getUser()->id;
         // Get a db connection:
@@ -135,14 +192,14 @@ class RadeniumModelTakes extends JModelForm
             , $db->quoteName('files') . ' = ' . intval($data["files"])
             , $db->quoteName('resolution') . ' = ' . intval($data["resolution"])
             , $db->quoteName('format') . ' = ' . intval($data["format"])
-            , $db->quoteName('takedate') . ' = ' . $db->quote($data["takedate"])
+            //, $db->quoteName('takedate') . ' = ' . $db->quote($data["takedate"])
             , $db->quoteName('publish') . ' = ' . intval($data["publish"])
             , $db->quoteName('state') . ' = ' . intval($data["state"])
             , $db->quoteName('pid') . ' = ' . intval($data["pid"])
             , $db->quoteName('user_id') . ' = ' . intval($data["user_id"])
 
         );
-
+        
        // Conditions for which records should be updated:
         $conditions = array(
             $db->quoteName('id') .' = '. $id
