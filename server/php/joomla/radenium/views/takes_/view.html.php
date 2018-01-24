@@ -4,7 +4,7 @@
  * @package     Joomla.Site
  * @subpackage  com_radenium
  *
- * @copyright   Copyright (C) 2017 Andries Bron, Drachten, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2017 Andries Bron, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
  		

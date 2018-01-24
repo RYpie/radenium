@@ -4,7 +4,7 @@
  * @package     Joomla.Site
  * @subpackage  com_radenium
  *
- * @copyright   Copyright (C) 2017 Andries Bron, Drachten, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2017 Andries Bron, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
  		
@@ -16,9 +16,9 @@ defined('_JEXEC') or die('Restricted access');
 <div id="takes_new">
     <form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="radenium_takes" name="radenium_takes">
     <div class="form_rendered_container">
-        <h3><?php echo JText::_('HIDDEN'); ?></h3>
+        <h3><?php echo JText::_('RUNNINGTAKE'); ?></h3>
         <div class="form_rendered_container_form">
-            <?php $this->form->renderFieldSet("hidden"); ?>
+            <?php $this->form->renderFieldSet("runningtake"); ?>
         </div>
     </div>
     

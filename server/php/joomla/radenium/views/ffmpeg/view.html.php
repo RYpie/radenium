@@ -17,7 +17,7 @@ defined('_JEXEC') or die('Restricted access');
  *
  * @since  0.0.1
  */
-class RadeniumViewTakes extends JViewLegacy
+class RadeniumViewFfmpeg extends JViewLegacy
 {
 	function __construct()
 	{
@@ -27,7 +27,7 @@ class RadeniumViewTakes extends JViewLegacy
 	}
 
 	/**
-	 * Display the Takes view
+	 * Display the Ffmpeg view
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
@@ -37,7 +37,7 @@ class RadeniumViewTakes extends JViewLegacy
 	{
 	    $this->setLayout(JFactory::getApplication()->input->get("layout"));
 		// Assign data to the view
-		$this->msg = 'Takes message';
+		$this->msg = 'Ffmpeg message';
 
         switch( JFactory::getApplication()->input->get("layout") )
         {
@@ -50,33 +50,18 @@ class RadeniumViewTakes extends JViewLegacy
                 $this->edit_data = $this->get("edit");
                 $this->form = $this->get("Form");
                 $this->entry_data = $this->get("Entry_Entry_Id");
-                $this->takes_id = JFactory::getApplication()->input->get("takes_id");
+                $this->ffmpeg_id = JFactory::getApplication()->input->get("ffmpeg_id");
                 break;
 
-            case "take":
-                $this->take_data = $this->get("take");
-                $this->form = $this->get("Form");
-                break;
-
-            case "livepublish":
-                $this->livepublish_data = $this->get("livepublish");
-                $this->form = $this->get("Form");
-                break;
-
-            case "runningtake":
-                $this->runningtake_data = $this->get("runningtake");
-                $this->form = $this->get("Form");
-                break;
-
-            case "hidden":
-                $this->hidden_data = $this->get("hidden");
+            case "commands":
+                $this->commands_data = $this->get("commands");
                 $this->form = $this->get("Form");
                 break;
 
 
 
             default:
-                $this->takes_entries = $this->get("AllEntries");
+                $this->ffmpeg_entries = $this->get("AllEntries");
                 break;
         }
 				

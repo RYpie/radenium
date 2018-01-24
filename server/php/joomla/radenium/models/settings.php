@@ -11,7 +11,7 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
  		
-// JForm model description of Takes
+// JForm model description of Settings
 
 
 // Include dependancy of the main model form
@@ -27,7 +27,7 @@ jimport('joomla.event.dispatcher');
  *
  * @since  0.0.1
  */
-class RadeniumModelTakes extends JModelForm
+class RadeniumModelSettings extends JModelForm
 {
 		
     public function getForm($data = array(), $loadData = true)
@@ -36,7 +36,7 @@ class RadeniumModelTakes extends JModelForm
         $app = JFactory::getApplication('site');
 		
         // Get the form.
-        $form = $this->loadForm('radenium.takes', 'takes', array('control' => 'jform', 'load_data' => true));
+        $form = $this->loadForm('radenium.settings', 'settings', array('control' => 'jform', 'load_data' => true));
         if (empty($form)) {
             return false;
         }
@@ -71,38 +71,30 @@ class RadeniumModelTakes extends JModelForm
         $query = $db->getQuery(true);
         // Prepare table data:
         $columns = array(
-            selectsource
-            , vid
-            , aid
-            , files
-            , resolution
-            , format
-            , takedate
-            , publish
-            , state
-            , pid
+            name
+            , video_out_size
+            , frame_rate
+            , remote_url
+            , remote_user
+            , remote_password
             , user_id
 
         );
 
         $values = array(
-            intval($data["selectsource"])
-            , intval($data["vid"])
-            , intval($data["aid"])
-            , intval($data["files"])
-            , intval($data["resolution"])
-            , intval($data["format"])
-            , $db->quote($data["takedate"])
-            , intval($data["publish"])
-            , intval($data["state"])
-            , intval($data["pid"])
+            $db->quote($data["name"])
+            , $db->quote($data["video_out_size"])
+            , intval($data["frame_rate"])
+            , $db->quote($data["remote_url"])
+            , $db->quote($data["remote_user"])
+            , $db->quote($data["remote_password"])
             , intval($data["user_id"])
 
         );
 
         // Prepare the insert query.
         $query
-            ->insert($db->quoteName( '#__radenium_takes'))
+            ->insert($db->quoteName( '#__radenium_settings'))
             ->columns($db->quoteName( $columns))
             ->values(implode(',', $values));
         // Set the query using our newly populated query object and execute it.
@@ -129,16 +121,12 @@ class RadeniumModelTakes extends JModelForm
         $query = $db->getQuery(true);
         // Prepare table data:
         $fields = array(
-            $db->quoteName('selectsource') . ' = ' . intval($data["selectsource"])
-            , $db->quoteName('vid') . ' = ' . intval($data["vid"])
-            , $db->quoteName('aid') . ' = ' . intval($data["aid"])
-            , $db->quoteName('files') . ' = ' . intval($data["files"])
-            , $db->quoteName('resolution') . ' = ' . intval($data["resolution"])
-            , $db->quoteName('format') . ' = ' . intval($data["format"])
-            , $db->quoteName('takedate') . ' = ' . $db->quote($data["takedate"])
-            , $db->quoteName('publish') . ' = ' . intval($data["publish"])
-            , $db->quoteName('state') . ' = ' . intval($data["state"])
-            , $db->quoteName('pid') . ' = ' . intval($data["pid"])
+            $db->quoteName('name') . ' = ' . $db->quote($data["name"])
+            , $db->quoteName('video_out_size') . ' = ' . $db->quote($data["video_out_size"])
+            , $db->quoteName('frame_rate') . ' = ' . intval($data["frame_rate"])
+            , $db->quoteName('remote_url') . ' = ' . $db->quote($data["remote_url"])
+            , $db->quoteName('remote_user') . ' = ' . $db->quote($data["remote_user"])
+            , $db->quoteName('remote_password') . ' = ' . $db->quote($data["remote_password"])
             , $db->quoteName('user_id') . ' = ' . intval($data["user_id"])
 
         );
@@ -148,7 +136,7 @@ class RadeniumModelTakes extends JModelForm
             $db->quoteName('id') .' = '. $id
         );
         // Prepare the insert query.
-        $query->update($db->quoteName( '#__radenium_takes'))
+        $query->update($db->quoteName( '#__radenium_settings'))
             ->set($fields)
 			->where($conditions);
         // Set the query using our newly populated query object and execute it...
@@ -171,7 +159,7 @@ class RadeniumModelTakes extends JModelForm
         $query = $db->getQuery(true);
         // Select all:
         $query->select('*');
-        $query->from($db->quoteName('#__radenium_takes'));
+        $query->from($db->quoteName('#__radenium_settings'));
         $db->setQuery($query);
         $db->execute();
 
@@ -188,9 +176,9 @@ class RadeniumModelTakes extends JModelForm
     public function getAllEntriesById()
     {
         $results = array();
-        if ( JFactory::getApplication()->input->get("takes_id") != "" )
+        if ( JFactory::getApplication()->input->get("settings_id") != "" )
         {
-            $id = JFactory::getApplication()->input->get("takes_id");
+            $id = JFactory::getApplication()->input->get("settings_id");
             $conditions = array(
                 $db->quoteName('id') . ' = '.$id
             );
@@ -200,7 +188,7 @@ class RadeniumModelTakes extends JModelForm
             $query = $db->getQuery(true);
             // Select all:
             $query->select('*');
-            $query->from($db->quoteName('#__radenium_takes'));
+            $query->from($db->quoteName('#__radenium_settings'));
             $query->where($conditions);
             $db->setQuery($query);
             $db->execute();
@@ -220,10 +208,10 @@ class RadeniumModelTakes extends JModelForm
     public function getEntry($id=false)
     {
         if ( ( $id == false )
-        && ( JFactory::getApplication()->input->get("takes_id") != "" )
+        && ( JFactory::getApplication()->input->get("settings_id") != "" )
         )
         {
-            $id = JFactory::getApplication()->input->get("takes_id");
+            $id = JFactory::getApplication()->input->get("settings_id");
         }
         if ( $id != false ) {
             // Get a db connection:
@@ -235,7 +223,7 @@ class RadeniumModelTakes extends JModelForm
             $db->quoteName('id') . ' = '.$id
             );
             $query->select('*');
-            $query->from($db->quoteName('#__radenium_takes'));
+            $query->from($db->quoteName('#__radenium_settings'));
             $query->where($conditions);
             $db->setQuery($query);
             $db->execute();
@@ -251,11 +239,11 @@ class RadeniumModelTakes extends JModelForm
         
     /**
      * @name getEntry_Entry_Id
-     * @desc Gets an entry by the request variable $_REQUEST["takes_id"] from the database.
+     * @desc Gets an entry by the request variable $_REQUEST["settings_id"] from the database.
      */
     public function getEntry_Entry_Id()
     {
-        $id = JFactory::getApplication()->input->get('takes_id');
+        $id = JFactory::getApplication()->input->get('settings_id');
         if ( $id != false ) {
             $results = $this->getEntry( $id );
         }
@@ -282,7 +270,7 @@ class RadeniumModelTakes extends JModelForm
         $conditions = array(
             $db->quoteName('id') . ' = '.$id
         );
-        $query->delete($db->quoteName('#__radenium_takes'));
+        $query->delete($db->quoteName('#__radenium_settings'));
         $query->where($conditions);
         $db->setQuery($query);
         $db->execute();
@@ -293,149 +281,117 @@ class RadeniumModelTakes extends JModelForm
 
         
     /**
-     * @name gettake
+     * @name getchannel
      * @desc Function description.
      */
-    public function gettake()
+    public function getchannel()
     {
         // Returns a particular fieldset to render as form. 
 
         // should return a form with only the fieldset 
 /*Array
 (
-    [name] => take
+    [name] => channel
     [variables] => Array
         (
             [0] => Array
                 (
-                    [name] => selectsource
-                    [type] => radio
-                    [label] => COM_RADENIUM_FIELD_TASK_SELECT_SOURCE
-                    [description] => COM_RADENIUM_FIELD_TASK_SELECT_SOURCE
+                    [name] => name
+                    [type] => text
+                    [label] => COM_RADENIUM_FIELD_SETTINGS_CHANNEL_NAME_LBL
+                    [description] => COM_RADENIUM_FIELD_SETTINGS_CHANNEL_NAME_DESC
+                )
+
+        )
+
+)
+
+*/
+
+        
+
+        return True;
+    }
+
+        
+    /**
+     * @name getffmpeg
+     * @desc Function description.
+     */
+    public function getffmpeg()
+    {
+        // Returns a particular fieldset to render as form. 
+
+        // should return a form with only the fieldset 
+/*Array
+(
+    [name] => ffmpeg
+    [variables] => Array
+        (
+            [0] => Array
+                (
+                    [name] => video_out_size
+                    [type] => text
+                    [label] => COM_RADENIUM_FIELD_SETTINGS_FFMPEG_VOUT_SIZE_LABEL
+                    [description] => COM_RADENIUM_FIELD_SETTINGS_FFMPEG_VOUT_SIZE_DESC
                 )
 
             [1] => Array
                 (
-                    [name] => vid
-                    [type] => videodevices
-                    [label] => COM_RADENIUM_FIELD_TASK_VID
-                    [description] => COM_RADENIUM_FIELD_TASK_VID
+                    [name] => frame_rate
+                    [type] => number
+                    [label] => COM_RADENIUM_FIELD_SETTINGS_FFMPEG_FRAME_RATE_LABEL
+                    [description] => COM_RADENIUM_FIELD_SETTINGS_FFMPEG_FRAME_RATE_NAME_DESC
+                )
+
+        )
+
+)
+
+*/
+
+        
+
+        return True;
+    }
+
+        
+    /**
+     * @name getremote
+     * @desc Function description.
+     */
+    public function getremote()
+    {
+        // Returns a particular fieldset to render as form. 
+
+        // should return a form with only the fieldset 
+/*Array
+(
+    [name] => remote
+    [variables] => Array
+        (
+            [0] => Array
+                (
+                    [name] => remote_url
+                    [type] => text
+                    [label] => COM_RADENIUM_FIELD_SETTINGS_REMOTE_URL_LBL
+                    [description] => COM_RADENIUM_FIELD_SETTINGS_REMOTE_URL_DESC
+                )
+
+            [1] => Array
+                (
+                    [name] => remote_user
+                    [type] => text
+                    [label] => COM_RADENIUM_FIELD_SETTINGS_REMOTE_USER_LBL
+                    [description] => COM_RADENIUM_FIELD_SETTINGS_REMOTE_USER_DESC
                 )
 
             [2] => Array
                 (
-                    [name] => aid
-                    [type] => audiodevices
-                    [label] => COM_RADENIUM_FIELD_TASK_AID
-                    [description] => COM_RADENIUM_FIELD_TASK_AID
-                )
-
-            [3] => Array
-                (
-                    [name] => files
-                    [type] => filesystem
-                    [label] => COM_RADENIUM_FIELD_TASK_AID
-                    [description] => COM_RADENIUM_FIELD_TASK_AID
-                )
-
-            [4] => Array
-                (
-                    [name] => resolution
-                    [type] => screenresolution
-                    [label] => COM_RADENIUM_FIELD_TASK_SCREEN_RESOLUTION
-                    [description] => COM_RADENIUM_FIELD_TASK_SCREEN_RESOLUTION
-                )
-
-            [5] => Array
-                (
-                    [name] => format
-                    [type] => mediaformat
-                    [label] => COM_RADENIUM_FIELD_TASK_FORMAT
-                    [description] => COM_RADENIUM_FIELD_TASK_FORMAT
-                )
-
-            [6] => Array
-                (
-                    [name] => takedate
-                    [type] => calendar
-                    [label] => COM_RADENIUM_FIELD_TAKE_DATE
-                    [description] => COM_RADENIUM_FIELD_TAKE_DATE
-                )
-
-        )
-
-)
-
-*/
-
-        
-
-        return True;
-    }
-
-        
-    /**
-     * @name getlivepublish
-     * @desc Function description.
-     */
-    public function getlivepublish()
-    {
-        // Returns a particular fieldset to render as form. 
-
-        // should return a form with only the fieldset 
-/*Array
-(
-    [name] => livepublish
-    [variables] => Array
-        (
-            [0] => Array
-                (
-                    [name] => publish
-                    [type] => radio
-                    [label] => COM_RADENIUM_FIELD_TASK_PUBLISH
-                    [description] => COM_RADENIUM_FIELD_TASK_PUBLISH
-                )
-
-        )
-
-)
-
-*/
-
-        
-
-        return True;
-    }
-
-        
-    /**
-     * @name getrunningtake
-     * @desc Function description.
-     */
-    public function getrunningtake()
-    {
-        // Returns a particular fieldset to render as form. 
-
-        // should return a form with only the fieldset 
-/*Array
-(
-    [name] => runningtake
-    [variables] => Array
-        (
-            [0] => Array
-                (
-                    [name] => state
-                    [type] => radio
-                    [label] => COM_RADENIUM_FIELD_TASK_STATE
-                    [description] => COM_RADENIUM_FIELD_TASK_STATE
-                )
-
-            [1] => Array
-                (
-                    [name] => pid
-                    [type] => number
-                    [label] => COM_RADENIUM_FIELD_TASK_PID
-                    [description] => COM_RADENIUM_FIELD_TASK_PID
+                    [name] => remote_password
+                    [type] => text
+                    [label] => COM_RADENIUM_FIELD_SETTINGS_REMOTE_PASSWORD_LBL
+                    [description] => COM_RADENIUM_FIELD_SETTINGS_REMOTE_PASSWORD_DESC
                 )
 
         )

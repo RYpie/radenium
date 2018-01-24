@@ -16,8 +16,8 @@ defined('_JEXEC') or die('Restricted access');
 JFormHelper::loadFieldClass('list');
 
 //https://docs.joomla.org/Creating_a_custom_form_field_type
-class JFormFieldTakes extends JFormFieldList {
-	protected $type = 'Takes';
+class JFormFieldSettings extends JFormFieldList {
+	protected $type = 'Settings';
 	
 	public function getOptions() {		
 		$list_options = array();
@@ -26,7 +26,7 @@ class JFormFieldTakes extends JFormFieldList {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true);
-		$query->select('id,name')->from('`#__radenium_takes`')->where('user_id = "'.$user->id.'"');
+		$query->select('id,name')->from('`#__radenium_settings`')->where('user_id = "'.$user->id.'"');
 		$rows = $db->setQuery($query)->loadObjectlist();
 		
 		foreach($rows as $row){
@@ -43,7 +43,7 @@ class JFormFieldTakes extends JFormFieldList {
 	}
 	
 	public function getLabel() {
-		return "Select Takes";
+		return "Select Settings";
 	}
 	
 	// getLabel() left out

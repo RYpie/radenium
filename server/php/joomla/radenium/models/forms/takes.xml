@@ -33,6 +33,12 @@
 			description="COM_RADENIUM_FIELD_TASK_AID"
 		/>
 		<field
+			name="resolution"
+			type="screenresolution"
+			label="COM_RADENIUM_FIELD_TASK_SCREEN_RESOLUTION"
+			description="COM_RADENIUM_FIELD_TASK_SCREEN_RESOLUTION"
+		/>
+		<field
 			name="format"
 			type="mediaformat"
 			label="COM_RADENIUM_FIELD_TASK_FORMAT"
@@ -71,6 +77,12 @@
                 <option value="2">Stop Take</option>
                 <option value="3">Take Finished</option>
 		</field>
+		<field
+			name="pid"
+			type="number"
+			label="COM_RADENIUM_FIELD_TASK_PID"
+			description="COM_RADENIUM_FIELD_TASK_PID"
+		/>
 	</fieldset>
     <fieldset name="hidden">
         <field

@@ -17,7 +17,7 @@ defined('_JEXEC') or die('Restricted access');
  *
  * @since  0.0.1
  */
-class RadeniumViewTakes extends JViewLegacy
+class RadeniumViewSettings extends JViewLegacy
 {
 	function __construct()
 	{
@@ -27,7 +27,7 @@ class RadeniumViewTakes extends JViewLegacy
 	}
 
 	/**
-	 * Display the Takes view
+	 * Display the Settings view
 	 *
 	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
 	 *
@@ -37,7 +37,7 @@ class RadeniumViewTakes extends JViewLegacy
 	{
 	    $this->setLayout(JFactory::getApplication()->input->get("layout"));
 		// Assign data to the view
-		$this->msg = 'Takes message';
+		$this->msg = 'Settings message';
 
         switch( JFactory::getApplication()->input->get("layout") )
         {
@@ -50,21 +50,21 @@ class RadeniumViewTakes extends JViewLegacy
                 $this->edit_data = $this->get("edit");
                 $this->form = $this->get("Form");
                 $this->entry_data = $this->get("Entry_Entry_Id");
-                $this->takes_id = JFactory::getApplication()->input->get("takes_id");
+                $this->settings_id = JFactory::getApplication()->input->get("settings_id");
                 break;
 
-            case "take":
-                $this->take_data = $this->get("take");
+            case "channel":
+                $this->channel_data = $this->get("channel");
                 $this->form = $this->get("Form");
                 break;
 
-            case "livepublish":
-                $this->livepublish_data = $this->get("livepublish");
+            case "ffmpeg":
+                $this->ffmpeg_data = $this->get("ffmpeg");
                 $this->form = $this->get("Form");
                 break;
 
-            case "runningtake":
-                $this->runningtake_data = $this->get("runningtake");
+            case "remote":
+                $this->remote_data = $this->get("remote");
                 $this->form = $this->get("Form");
                 break;
 
@@ -76,7 +76,7 @@ class RadeniumViewTakes extends JViewLegacy
 
 
             default:
-                $this->takes_entries = $this->get("AllEntries");
+                $this->settings_entries = $this->get("AllEntries");
                 break;
         }
 				

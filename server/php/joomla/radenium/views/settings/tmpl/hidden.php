@@ -13,8 +13,8 @@ defined('_JEXEC') or die('Restricted access');
  		
 ?>
 
-<div id="takes_new">
-    <form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="radenium_takes" name="radenium_takes">
+<div id="settings_new">
+    <form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="radenium_settings" name="radenium_settings">
     <div class="form_rendered_container">
         <h3><?php echo JText::_('HIDDEN'); ?></h3>
         <div class="form_rendered_container_form">

@@ -4,7 +4,7 @@
  * @package     Joomla.Site
  * @subpackage  com_radenium
  *
- * @copyright   Copyright (C) 2017 Andries Bron, Drachten, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2017 Andries Bron, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
  		
@@ -14,6 +14,32 @@ defined('_JEXEC') or die('Restricted access');
 ?>
 
         <?php 
+/*
+echo "<pre>";
+print_r( $this->live_now ); 
+echo "<h2>Media</h2>";
+print_r($this->media);
+echo "</pre>";
+
+foreach($this->media["media"] as $m ) {
+echo "<div>";
+//echo "<video controls width=\"320\" height=\"240\">";
+echo "<video controls>";
+echo "  <source src=\"".$m."\" type=\"video/mp4\">";
+echo "</video>";
+echo "</div>";
+}
+*/
+//print_r($this->entry_data[0]);
+$vidurl = "media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/playlist.m3u8";
+//echo $vidurl;
+echo "<a href=\"".$vidurl."\">".$vidurl."</a>";
+echo "<div>";
+//echo "<video controls width=\"320\" height=\"240\">";
+echo "<video controls>";
+echo "  <source src=\"".$vidurl."\" type=\"video/mp4\">";
+echo "</video>";
+echo "</div>";
 
 $xml = $this->form->getXml();
 foreach ( $xml->fieldset as $f ) {
@@ -67,6 +93,8 @@ foreach( $this->entry_data[0] as $key => $val )
     <br />
 
     <?php echo JHtml::_('form.token'); ?>
+    
+    <input type="hidden" name="view" value="takes" />
     <input type="hidden" name="task" value="modify" />
     <input type="hidden" name="takes_id" value="<?php echo $this->takes_id; ?>" />
     <br />
