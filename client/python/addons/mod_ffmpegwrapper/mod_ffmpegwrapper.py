@@ -138,7 +138,7 @@ class FFmpegStreamProcess(object):
         #! not anymore.
         self.options["filelocation"]=options["streamlocation"]
         self.command=FFmpegCommand().getCommand(options)
-        print(self.command)
+        print(" ".join(self.command))
 
         self.terminateMyself = False
         self.myProcessStopped = False
