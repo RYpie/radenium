@@ -1,6 +1,6 @@
 ![GitHub license](https://img.shields.io/badge/license-GPL-blue.svg)
 
-# Radenium
+# Welcome To Radenium, Home Of The Great
 
 Idea of Radenium is to implement an HLS livestreaming application based on FFMPEG, wrapped by a python application, controlled via a Joomla! component. The python application interacts with the Joomla! component via the database. Python application can also be used standalone.
 
