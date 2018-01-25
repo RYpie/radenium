@@ -20,7 +20,8 @@ jimport('joomla.application.component.modelform');
 jimport('joomla.application.component.modelitem');
 // Include dependancy of the dispatcher
 jimport('joomla.event.dispatcher');
-				
+
+include_once("components/com_radenium/models/phpffmpeg.php");		
 				
 /**
  * Radenium Model Project
@@ -29,7 +30,8 @@ jimport('joomla.event.dispatcher');
  */
 class RadeniumModelSystemdevices extends JModelForm
 {
-		
+	private $ffmpeg;
+	
     public function getForm($data = array(), $loadData = true)
     {
 		
@@ -52,30 +54,14 @@ class RadeniumModelSystemdevices extends JModelForm
     {
         // Construct the parent
         parent::__construct();
-        
-        $this->registerSystemDevices();
+        $this->ffmpeg = new RadeniumModelPhpffmpeg();
+        echo getcwd();
+        echo $this->ffmpeg->getMsg();
+        $this->ffmpeg->getSystemDevices();
         return True;
     }
 
-    public function registerSystemDevices() {
-        //ini_set('max_execution_time', 0);
-        $noterminal = " </dev/null >/dev/null 2>python.log & echo $!";
-        $noterminal = " </dev/null >/dev/null 2>python.log &";
-        //$result = exec("python components/com_radenium/models/python/getsystemdevices.py".$noterminal, $out);
-        //$result = exec("/usr/local/bin/python3.6 components/com_radenium/models/python/getsystemdevices.py".$noterminal, $out);
 
-//"/usr/local/bin/ffmpeg", "-f", "avfoundation", "-list_devices", "true", "-i", ""
-        $result = shell_exec("/usr/local/bin/ffmpeg -f avfoundation -list_devices true -i \"\"");
-echo exec('whoami');
-echo exec("/usr/local/bin/ffmpeg -f avfoundation -list_devices true -i \"\"", $out);
-        //$result = exec("pwd", $out);
-        print_r($result);
-        echo "<hr />";
-        print_r($out);
-        die;
-        return $pid;
-        
-    }
     /**
      * @name save
      * @desc Creates a new form entry in the database.
