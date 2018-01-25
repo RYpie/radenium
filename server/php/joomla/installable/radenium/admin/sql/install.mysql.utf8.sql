@@ -68,9 +68,9 @@ CREATE TABLE `#__radenium_takes` (
   `vid` int(11) NOT NULL,
   `aid` int(11) NOT NULL,
   `files` int(11) NOT NULL,
-  `resolution` int(11) NOT NULL,
+  `resolution` varchar(20) NOT NULL,
   `format` int(11) NOT NULL,
-  `takedate` text NOT NULL,
+  `takedate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `publish` int(11) NOT NULL,
   `state` int(11) NOT NULL,
   `pid` int(11) NOT NULL,
@@ -82,3 +82,24 @@ CREATE TABLE `#__radenium_takes` (
 --
 ALTER TABLE `#__radenium_takes`
   ADD PRIMARY KEY (`id`);
+
+DROP TABLE IF EXISTS `#__radenium_systemdevices`;
+CREATE TABLE `#__radenium_systemdevices` (
+  `id` int(11) NOT NULL,
+  `name` text NOT NULL,
+  `type` text NOT NULL,
+  `idstr` text NOT NULL,
+  `sysid` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Indexes for table `#__radenium_systemdevices`
+--
+ALTER TABLE `#__radenium_systemdevices`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for table `#__radenium_systemdevices`
+--
+ALTER TABLE `#__radenium_systemdevices`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
