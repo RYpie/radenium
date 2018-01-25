@@ -2,13 +2,13 @@
 
 # Welcome To Radenium, Home Of The Great
 
-Idea of Radenium is to implement an HLS livestreaming application based on FFMPEG, wrapped by a python application, controlled via a Joomla! component. The python application interacts with the Joomla! component via the database. Python application can also be used standalone.
+Idea of Radenium is to implement an HLS livestreaming application based on FFMPEG, wrapped by a python application.
 
-Development status is prototype
+Development status is prototype.
 
 Idea is to run the application on a barebone PC and via a webadmin control the livestreaming that is being pushed to a website.
 
-Currently it works on a mac, my mac to be clear. Without knowledge on python, Joomla! and mysql I would not put too much effort in this for now.
+Currently it works on a mac, my mac to be clear. Without knowledge on python and mysql I would not put too much effort in this for now.
 
 Aim is to add installation instructions and more complete installation packages for users to hook in.
 
@@ -32,8 +32,6 @@ Download mysql-connector-python-2.0.4 and cd yourself into the package directory
 @todo
 
 ### All platforms
-- Download and install a webserver, preferably XAMP, MAMP or a NGINX solution with MYSQL
-- Download and install Joomla! (http://www.joomla.org)
 - Modify mod_settings.py in the addons/mod_setting directory
 - Download radenium and follow instruction in chapter Python client.
 
@@ -49,13 +47,6 @@ Check it out, either run:
 - Press 's' and ENTER should stop the livestream.
 
 - Or run the encoderdeck_app or use the muxer in mod_mediadevices.
-
-## PHP Joomla! server
-Joomla package is intended to be used on the same system as where the python is running.
-If you are able to install it, add a menu, the default menu of radenium encoder task. 
-Next add a task of which you can find an example in the python addons/app_eventhandler
-
-
 
 
 Roadmap:
