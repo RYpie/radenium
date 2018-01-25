@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form name = "settings">
+    <fieldset name="channel">
+		<field
+			name="name"
+			type="text"
+			label="COM_RADENIUM_FIELD_SETTINGS_CHANNEL_NAME_LBL"
+			description="COM_RADENIUM_FIELD_SETTINGS_CHANNEL_NAME_DESC"
+		/>
+	</fieldset>
+	<fieldset name="ffmpeg">
+		<field
+			name="video_out_size"
+			type="text"
+			label="COM_RADENIUM_FIELD_SETTINGS_FFMPEG_VOUT_SIZE_LABEL"
+			description="COM_RADENIUM_FIELD_SETTINGS_FFMPEG_VOUT_SIZE_DESC"
+			required="true"
+		/>
+		<field
+			name="frame_rate"
+			type="number"
+			min="5"
+			max="30"
+			step="1"
+			label="COM_RADENIUM_FIELD_SETTINGS_FFMPEG_FRAME_RATE_LABEL"
+			description="COM_RADENIUM_FIELD_SETTINGS_FFMPEG_FRAME_RATE_NAME_DESC"
+			required="true"
+		/>
+	</fieldset>
+    <fieldset name="remote">
+		<field
+			name="remote_url"
+			type="text"
+			label="COM_RADENIUM_FIELD_SETTINGS_REMOTE_URL_LBL"
+			description="COM_RADENIUM_FIELD_SETTINGS_REMOTE_URL_DESC"
+		/>
+		<field
+			name="remote_user"
+			type="text"
+			label="COM_RADENIUM_FIELD_SETTINGS_REMOTE_USER_LBL"
+			description="COM_RADENIUM_FIELD_SETTINGS_REMOTE_USER_DESC"
+		/>
+		<field
+			name="remote_password"
+			type="text"
+			label="COM_RADENIUM_FIELD_SETTINGS_REMOTE_PASSWORD_LBL"
+			description="COM_RADENIUM_FIELD_SETTINGS_REMOTE_PASSWORD_DESC"
+		/>
+	</fieldset>
+    <fieldset name="hidden">
+        <field 
+            name="user_id" 
+            type="hidden" />
+    </fieldset>
+</form>
