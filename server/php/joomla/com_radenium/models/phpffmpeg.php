@@ -37,8 +37,33 @@ class RadeniumModelPhpffmpeg extends JModelItem
 		return $this->message;
 	}
 	
+	public function startTake( $id, $data, $devices ) {
+		
+		$noterminal = " </dev/null >/dev/null 2>ffmpeg.log & echo $!";
+		$ffmpeg = "/usr/local/bin/ffmpeg";
+		
+		mkdir("/Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."", 0757);
+		$devstr="";
+		// Do we have to start audio as well?
+		if ( $devices["audio"]["sysid"] == "" ) {
+			$devstr = $devices["video"]["sysid"];
+		} else {
+			$devstr = $devices["video"]["sysid"].":".$devices["audio"]["sysid"];
+		}
+		
+		$ffmpegcom = "-r 30 -f avfoundation -i ".$devstr." -pix_fmt yuv420p -s 640X320 -hls_flags round_durations -hls_time 3 -hls_init_time 3 /Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."/playlist.m3u8";
+		//$ffmpegcom = "-r 30 -f avfoundation -i 0:0 -pix_fmt yuv420p -s 640X320 -hls_flags round_durations -hls_time 3 -hls_init_time 3 /Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."/playlist.m3u8";
+		
+		ini_set('max_execution_time', 0);
+		
+		//echo $ffmpeg." ".$ffmpegcom.$noterminal;
+		
+		$pid = exec($ffmpeg." ".$ffmpegcom.$noterminal, $out);
+		
+		return $pid;
+	}
 	
-	public function startTake( $id, $data ) {
+	public function _startTake( $id, $data ) {
 		$noterminal = " </dev/null >/dev/null 2>ffmpeg.log & echo $!";
 		$ffmpeg = "/usr/local/bin/ffmpeg";
 		
@@ -107,7 +132,9 @@ class RadeniumModelPhpffmpeg extends JModelItem
             	
             }
         }
-
+        
+        $devs['audio'][] = array("sysid"=>"", "name"=>"No Audio", "idstr"=>"no_audio");
+        $devs['video'][] = array("sysid"=>"", "name"=>"No Video", "idstr"=>"no_video");
         
 /*
 $output = shell_exec('ffprobe -v quiet -print_format json -show_format -show_streams "path/to/yourfile.ext"');

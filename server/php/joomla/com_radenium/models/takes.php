@@ -61,24 +61,6 @@ class RadeniumModelTakes extends JModelForm
     }
 
     
-    public function startTake( $id, $data, $devices ) {
-    	
-        $noterminal = " </dev/null >/dev/null 2>ffmpeg.log & echo $!";
-        $ffmpeg = "/usr/local/bin/ffmpeg";
-        
-        mkdir("/Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."", 0757);
-        $ffmpegcom = "-r 30 -f avfoundation -i ".$devices["video"]["sysid"].":".$devices["audio"]["sysid"]." -pix_fmt yuv420p -s 640X320 -hls_flags round_durations -hls_time 3 -hls_init_time 3 /Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."/playlist.m3u8";
-        //$ffmpegcom = "-r 30 -f avfoundation -i 0:0 -pix_fmt yuv420p -s 640X320 -hls_flags round_durations -hls_time 3 -hls_init_time 3 /Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."/playlist.m3u8";
-        
-        ini_set('max_execution_time', 0);
-        
-        //echo $ffmpeg." ".$ffmpegcom.$noterminal;
-
-        $pid = exec($ffmpeg." ".$ffmpegcom.$noterminal, $out);
-        
-        return $pid;
-    }
-    
     public function stopTake( $pid ) {
         if ( $pid > 0 ) {
             $pid = exec("kill ".$pid, $out);
@@ -175,12 +157,7 @@ class RadeniumModelTakes extends JModelForm
      * @param data
      */
     public function edit($id, $data)
-    {
-        
-        if ( intval($data["state"]) == 2 ) {
-            $this->stopTake($data["pid"]);
-        }
-        
+    {        
         //Set the joomla platform user id:
         $data["user_id"] = JFactory::getUser()->id;
         // Get a db connection:

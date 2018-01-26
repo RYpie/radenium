@@ -47,7 +47,10 @@ class RadeniumControllerTakes extends JControllerForm
 		            $aid = $model_systemdevices->getEntry($data['aid'])[0];
 					//start the take...
 					// @todo this is via the model, I should do it here via the ffmpeg model. I think i can get that as well..
-		            $data["pid"] = $model->startTake($take_id, $data, array("video"=>$vid, "audio"=>$aid));
+		            
+		            $model_ffmpeg = $this->getModel("phpffmpeg");
+		            $data["pid"] = $model_ffmpeg->startTake($take_id, $data, array("video"=>$vid, "audio"=>$aid));
+		            
 		            $model->setPid($take_id, $data["pid"]);
 
             }
@@ -65,6 +68,12 @@ class RadeniumControllerTakes extends JControllerForm
             $model = $this->getModel("takes");
             $data = JFactory::getApplication()->input->get('jform','', 'array');
             $model->edit( JFactory::getApplication()->input->get("takes_id"),$data );
+            $model_ffmpeg = $this->getModel("phpffmpeg");
+            
+            if ( intval($data["state"]) == 2 ) {
+            	$model_ffmpeg->stopTake($data["pid"]);
+            }
+            
             
             $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=default', false));
         }
