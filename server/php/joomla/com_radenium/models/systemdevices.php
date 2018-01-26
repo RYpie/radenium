@@ -241,7 +241,7 @@ class RadeniumModelSystemdevices extends JModelForm
      */
     public function getEntry($id=false)
     {
-        if ( ( $id == false )
+        if ( ( $id === false )
         && ( JFactory::getApplication()->input->get("systemdevices_id") != "" )
         )
         {
@@ -261,7 +261,7 @@ class RadeniumModelSystemdevices extends JModelForm
             $query->where($conditions);
             $db->setQuery($query);
             $db->execute();
-            $results = $db->loadObjectList();
+            $results = $db->loadAssocList();
         }
         else {
             $results = false;

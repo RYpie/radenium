@@ -20,8 +20,11 @@ jimport('joomla.application.component.modelform');
 jimport('joomla.application.component.modelitem');
 // Include dependancy of the dispatcher
 jimport('joomla.event.dispatcher');
-				
-				
+
+
+include_once("components/com_radenium/models/phpffmpeg.php");	
+
+
 /**
  * Radenium Model Project
  *
@@ -29,7 +32,8 @@ jimport('joomla.event.dispatcher');
  */
 class RadeniumModelTakes extends JModelForm
 {
-		
+	private $ffmpeg;
+	
     public function getForm($data = array(), $loadData = true)
     {
 		
@@ -52,34 +56,39 @@ class RadeniumModelTakes extends JModelForm
     {
         // Construct the parent
         parent::__construct();
+        $this->ffmpeg = new RadeniumModelPhpffmpeg();
         return True;
     }
 
     
-    private function startTake( $id, $data ) {
+    public function startTake( $id, $data, $devices ) {
+    	
         $noterminal = " </dev/null >/dev/null 2>ffmpeg.log & echo $!";
         $ffmpeg = "/usr/local/bin/ffmpeg";
         
         mkdir("/Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."", 0757);
-        $ffmpegcom = "-r 30 -f avfoundation -i 0:0 -pix_fmt yuv420p -s 640X320 -hls_flags round_durations -hls_time 3 -hls_init_time 3 /Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."/playlist.m3u8";
+        $ffmpegcom = "-r 30 -f avfoundation -i ".$devices["video"]["sysid"].":".$devices["audio"]["sysid"]." -pix_fmt yuv420p -s 640X320 -hls_flags round_durations -hls_time 3 -hls_init_time 3 /Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."/playlist.m3u8";
+        //$ffmpegcom = "-r 30 -f avfoundation -i 0:0 -pix_fmt yuv420p -s 640X320 -hls_flags round_durations -hls_time 3 -hls_init_time 3 /Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."/playlist.m3u8";
         
         ini_set('max_execution_time', 0);
         
-        echo $ffmpeg." ".$ffmpegcom.$noterminal;
+        //echo $ffmpeg." ".$ffmpegcom.$noterminal;
 
         $pid = exec($ffmpeg." ".$ffmpegcom.$noterminal, $out);
         
         return $pid;
     }
     
-    private function stopTake( $pid ) {
+    public function stopTake( $pid ) {
         if ( $pid > 0 ) {
             $pid = exec("kill ".$pid, $out);
         }
         
         return true;
     }
-    private function setPid($id, $pid) {
+    
+    
+    public function setPid($id, $pid) {
         // Get a db connection:
         $db = JFactory::getDbo();
         // Create a new query object:
@@ -153,15 +162,9 @@ class RadeniumModelTakes extends JModelForm
         // Set the query using our newly populated query object and execute it.
         $db->setQuery($query);
         $db->execute();
-
+        $lastRowId = $db->insertid();
         
-        if ( intval($data["pid"]) < 1 ) {
-            $lastRowId = $db->insertid();
-            $data["pid"] = $this->startTake($lastRowId, $data);
-            $this->setPid($lastRowId, $data["pid"]);
-        }
-        
-        return True;
+        return $lastRowId;
     }
 
         
