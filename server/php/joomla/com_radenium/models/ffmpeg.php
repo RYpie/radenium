@@ -73,12 +73,16 @@ class RadeniumModelFfmpeg extends JModelForm
         $columns = array(
             name
             , command
+            , platform
+            , category
 
         );
 
         $values = array(
             $db->quote($data["name"])
             , $db->quote($data["command"])
+            , $db->quote($data["platform"])
+            , intval($data["category"])
 
         );
 
@@ -113,6 +117,8 @@ class RadeniumModelFfmpeg extends JModelForm
         $fields = array(
             $db->quoteName('name') . ' = ' . $db->quote($data["name"])
             , $db->quoteName('command') . ' = ' . $db->quote($data["command"])
+            , $db->quoteName('platform') . ' = ' . $db->quote($data["platform"])
+            , $db->quoteName('category') . ' = ' . intval($data["category"])
 
         );
 
@@ -290,9 +296,25 @@ class RadeniumModelFfmpeg extends JModelForm
             [1] => Array
                 (
                     [name] => command
-                    [type] => text
+                    [type] => textarea
                     [label] => COM_RADENIUM_FIELD_FFMPEG_TEMPLATE_COMMAND_LABEL
                     [description] => COM_RADENIUM_FIELD_FFMPEG_TEMPLATE_COMMAND_DESC
+                )
+
+            [2] => Array
+                (
+                    [name] => platform
+                    [type] => text
+                    [label] => COM_RADENIUM_FIELD_FFMPEG_TEMPLATE_PLATFORM_LABEL
+                    [description] => COM_RADENIUM_FIELD_FFMPEG_TEMPLATE_PLATFORM_DESC
+                )
+
+            [3] => Array
+                (
+                    [name] => category
+                    [type] => list
+                    [label] => COM_RADENIUM_FIELD_FFMPEG_TEMPLATE_CATEGORY_LABEL
+                    [description] => COM_RADENIUM_FIELD_FFMPEG_TEMPLATE_CATEGORY_DESC
                 )
 
         )
