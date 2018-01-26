@@ -1,24 +1,20 @@
 ![GitHub license](https://img.shields.io/badge/license-GPL-blue.svg)
 
-# Welcome To Radenium, Home Of The Great
+# Welcome To Radenium, Home Of The Great Radeniums
 
 Idea of Radenium is to implement an HLS livestreaming application based on FFMPEG, wrapped by a python application.
 
-Development status is prototype.
+Development status is definitely prototype, works only on my mac...
 
-Idea is to run the application on a barebone PC and via a webadmin control the livestreaming that is being pushed to a website.
+Without knowledge on python and mysql I would not put too much effort in this for now.
 
-Currently it works on a mac, my mac to be clear. Without knowledge on python and mysql I would not put too much effort in this for now.
-
-Aim is to add installation instructions and more complete installation packages for users to hook in.
 
 ## Installation
-
-Take notice that radenium should work without database and Joomla! The database and Joomla! is only used to create a webui and manage the files etcetera. By the way, at this point it's really nothing worth putting  efforts in.
 
 Aim is to create a simple, nodatabase required, solution to publish a stream to the web.
 
 ### MAC OSX
+
 If you don't have python3 installed:
 - $ brew install python3
 
