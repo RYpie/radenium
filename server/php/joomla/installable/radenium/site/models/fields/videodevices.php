@@ -26,11 +26,11 @@ class JFormFieldVideodevices extends JFormFieldList {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true);
-		$query->select('idstr,name')->from('`#__radenium_encdck_mediadevices`')->where('type = "video"');
+		$query->select('id,name')->from('`#__radenium_systemdevices`')->where('type = "video"');
 		$rows = $db->setQuery($query)->loadObjectlist();
 		
 		foreach($rows as $row){
-			$list_options[strval($row->idstr)] = $row->name;
+			$list_options[$row->id] = $row->name;
 		}
 		
 		//Using the options causes the values of the list to start with 0.

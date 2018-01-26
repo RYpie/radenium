@@ -34,9 +34,28 @@ class RadeniumControllerTakes extends JControllerForm
             $option = JFactory::getApplication()->input->get('option','string');
             $model = $this->getModel("takes");
             $data = JFactory::getApplication()->input->get('jform','', 'array');
-            $model->save($data);
+            $take_id = $model->save($data);
+            // Now starting up the just created take...
+            if (
+            		($take_id !== false) // could store it to the database
+            		&& ($take_id !== null)
+            		&& (intval($data["pid"]) < 1) // take not already has a pid...
+            	) {
+            		// Get the systemdevice that have been selected for this take.
+		            $model_systemdevices = $this->getModel("systemdevices");
+		            $vid = $model_systemdevices->getEntry($data['vid'])[0];
+		            $aid = $model_systemdevices->getEntry($data['aid'])[0];
+					//start the take...
+					// @todo this is via the model, I should do it here via the ffmpeg model. I think i can get that as well..
+		            
+		            $model_ffmpeg = $this->getModel("phpffmpeg");
+		            $data["pid"] = $model_ffmpeg->startTake($take_id, $data, array("video"=>$vid, "audio"=>$aid));
+		            
+		            $model->setPid($take_id, $data["pid"]);
+
+            }
             
-            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=default', false));
+            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=edit&takes_id='.$take_id, false));
         }
 
     }
@@ -49,6 +68,12 @@ class RadeniumControllerTakes extends JControllerForm
             $model = $this->getModel("takes");
             $data = JFactory::getApplication()->input->get('jform','', 'array');
             $model->edit( JFactory::getApplication()->input->get("takes_id"),$data );
+            $model_ffmpeg = $this->getModel("phpffmpeg");
+            
+            if ( intval($data["state"]) == 2 ) {
+            	$model_ffmpeg->stopTake($data["pid"]);
+            }
+            
             
             $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=default', false));
         }

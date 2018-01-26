@@ -18,6 +18,29 @@
     along with Radenium.  If not, see <http://www.gnu.org/licenses/>.
     """
 
+'''
+    Something with signals...
+import signal
+import sys
+
+def signal_term_handler(signal, frame):
+    print ('got SIGTERM')
+    print ('Thats it baby')
+    sys.exit(0)
+
+
+
+if __name__ == "__main__":
+    pass
+    signal.signal(signal.SIGTERM, signal_term_handler)
+    #! signal.signal(signal.SIGINT, signal_term_handler)
+    #! https://nattster.wordpress.com/2013/06/05/catch-kill-signal-in-python/
+    while True:
+        pass
+    #! sys.exit(0)
+    print ('Thats it baby')
+
+'''
 
 import threading
 import queue

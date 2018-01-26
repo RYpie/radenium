@@ -4,7 +4,7 @@
  * @package     Joomla.Site
  * @subpackage  com_radenium
  *
- * @copyright   Copyright (C) 2017 Andries Bron, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2017 Andries Bron, Drachten, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
  		
@@ -17,7 +17,7 @@ defined('_JEXEC') or die('Restricted access');
 jimport('joomla.application.component.controllerform');
 
 
-class RadeniumControllerTakes extends JControllerForm
+class RadeniumControllerSystemdevices extends JControllerForm
 {
 
 
@@ -28,15 +28,15 @@ class RadeniumControllerTakes extends JControllerForm
     }
 
 
-    public function save()
+    public function save($key = NULL, $urlVar = NULL)
     {
-        if ($this->checkToken()) {
+        if ($this->checkToken($method = 'post', $redirect = true)) {
             $option = JFactory::getApplication()->input->get('option','string');
-            $model = $this->getModel("takes");
+            $model = $this->getModel("systemdevices");
             $data = JFactory::getApplication()->input->get('jform','', 'array');
             $model->save($data);
             
-            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=default', false));
+            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=systemdevices&layout=default', false));
         }
 
     }
@@ -44,26 +44,26 @@ class RadeniumControllerTakes extends JControllerForm
 
     public function modify()
     {
-        if ($this->checkToken()) {
+        if ($this->checkToken($method = 'post', $redirect = true)) {
             $option = JFactory::getApplication()->input->get('option','string');
-            $model = $this->getModel("takes");
+            $model = $this->getModel("systemdevices");
             $data = JFactory::getApplication()->input->get('jform','', 'array');
-            $model->edit( JFactory::getApplication()->input->get("takes_id"),$data );
+            $model->edit( JFactory::getApplication()->input->get("systemdevices_id"),$data );
             
-            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=default', false));
+            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=systemdevices&layout=default', false));
         }
 
     }
 
 
-    public function edit()
+    public function edit($key = NULL, $urlVar = NULL)
     {
-        if ($this->checkToken()) {
+        if ($this->checkToken($method = 'post', $redirect = true)) {
             // Not sure what to all in this function. Basically the data could be retrieved by the view, like with new form.
             $option = JFactory::getApplication()->input->get('option','string');
-            $id = JFactory::getApplication()->input->get('takes_id');
+            $id = JFactory::getApplication()->input->get('systemdevices_id');
             
-            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=edit&takes_id='.$id, false));
+            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=systemdevices&layout=edit&systemdevices_id='.$id, false));
         }
 
     }
@@ -71,13 +71,13 @@ class RadeniumControllerTakes extends JControllerForm
 
     public function delete()
     {
-        if ($this->checkToken()) {
+        if ($this->checkToken($method = 'post', $redirect = true)) {
             $option = JFactory::getApplication()->input->get('option','string');
-            $model = $this->getModel("takes");
-            $id = JFactory::getApplication()->input->get('takes_id');
+            $model = $this->getModel("systemdevices");
+            $id = JFactory::getApplication()->input->get('systemdevices_id');
             $model->delete($id);
             
-            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=default', false));
+            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=systemdevices&layout=default', false));
         }
 
     }
@@ -87,7 +87,7 @@ class RadeniumControllerTakes extends JControllerForm
     {
         //
         // Do you want to override the default controller?
-        // $view = $this->getView("Takes","html");
+        // $view = $this->getView("Systemdevices","html");
         // $view->display();
         // Then comment the parent to be executed.
         // @attention: execution of parent overrides any view or layout variable set. 
@@ -96,7 +96,7 @@ class RadeniumControllerTakes extends JControllerForm
         return parent::execute($task);
     }
 
-    public function checkToken()
+    public function checkToken($method = 'post', $redirect = true)
     {
         $token = JSession::getFormToken();
         
