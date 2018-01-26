@@ -26,7 +26,7 @@ class JFormFieldAudiodevices extends JFormFieldList {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true);
-		$query->select('idstr,name')->from('`#__radenium_encdck_mediadevices`')->where('type = "audio"');
+		$query->select('idstr,name')->from('`#__radenium_systemdevices`')->where('type = "audio"');
 		$rows = $db->setQuery($query)->loadObjectlist();
 		
 		foreach($rows as $row){

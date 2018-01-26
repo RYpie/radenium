@@ -21,8 +21,8 @@ jimport('joomla.application.component.modelitem');
 // Include dependancy of the dispatcher
 jimport('joomla.event.dispatcher');
 
-include_once("components/com_radenium/models/phpffmpeg.php");		
-				
+include_once("components/com_radenium/models/phpffmpeg.php");	
+include_once("components/com_radenium/models/phpsystem.php");
 /**
  * Radenium Model Project
  *
@@ -31,6 +31,7 @@ include_once("components/com_radenium/models/phpffmpeg.php");
 class RadeniumModelSystemdevices extends JModelForm
 {
 	private $ffmpeg;
+	private $system;
 	
     public function getForm($data = array(), $loadData = true)
     {
@@ -48,16 +49,52 @@ class RadeniumModelSystemdevices extends JModelForm
         
     /**
      * @name __construct
-     * @desc Function description.
+     * @desc Checks which system devices are available and next stores them into the database.
      */
     public function __construct()
     {
         // Construct the parent
         parent::__construct();
         $this->ffmpeg = new RadeniumModelPhpffmpeg();
-        echo getcwd();
-        echo $this->ffmpeg->getMsg();
-        $this->ffmpeg->getSystemDevices();
+        $this->system = new RadeniumModelPhpsystem();
+        
+        $devices = $this->ffmpeg->getSystemDevices();
+        $test = array();
+        $this->system->getStorageDevices($test);
+        $known = $this->getAllEntries();
+
+        foreach( $devices as $type => $td ) {
+        	foreach ( $td as $d ) {
+        		$d["type"] = $type;
+        		$saveit = true;
+        		foreach ($known as $k ) {
+        			if ( $k["idstr"] == $d["idstr"]) {
+        				$saveit = false;
+        				$stillexist[] = $k['id'];
+        			}
+        		}
+        		
+        		if ( $saveit ) {
+        			$this->save($d);
+        		}
+        	}
+        }
+
+        // Now $stillexist contains id of systemdevices that still exist. All others have to be removed.
+        foreach( $known as $k ) {
+        	$deletethis = true;
+        	foreach ($stillexist as $d ) {
+        		if ( intval($k["id"] ) == intval($d) ) {
+        			$deletethis = false;
+        			
+        		}
+        	}
+        	if ( $deletethis ) {
+        		$this->delete($k["id"]);
+
+        	}
+        }
+
         return True;
     }
 
@@ -160,7 +197,7 @@ class RadeniumModelSystemdevices extends JModelForm
         $db->setQuery($query);
         $db->execute();
 
-        $results = $db->loadObjectList();
+        $results = $db->loadAssocList();
 
         return $results;
     }

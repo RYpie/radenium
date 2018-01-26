@@ -15,7 +15,7 @@ defined('_JEXEC') or die('Restricted access');
  *
  * @since  0.0.1
  */
-class RadeniumModelPhpffmpeg extends JModelItem
+class RadeniumModelPhpsystem extends JModelItem
 {
 	/**
 	 * @var string message
@@ -39,16 +39,19 @@ class RadeniumModelPhpffmpeg extends JModelItem
 	
 	private function parseSystemDeviceOutputLine( $line ) {
 		$device = array();
+		echo "<p>";
 		$d = explode("] [", $line);
+		//echo "hi there:<br />";
+		//print_r($d);
 		$d = explode("] ", $d[1]);
 		$device["sysid"] = $d[0];
 		$device["name"] = $d[1];
 		$device["idstr"] = $device["sysid"]."_".strtolower(str_replace(" ", "_", $device["name"]));
-
+		echo "</p>";
 		return $device;
 	}
 	
-    public function getSystemDevices() {
+	public function getStorageDevices($var) {
         //ini_set('max_execution_time', 0);
         $noterminal = " </dev/null >/dev/null 2>python.log & echo $!";
         $noterminal = " </dev/null >/dev/null 2>python.log &";
@@ -57,38 +60,19 @@ class RadeniumModelPhpffmpeg extends JModelItem
 
 //"/usr/local/bin/ffmpeg", "-f", "avfoundation", "-list_devices", "true", "-i", ""
         //$result = shell_exec("/usr/local/bin/ffmpeg -f avfoundation -list_devices true -i \"\"");
-
-        exec("/usr/local/bin/ffmpeg -f avfoundation -list_devices true -i \"\" 2>&1", $out);
-		$devs = array();
-		$parsevideodevicesnow = false;
-		$parseaudiodevicesnow = false;
+    
+        exec("diskutil list 2>&1", $out);
+        //print_r($out);
+        //die;
         
-        foreach( $out as $l ) {
-            if (strpos($l, ":") !== false){ // Otherwise it parses the ': input output error' as well.
-            	if (strpos($l, "video")) {
-               		$parsevideodevicesnow = true;
-               		$parseaudiodevicesnow = false; // you never know...
-               		
-            	} else if ( strpos($l, "audio")){
-	            	$parseaudiodevicesnow = true;
-	            	$parsevideodevicesnow = false;
-	            	
-            	}
-            } else if ($parsevideodevicesnow) {
-            	$devs['video'][] = $this->parseSystemDeviceOutputLine($l);
-            	
-            } else if ($parseaudiodevicesnow) {
-            	$devs['audio'][] = $this->parseSystemDeviceOutputLine($l);
-            	
-            }
-        }
+        
 
         
 /*
 $output = shell_exec('ffprobe -v quiet -print_format json -show_format -show_streams "path/to/yourfile.ext"');
 $parsed = json_decode($output, true);
 */
-        return $devs;
+        //return $devs;
         
     }
 	

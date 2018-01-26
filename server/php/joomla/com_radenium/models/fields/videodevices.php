@@ -26,7 +26,7 @@ class JFormFieldVideodevices extends JFormFieldList {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true);
-		$query->select('idstr,name')->from('`#__radenium_encdck_mediadevices`')->where('type = "video"');
+		$query->select('idstr,name')->from('`#__radenium_systemdevices`')->where('type = "video"');
 		$rows = $db->setQuery($query)->loadObjectlist();
 		
 		foreach($rows as $row){

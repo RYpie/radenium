@@ -44,6 +44,18 @@ Check it out, either run:
 
 - Or run the encoderdeck_app or use the muxer in mod_mediadevices.
 
+## Radenium Loves
+
+- https://www.joomla.org
+- https://www.python.org
+- https://www.kodi.tv
+- https://www.ffmpeg.org
+- https://www.shotcut.org
+- https://www.mltframework.org
+- https://www.apple.com
+- HLS livestreaming
+- Podcasting
+- RSS
 
 Roadmap:
 - Use a real ffmpeg wrapper.
