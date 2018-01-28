@@ -118,6 +118,8 @@ class RadeniumModelTakes extends JModelForm
             , state
             , pid
             , user_id
+        	, title
+        	, notes
 
         );
 
@@ -133,6 +135,8 @@ class RadeniumModelTakes extends JModelForm
             , intval($data["state"])
             , intval($data["pid"])
             , intval($data["user_id"])
+        	, $db->quote($data["title"])
+        	, $db->quote($data["notes"])
 
         );
 
@@ -177,6 +181,8 @@ class RadeniumModelTakes extends JModelForm
             , $db->quoteName('state') . ' = ' . intval($data["state"])
             , $db->quoteName('pid') . ' = ' . intval($data["pid"])
             , $db->quoteName('user_id') . ' = ' . intval($data["user_id"])
+        	, $db->quoteName('title') . ' = ' . $db->quote($data["title"])
+        	, $db->quoteName('notes') . ' = ' . $db->quote($data["notes"])
 
         );
         

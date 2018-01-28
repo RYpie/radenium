@@ -15,5 +15,24 @@
 			description="COM_RADENIUM_FIELD_FFMPEG_TEMPLATE_COMMAND_DESC"
 			required="true"
 		/>
+		<field
+			name="platform"
+			type="list"
+			label="COM_RADENIUM_FIELD_FFMPEG_TEMPLATE_PLATFORM_LABEL"
+			description="COM_RADENIUM_FIELD_FFMPEG_TEMPLATE_PLATFORM_DESC"
+			required="true">
+			<option value="0">MAC OSX</option>
+			<option value="1">Linux</option>
+			<option value="2">Windows</option>
+		</field>
+		<field
+			name="category"
+			type="list"
+			label="COM_RADENIUM_FIELD_FFMPEG_TEMPLATE_CATEGORY_LABEL"
+			description="COM_RADENIUM_FIELD_FFMPEG_TEMPLATE_CATEGORY_DESC"
+			required="true">
+			<option value="0">takes</option>
+			<option value="1">edit</option>
+		</field>
 	</fieldset>
 </form>

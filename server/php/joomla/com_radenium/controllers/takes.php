@@ -60,7 +60,22 @@ class RadeniumControllerTakes extends JControllerForm
 
     }
 
+	public function publishlive() {
+		$option = JFactory::getApplication()->input->get('option','string');
+		$take_id = JFactory::getApplication()->input->get('takes_id',false);
+		
+		$model_ffmpeg = $this->getModel("phpffmpeg");
+		$model_ffmpeg->publishLive($take_id);
+		
+		$view = $this->getView( "takes", "raw" );
+		$data = array("take_id" => $take_id);
 
+		echo "<a href=\"index.php?option=com_radenium&view=takes&format=raw&Itemid=105&task=publishlive&takes_id=58\">test</a>";
+		
+		$view->display_json($data);
+	}
+	
+    
     public function modify()
     {
         if ($this->checkToken($method = 'post', $redirect = true)) {

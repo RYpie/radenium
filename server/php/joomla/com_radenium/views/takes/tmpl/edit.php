@@ -12,25 +12,14 @@
 defined('_JEXEC') or die('Restricted access');
  		
 $vidurl = "media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/playlist.m3u8";
-//echo $vidurl;
-echo "<a href=\"".$vidurl."\">".$vidurl."</a>";
+
+//echo "<a href=\"".$vidurl."\">".$vidurl."</a>";
 echo "<div>";
 //echo "<video controls width=\"320\" height=\"240\">";
-echo "<video controls>";
+echo "<video controls autoplay=\"1\">";
 echo "  <source src=\"".$vidurl."\" type=\"video/mp4\">";
 echo "</video>";
 echo "</div>";
-
-//ini_set('max_execution_time', 0);
-$noterminal = " </dev/null >/dev/null 2>ffmpeg.log & echo $!";
-$ffmpeg = "/usr/local/bin/ffmpeg";
-$ffmpegcom = "-r 30 -f avfoundation -i 0:0 -pix_fmt yuv420p -s 640X320 -hls_flags round_durations -hls_time 3 -hls_init_time 3 /Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/playlist.m3u8";
-//$pid = exec($ffmpeg." ".$ffmpegcom.$noterminal, $out);
-
-//exec("kill 76988", $out);
-echo "<h1>".$this->entry_data[0]->id ." - ";
-echo $pid;
-echo "</h1>";
 
 
 $xml = $this->form->getXml();
@@ -39,59 +28,87 @@ foreach ( $xml->fieldset as $f ) {
 		foreach( $f->field as $e ){
 			if ((string)$e->attributes()->name != "user_id")
 			{
-				$this->form->setValue( (string)$e->attributes()->name, null, JFactory::getApplication()->input->get( (string)$e->attributes()->name ) );
+				$this->form->setValue( (string)$e->attributes()->name, null, JFactory::getApplication()->input->get( (string)$e->attributes()->name ) );				
 			}
 		}
+	} else {
+		
 	}
 }
 
+//Get custom field
+JFormHelper::addFieldPath(JPATH_COMPONENT . '/models/fields');
+$vdevs = JFormHelper::loadFieldType('Videodevices', false);
+$vdevs = $vdevs->getOptions(); // works only if you set your field getOptions on public!!
+$adevs = JFormHelper::loadFieldType('Audiodevices', false);
+$adevs = $adevs->getOptions(); // works only if you set your field getOptions on public!!
+$res = JFormHelper::loadFieldType('ScreenResolution', false);
+$res = $res->getOptions(); // works only if you set your field getOptions on public!!
+$format = JFormHelper::loadFieldType('ffmpeg', false);
+$format= $format->getOptions(); // works only if you set your field getOptions on public!!
+
+
+$info = array(
+		"Video Input Device"=>$vdevs[$this->entry_data[0]->vid]
+		, "Audio Input Device"=>$adevs[$this->entry_data[0]->aid]
+		, "Screen Resolution" => $res[$this->entry_data[0]->resolution]
+		, "Recording Format" => $format[$this->entry_data[0]->format]
+		, "Take date" => $this->entry_data[0]->takedate
+		, "Process ID"=> $this->entry_data[0]->pid
+);
 
 
 foreach( $this->entry_data[0] as $key => $val )
-        {
-            $this->form->setValue( $key, null, $val);
-        }
+{
+	$this->form->setValue( $key, null, $val);
+}
         ?><div id="takes_new">
-<h1><?php echo JText::_('COM_radenium_VIEW_EDIT_ENTRY'); ?></h1>
-    <form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="radenium_takes" name="radenium_takes">
-    <div class="form_rendered_container">
-        <h3><?php echo JText::_('COM_RADENIUM_VIEW_TAKES_FIELDSET_TAKE'); ?></h3>
-        <div class="form_rendered_container_form">
-            <?php echo $this->form->renderFieldSet("take"); ?>
-        </div>
-    </div>
-    
-    <br />
-    <div class="form_rendered_container">
-        <h3><?php echo JText::_('COM_RADENIUM_VIEW_TAKES_FIELDSET_LIVEPUBLISH'); ?></h3>
-        <div class="form_rendered_container_form">
-            <?php echo $this->form->renderFieldSet("livepublish"); ?>
-        </div>
-    </div>
-    
-    <br />
-    <div class="form_rendered_container">
-        <h3><?php echo JText::_('COM_RADENIUM_VIEW_TAKES_FIELDSET_RUNNINGTAKE'); ?></h3>
-        <div class="form_rendered_container_form">
-            <?php echo $this->form->renderFieldSet("runningtake"); ?>
-        </div>
-    </div>
-    
-    <br />
-    <div class="form_rendered_container">
-        <h3><?php echo JText::_('COM_RADENIUM_VIEW_TAKES_FIELDSET_HIDDEN'); ?></h3>
-        <div class="form_rendered_container_form">
-            <?php echo $this->form->renderFieldSet("hidden"); ?>
-        </div>
-    </div>
-    
-    <br />
 
+
+<form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="radenium_takes" name="radenium_takes">
+
+<br />
+<div class="controls">
+	<fieldset id="jform_publish" class="btn-group required radio" required aria-required="true"	>
+		<input type="radio" id="jform_publish0" name="jform[publish]" value="0" checked="checked" required aria-required="true" />
+			<label for="jform_publish0" >Stop Publishing</label>
+		<input type="radio" id="jform_publish1" name="jform[publish]" value="1" required aria-required="true" />
+			<label for="jform_publish1" >Go Live</label>
+	</fieldset>
+
+    <fieldset id="jform_state" class="btn-group radio">
+        <input type="radio" id="jform_state0" name="jform[state]" value="0" checked="checked" />
+        <input type="radio" id="jform_state2" name="jform[state]" value="2"  />
+        	<label for="jform_state2" >Stop Take</label>
+        <input type="radio" id="jform_state3" name="jform[state]" value="3"  />
+            <label for="jform_state3" >Take Finished</label>
+    </fieldset>
+</div>
+    
+
+<h2>Take information:</h2>
+    <div class="form_rendered_container">
+        <div class="form_rendered_container_form">
+            <?php echo $this->form->renderFieldSet("taketitle"); ?>
+        </div>
+    </div>
+	<?php print_r($info); ?>
+    <br />      
+    <div class="form_rendered_container">
+        <h3><?php echo JText::_('COM_RADENIUM_VIEW_TAKES_FIELDSET_NOTES'); ?></h3>
+        <div class="form_rendered_container_form">
+            <?php echo $this->form->renderFieldSet("information"); ?>
+        </div>
+    </div>
+    
+    
+	<?php echo $this->form->renderFieldSet("hidden"); ?>
     <?php echo JHtml::_('form.token'); ?>
+    <input type="hidden" name="jform[pid]" value="<?php echo $this->entry_data[0]->pid; ?>" />
     <input type="hidden" name="view" value="takes" />
     <input type="hidden" name="task" value="modify" />
     <input type="hidden" name="takes_id" value="<?php echo $this->takes_id; ?>" />
     <br />
-    <button type="submit" class="button"><?php echo JText::_('Submit'); ?></button>
+    <button type="submit" class="button"><?php echo JText::_('Save & Close'); ?></button>
     </form>
 </div>

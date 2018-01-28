@@ -26,9 +26,7 @@ class JFormFieldFfmpeg extends JFormFieldList {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true);
-		//$query->select('id,name')->from('`#__radenium_ffmpeg`')->where('user_id = "'.$user->id.'"');
-	    $query->select('id,name')->from('`#__radenium_ffmpeg`');
-
+		$query->select('id,name')->from('`#__radenium_ffmpeg`')->where('user_id = "'.$user->id.'"');
 		$rows = $db->setQuery($query)->loadObjectlist();
 		
 		foreach($rows as $row){
@@ -45,7 +43,7 @@ class JFormFieldFfmpeg extends JFormFieldList {
 	}
 	
 	public function getLabel() {
-		return "Select Out Format";
+		return "Select Ffmpeg";
 	}
 	
 	// getLabel() left out

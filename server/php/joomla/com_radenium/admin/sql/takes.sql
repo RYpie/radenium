@@ -20,6 +20,8 @@ CREATE TABLE `#__radenium_takes` (
   `state` int(11) NOT NULL,
   `pid` int(11) NOT NULL,
   `user_id` int(11) NOT NULL
+  `title` TEXT NOT NULL
+  `notes` TEXT NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

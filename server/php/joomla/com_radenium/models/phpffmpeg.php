@@ -21,6 +21,8 @@ class RadeniumModelPhpffmpeg extends JModelItem
 	 * @var string message
 	 */
 	protected $message;
+	protected $noterminal = " </dev/null >/dev/null 2>ffmpeg.log & echo $!";
+	
 
 	/**
 	 * Get the message
@@ -36,6 +38,18 @@ class RadeniumModelPhpffmpeg extends JModelItem
 
 		return $this->message;
 	}
+	
+	public function publishLive( $id ) {
+		
+		//$pid = exec("python ".$comand.$this->noterminal, $out);		
+		//echo $pid;
+		
+		exec("python components/com_radenium/models/python/phppublishremote.py 2>&1", $out);
+		print_r($out);
+		
+		
+	}
+	
 	
 	public function startTake( $id, $data, $devices ) {
 		
