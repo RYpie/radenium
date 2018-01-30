@@ -55,8 +55,8 @@ class RadeniumModelPhpffmpeg extends JModelItem
 		
 		$noterminal = " </dev/null >/dev/null 2>ffmpeg.log & echo $!";
 		$ffmpeg = "/usr/local/bin/ffmpeg";
-		
-		mkdir("/Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."", 0757);
+		$vid_url = "/Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id;
+		mkdir($vid_url, 0757);
 		$devstr="";
 		// Do we have to start audio as well?
 		if ( $devices["audio"]["sysid"] == "" ) {
@@ -82,7 +82,7 @@ class RadeniumModelPhpffmpeg extends JModelItem
 		$ffmpeg = "/usr/local/bin/ffmpeg";
 		
 		mkdir("/Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."", 0757);
-		$ffmpegcom = "-r 30 -f avfoundation -i 0:0 -pix_fmt yuv420p -s 640X320 -hls_flags round_durations -hls_time 3 -hls_init_time 3 /Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."/playlist.m3u8";
+		$ffmpegcom = "-r 30 -f avfoundation -i 0:0 -pix_fmt yuv420p -s 640X320 -hls_flags round_durations -hls_time 3 -hls_init_time 3 ".$vid_url."/playlist.m3u8";
 		
 		ini_set('max_execution_time', 0);
 		

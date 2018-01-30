@@ -26,6 +26,10 @@ jimport('joomla.event.dispatcher');
  * Radenium Model Project
  *
  * @since  0.0.1
+ * 
+ * @desc help links:
+ * https://www.wowza.com/docs/how-to-use-ffmpeg-with-wowza-media-server-mpeg-ts#restreamrtsp
+ * 
  */
 class RadeniumModelFfmpeg extends JModelForm
 {

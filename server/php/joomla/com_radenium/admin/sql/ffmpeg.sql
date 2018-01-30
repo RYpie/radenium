@@ -10,7 +10,9 @@ DROP TABLE IF EXISTS `#__radenium_ffmpeg`;
 CREATE TABLE `#__radenium_ffmpeg` (
   `id` int(11) NOT NULL,
   `name` text NOT NULL,
-  `command` text NOT NULL
+  `command` text NOT NULL,
+  `platform` int(1) NOT NULL,
+  `category` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

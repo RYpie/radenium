@@ -62,27 +62,47 @@ foreach( $this->entry_data[0] as $key => $val )
 {
 	$this->form->setValue( $key, null, $val);
 }
-        ?><div id="takes_new">
+print_R($this->entry_data[0]->id);
+/*
+echo "<pre>";
+print_r($this->entry_data[0]);
+echo "</pre>";
+*/
+$jformpublish=array(
+	0=>""
+	,1=>""
+);
+$jformpublish[intval($this->entry_data[0]->publish)] = "checked=\"checked\"";
 
+        ?><div id="takes_new">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+function performCall(task) {
+	//$.getJSON( "http://localhost:8888/radenium/test.json", function( data )
+	$.getJSON( "http://localhost:8888/radenium/index.php?option=com_radenium&view=takes&format=raw&Itemid=105&task="+task+"&takes_id=<?php echo $this->entry_data[0]->id; ?>", function( data )
+	{
+
+		alert(data['msg']);
+	});
+	//alert("hi there");
+
+}
+
+
+</script>
+
+<button onclick="performCall('publishlive')">Publish Live!</button> <button onclick="performCall('stoptake')">Stop Take</button>
 
 <form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="radenium_takes" name="radenium_takes">
 
 <br />
 <div class="controls">
 	<fieldset id="jform_publish" class="btn-group required radio" required aria-required="true"	>
-		<input type="radio" id="jform_publish0" name="jform[publish]" value="0" checked="checked" required aria-required="true" />
-			<label for="jform_publish0" >Stop Publishing</label>
-		<input type="radio" id="jform_publish1" name="jform[publish]" value="1" required aria-required="true" />
-			<label for="jform_publish1" >Go Live</label>
+		<input type="radio" id="jform_publish0" name="jform[publish]" value="0" <?php echo $jformpublish[0];?> required aria-required="true" />
+			<label for="jform_publish0" >Stop Live</label>
+		<input type="radio" id="jform_publish1" name="jform[publish]" value="1" <?php echo $jformpublish[1];?> required aria-required="true" />
+			<label for="jform_publish1" >Go Live!</label>
 	</fieldset>
-
-    <fieldset id="jform_state" class="btn-group radio">
-        <input type="radio" id="jform_state0" name="jform[state]" value="0" checked="checked" />
-        <input type="radio" id="jform_state2" name="jform[state]" value="2"  />
-        	<label for="jform_state2" >Stop Take</label>
-        <input type="radio" id="jform_state3" name="jform[state]" value="3"  />
-            <label for="jform_state3" >Take Finished</label>
-    </fieldset>
 </div>
     
 

@@ -47,14 +47,14 @@ class post_request:
 
 class phppublish:
     def __init__(self, config={}):
-        print("phppublish created...")
+        #print("phppublish created...")
         self.runalways = True
         signal.signal(signal.SIGTERM, self.signal_term_handler)
         signal.signal(signal.SIGINT, self.signal_term_handler)
 
 
     def signal_term_handler(self, signal, frame):
-        print ('Closed gracefully, have a nice day!')
+        #print ('Closed gracefully, have a nice day!')
         self.runalways = False
 
 
@@ -65,6 +65,6 @@ class phppublish:
 
 phpub = phppublish()
 #phpub.main()
-print("Ending phppublish")
+#print("Ending phppublish")
 sys.exit(0)
 

@@ -1478,10 +1478,10 @@ if __name__ == "__main__":
     xAddrs = ["localhost:8080/abc", '{ip}/device_service']
     wsd.publishService(types=[ttype], scopes=[scope2], xAddrs=xAddrs)
     
-    #ret = wsd.searchServices(scopes=[scope1], timeout=10)
+    ret = wsd.searchServices(scopes=[scope1], timeout=10)
     
-    #nvt = QName("http://www.onvif.org/ver10/network/wsdl", "NetworkVideoTransmitter")
-    #ret = wsd.searchServices(types=[nvt])
+    nvt = QName("http://www.onvif.org/ver10/network/wsdl", "NetworkVideoTransmitter")
+    ret = wsd.searchServices(types=[nvt])
     
     ret = wsd.searchServices()
     

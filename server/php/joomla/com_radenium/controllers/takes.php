@@ -69,12 +69,35 @@ class RadeniumControllerTakes extends JControllerForm
 		
 		$view = $this->getView( "takes", "raw" );
 		$data = array("take_id" => $take_id);
+		$data["result"] = "OK";
 
-		echo "<a href=\"index.php?option=com_radenium&view=takes&format=raw&Itemid=105&task=publishlive&takes_id=58\">test</a>";
+		//echo "<a href=\"index.php?option=com_radenium&view=takes&format=raw&Itemid=105&task=publishlive&takes_id=58\">test</a>";
 		
 		$view->display_json($data);
 	}
 	
+	
+	public function stoptake() {
+		$option = JFactory::getApplication()->input->get('option','string');
+		$take_id = JFactory::getApplication()->input->get('takes_id',false);
+		$model = $this->getModel("takes");
+		$data = $model->getEntry_Entry_Id()[0];
+		$retVal = array();
+		if ( $data->pid != 0 ) {
+			$model_ffmpeg = $this->getModel("phpffmpeg");
+			$model_ffmpeg->stopTake($data->pid);
+			$retVal["take_id"] = $take_id;
+			$retVal["result"] = "OK";
+			$retVal["msg"] = "Take stopped.";
+			
+		} else {
+			$retVal["result"] = "NOK";
+			$retVal["msg"] = "No proper pid found";
+			
+		}
+		$view = $this->getView( "takes", "raw" );
+		$view->display_json($retVal);
+	}
     
     public function modify()
     {
