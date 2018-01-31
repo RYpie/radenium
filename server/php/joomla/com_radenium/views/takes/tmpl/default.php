@@ -15,6 +15,7 @@ JFormHelper::addFieldPath(JPATH_COMPONENT . '/models/fields');
 
 $res = JFormHelper::loadFieldType('ScreenResolution', false);
 $res = $res->getOptions(); // works only if you set your field getOptions on public!!
+
 $stateinfo=array(
 		0 => array("caption"=>"Running", "bg_color"=>"#F00")
 		, 1 => array("caption"=>"Running", "bg_color"=>"#F00")
@@ -25,6 +26,8 @@ $liveinfo=array(
 		0 =>array("caption"=>"Not Live", "bg_color"=>"#F00")
 		, 1 =>array("caption"=>"LIVE!", "bg_color"=>"#0C0")
 );
+
+
 ?>
 
 <div id="view_takes_layout_default">

@@ -293,6 +293,8 @@ class RadeniumModelFfmpeg extends JModelForm
 		$ffmpeg = "/usr/local/bin/ffmpeg";
 		$vid_url = "/Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id;
 		mkdir($vid_url, 0757);
+		//mkdir($vid_url."_copy", 0757);
+
 		$devstr="";
 		// Do we have to start audio as well?
 		if ( $devices["audio"]["sysid"] == "" ) {
@@ -301,9 +303,7 @@ class RadeniumModelFfmpeg extends JModelForm
 			$devstr = $devices["video"]["sysid"].":".$devices["audio"]["sysid"];
 		}
 		
-		$command = $this->getEntry($data['format'])[0];
-		
-		print_r($devstr);
+		$command = $this->getEntry($data['format'], $where=array("category"=>"takes"))[0];
 		
 		JFormHelper::addFieldPath(JPATH_COMPONENT . '/models/fields');
 		$res = JFormHelper::loadFieldType('ScreenResolution', false);
@@ -331,8 +331,9 @@ class RadeniumModelFfmpeg extends JModelForm
 		$ffmpegcom = str_replace("{\$RTSP_SERVER_URL}", $data["settings"]["rtsp_url"], $ffmpegcom);
 		$ffmpegcom = str_replace("{\$RTSP_SERVER_PORT}", $data["settings"]["rtsp_port"], $ffmpegcom);
 		$ffmpegcom = str_replace("{\$RTSP_KEY}", $data["settings"]["rtsp_key"], $ffmpegcom);
-		
+		//$ffmpegcom .= " copy ".$vid_url."_copy/copy.mp4";
 		/*
+		
 		print_r($ffmpegcom);
 		
 		echo "<pre>";
@@ -344,6 +345,7 @@ class RadeniumModelFfmpeg extends JModelForm
 		
 		die;
 		*/
+		
 		
 		//$ffmpegcom = "-r 30 -f avfoundation -i ".$devstr." -pix_fmt yuv420p -s 640X320 -hls_flags round_durations -hls_time 3 -hls_init_time 3 /Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."/playlist.m3u8";
 		//$ffmpegcom = "-r 30 -f avfoundation -i 0:0 -pix_fmt yuv420p -s 640X320 -hls_flags round_durations -hls_time 3 -hls_init_time 3 /Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."/playlist.m3u8";

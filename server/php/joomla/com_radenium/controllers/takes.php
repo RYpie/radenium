@@ -125,7 +125,8 @@ class RadeniumControllerTakes extends JControllerForm
             $option = JFactory::getApplication()->input->get('option','string');
             $model = $this->getModel("takes");
             $data = JFactory::getApplication()->input->get('jform','', 'array');
-            $model->edit( JFactory::getApplication()->input->get("takes_id"),$data );
+            $model->editNotes( JFactory::getApplication()->input->get("takes_id"), $data );
+            
             $model_ffmpeg = $this->getModel("phpffmpeg");
             
             if ( intval($data["state"]) == 2 ) {

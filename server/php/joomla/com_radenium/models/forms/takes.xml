@@ -3,7 +3,8 @@
 	<fieldset name="information">
 		<field
 			name="notes"
-			type="textarea"
+			type="editor"
+			filter="safehtml"
 			label="COM_RADENIUM_FIELD_TAKE_NOTES"
 			description="COM_RADENIUM_FIELD_TAKE_NOTES"
 			default=""

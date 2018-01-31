@@ -23,7 +23,7 @@ class RadeniumViewSettings extends JViewLegacy
 	{
 		parent::__construct();
 		$document = JFactory::getDocument();
-		$document->addStyleSheet(JUri::root() . 'media/com_ministry/css/style.css');
+		$document->addStyleSheet(JUri::root() . 'media/com_radenium/css/style.css');
 	}
 
 	/**

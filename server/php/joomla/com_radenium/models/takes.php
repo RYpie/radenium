@@ -175,6 +175,40 @@ class RadeniumModelTakes extends JModelForm
         return $lastRowId;
     }
 
+    /**
+     * @name edit
+     * @desc Edits a new form entry in the database.
+     * @param id
+     * @param data
+     */
+    public function editNotes($id, $data)
+    {
+    	//Set the joomla platform user id:
+    	$data["user_id"] = JFactory::getUser()->id;
+    	// Get a db connection:
+    	$db = JFactory::getDbo();
+    	// Create a new query object:
+    	$query = $db->getQuery(true);
+    	// Prepare table data:
+    	$fields = array(
+    			$db->quoteName('title') . ' = ' . $db->quote($data["title"])
+    			, $db->quoteName('notes') . ' = ' . $db->quote($data["notes"])	
+    	);
+    	
+    	// Conditions for which records should be updated:
+    	$conditions = array(
+    			$db->quoteName('id') .' = '. $id
+    	);
+    	// Prepare the insert query.
+    	$query->update($db->quoteName( '#__radenium_takes'))
+    	->set($fields)
+    	->where($conditions);
+    	// Set the query using our newly populated query object and execute it...
+    	$db->setQuery($query);
+    	$db->execute();
+    	
+    	return True;
+    }
         
     /**
      * @name edit
