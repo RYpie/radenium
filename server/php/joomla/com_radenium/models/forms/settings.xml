@@ -47,6 +47,56 @@
 			description="COM_RADENIUM_FIELD_SETTINGS_REMOTE_PASSWORD_DESC"
 		/>
 	</fieldset>
+    <fieldset name="rtsp_server">
+		<field
+			name="rtsp_enable"
+			type="radio"
+			class="btn-group"
+			label="COM_RADENIUM_FIELD_SETTINGS_RTSP_ENABLE_LBL"
+			description="COM_RADENIUM_FIELD_SETTINGS_RTSP_ENABLE_DESC"
+			required="true"
+			default="0">
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+		</field>
+		<field
+			name="rtsp_url"
+			showon="rtsp_enable:1"
+			type="text"
+			label="COM_RADENIUM_FIELD_SETTINGS_RTSP_URL_LBL"
+			description="COM_RADENIUM_FIELD_SETTINGS_RTSP_URL_DESC"
+		/>
+		<field
+			name="rtsp_user"
+			showon="rtsp_enable:1"
+			type="text"
+			label="COM_RADENIUM_FIELD_SETTINGS_RTSP_USER_LBL"
+			description="COM_RADENIUM_FIELD_SETTINGS_RTSP_USER_DESC"
+		/>
+		<field
+			name="rtsp_password"
+			showon="rtsp_enable:1"
+			type="text"
+			label="COM_RADENIUM_FIELD_SETTINGS_RTSP_PASSWORD_LBL"
+			description="COM_RADENIUM_FIELD_SETTINGS_RTSP_PASSWORD_DESC"
+		/>
+		<field
+			name="rtsp_port"
+			showon="rtsp_enable:1"
+			type="number"
+			min="0"
+			max="9999"
+			label="COM_RADENIUM_FIELD_SETTINGS_RTSP_PORT_LBL"
+			description="COM_RADENIUM_FIELD_SETTINGS_RTSP_PORT_DESC"
+		/>
+		<field
+			name="rtsp_key"
+			showon="rtsp_enable:1"
+			type="text"
+			label="COM_RADENIUM_FIELD_SETTINGS_RTSP_KEY_LBL"
+			description="COM_RADENIUM_FIELD_SETTINGS_RTSP_KEY_DESC"
+		/>
+	</fieldset>
     <fieldset name="hidden">
         <field 
             name="user_id" 

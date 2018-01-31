@@ -44,10 +44,10 @@ class RadeniumModelPhpffmpeg extends JModelItem
 		//$pid = exec("python ".$comand.$this->noterminal, $out);		
 		//echo $pid;
 		
-		exec("python components/com_radenium/models/python/phppublishremote.py 2>&1", $out);
-		print_r($out);
+		exec("python components/com_radenium/models/python/phppublishremote.py -id ".$id." 2>&1", $out);
+		//print_r($out);
 		
-		
+		return $out;
 	}
 	
 	

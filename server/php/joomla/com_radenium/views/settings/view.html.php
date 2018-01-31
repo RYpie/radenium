@@ -68,6 +68,11 @@ class RadeniumViewSettings extends JViewLegacy
                 $this->form = $this->get("Form");
                 break;
 
+            case "rtsp_server":
+                $this->rtsp_server_data = $this->get("rtsp_server");
+                $this->form = $this->get("Form");
+                break;
+
             case "hidden":
                 $this->hidden_data = $this->get("hidden");
                 $this->form = $this->get("Form");

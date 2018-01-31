@@ -91,6 +91,28 @@ class RadeniumModelTakes extends JModelForm
         $db->setQuery($query);
         $db->execute();
     }
+    
+    public function setlivepublish($value, $id) {
+    	// Get a db connection:
+    	$db = JFactory::getDbo();
+    	// Create a new query object:
+    	$query = $db->getQuery(true);
+    	// Prepare table data:
+    	$fields = array(
+    			$db->quoteName('publish') . ' = ' . intval($value)
+    	);
+    	// Conditions for which records should be updated:
+    	$conditions = array(
+    			$db->quoteName('id') .' = '. $id
+    	);
+    	// Prepare the insert query.
+    	$query->update($db->quoteName( '#__radenium_takes'))
+    	->set($fields)
+    	->where($conditions);
+    	// Set the query using our newly populated query object and execute it...
+    	$db->setQuery($query);
+    	$db->execute();
+    }
             
     /**
      * @name save

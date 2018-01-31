@@ -28,7 +28,7 @@ $liveinfo=array(
 ?>
 
 <div id="view_takes_layout_default">
-    <h1><?php echo JText::_('COM_RADENIUM_VIEW_TAKES_LAYOUT_NEW_TITLE'); ?></h1>    
+    <h1><?php echo JText::_('COM_RADENIUM_VIEW_TAKES_LAYOUT_NEW_TITLE'); ?></h1>   
     <hr />
     <form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="takes" name="takes">
 
@@ -48,7 +48,7 @@ $liveinfo=array(
 	    foreach ( $this->takes_entries as $entry ) {
 	            $takes_id = $entry->id;        ?>
 	    <div style="display:flex;flex-flow: row wrap;align-items: stretch;justify-content: space-around;flex-grow: 1;">
-	        <div><input type="checkbox" name="takes_id" value="<?php echo $takes_id; ?>" /> </div>
+	        <div><input type="checkbox" name="takes_id[]" value="<?php echo $takes_id; ?>" /> </div>
 	        <?php
 	        //print_r($entry);
 	

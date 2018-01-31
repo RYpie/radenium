@@ -48,6 +48,15 @@ class post_request:
 class phppublish:
     def __init__(self, config={}):
         #print("phppublish created...")
+        argcount=0
+        for arg in config:
+            if arg == '-id':
+                self.id = config[argcount + 1]
+            
+            argcount += 1
+        
+        print("publishing ID:"+self.id)
+        
         self.runalways = True
         signal.signal(signal.SIGTERM, self.signal_term_handler)
         signal.signal(signal.SIGINT, self.signal_term_handler)
@@ -62,8 +71,9 @@ class phppublish:
         while self.runalways:
             pass
 
+print("Starting PHP Publisher")
 
-phpub = phppublish()
+phpub = phppublish(config=sys.argv)
 #phpub.main()
 #print("Ending phppublish")
 sys.exit(0)

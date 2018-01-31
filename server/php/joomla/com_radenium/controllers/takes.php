@@ -48,7 +48,14 @@ class RadeniumControllerTakes extends JControllerForm
 					//start the take...
 					// @todo this is via the model, I should do it here via the ffmpeg model. I think i can get that as well..
 		            
-		            $model_ffmpeg = $this->getModel("phpffmpeg");
+		            $settings_model = $this->getModel("settings");
+		            $data["settings"] = $settings_model->getSettings()[0];
+		            
+		            $model_ffmpeg = $this->getModel("ffmpeg");
+		            
+		            //$model_phpffmpeg = $this->getModel("phpffmpeg");
+		            //$model_phpffmpeg = $this->getModel("phpffmpeg");
+		            
 		            $data["pid"] = $model_ffmpeg->startTake($take_id, $data, array("video"=>$vid, "audio"=>$aid));
 		            
 		            $model->setPid($take_id, $data["pid"]);
@@ -60,20 +67,33 @@ class RadeniumControllerTakes extends JControllerForm
 
     }
 
-	public function publishlive() {
+    
+	public function togglepublishlive() {
 		$option = JFactory::getApplication()->input->get('option','string');
 		$take_id = JFactory::getApplication()->input->get('takes_id',false);
 		
-		$model_ffmpeg = $this->getModel("phpffmpeg");
-		$model_ffmpeg->publishLive($take_id);
-		
-		$view = $this->getView( "takes", "raw" );
-		$data = array("take_id" => $take_id);
-		$data["result"] = "OK";
+		$model = $this->getModel("takes");
+		$data = $model->getEntry_Entry_Id()[0];
 
+		$view = $this->getView( "takes", "raw" );
+		$retVal = array();
+		$retVal["take_id"] = $take_id;
+
+		if (intval($data->publish) == 0) {
+			$model_ffmpeg = $this->getModel("phpffmpeg");
+			$linesout = $model_ffmpeg->publishLive($take_id);
+			$retVal["output"] = $linesout;
+			$model->setlivepublish(1,$take_id);
+			$retVal["publish"] = 1;
+			
+		} else {
+			$model->setlivepublish(0,$take_id);
+			$retVal["publish"] = 0;
+			
+		}
 		//echo "<a href=\"index.php?option=com_radenium&view=takes&format=raw&Itemid=105&task=publishlive&takes_id=58\">test</a>";
 		
-		$view->display_json($data);
+		$view->display_json($retVal);
 	}
 	
 	
@@ -112,6 +132,10 @@ class RadeniumControllerTakes extends JControllerForm
             	$model_ffmpeg->stopTake($data["pid"]);
             }
             
+            /**
+             * @todo depending on the state I should redirect to a different layout, namely one where you can't
+             * stop the take in case it was already stopped.
+             */
             
             $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=default', false));
         }
@@ -124,7 +148,7 @@ class RadeniumControllerTakes extends JControllerForm
         if ($this->checkToken($method = 'post', $redirect = true)) {
             // Not sure what to all in this function. Basically the data could be retrieved by the view, like with new form.
             $option = JFactory::getApplication()->input->get('option','string');
-            $id = JFactory::getApplication()->input->get('takes_id');
+            $id = JFactory::getApplication()->input->get('takes_id')[0];
             
             $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=edit&takes_id='.$id, false));
         }
@@ -132,17 +156,48 @@ class RadeniumControllerTakes extends JControllerForm
     }
 
 
-    public function delete()
+    public function delete($multiple=array())
     {
         if ($this->checkToken($method = 'post', $redirect = true)) {
             $option = JFactory::getApplication()->input->get('option','string');
             $model = $this->getModel("takes");
-            $id = JFactory::getApplication()->input->get('takes_id');
-            $model->delete($id);
+            $id_arr = JFactory::getApplication()->input->get('takes_id');
+            foreach( $id_arr as $id ) {
+            	'id_' . $id . DIRECTORY_SEPARATOR . 'sampledirtree';
+            	$vid_url = DIRECTORY_SEPARATOR ."Applications"
+            			. DIRECTORY_SEPARATOR ."MAMP"
+						. DIRECTORY_SEPARATOR ."htdocs/radenium/media/com_radenium/media/takes/id_".$id;
+				if ( file_exists($vid_url)) {
+					$this->removeDir($vid_url);
+				}
+            	$model->delete($id);
+            
+            }
             
             $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=default', false));
         }
-
+        
+    }
+    
+    
+    public function removeDir($dir) {
+    	//$dir = 'samples' . DIRECTORY_SEPARATOR . 'sampledirtree';
+    	$it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
+    	$files = new RecursiveIteratorIterator($it,
+    			RecursiveIteratorIterator::CHILD_FIRST);
+    	
+    	foreach($files as $file) {
+    		if ($file->isDir()){
+    			rmdir($file->getRealPath());
+    		
+    		} else {
+    			unlink($file->getRealPath());
+    		
+    		}
+    	
+    	}
+    	rmdir($dir);
+    
     }
 
 
