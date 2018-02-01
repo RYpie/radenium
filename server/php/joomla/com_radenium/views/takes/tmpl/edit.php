@@ -13,6 +13,10 @@ defined('_JEXEC') or die('Restricted access');
  		
 $vidurl = "media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/playlist.m3u8";
 
+$m3u8_file = "index.php?option=com_radenium&view=m3u8&format=raw&take_id=".$this->entry_data[0]->id;
+
+$m3u8_file = "media/com_radenium/playlist.php?take_id=".$this->entry_data[0]->id;
+
 //echo "<a href=\"".$vidurl."\">".$vidurl."</a>";
 echo "<div>";
 //echo "<video controls width=\"320\" height=\"240\">";
