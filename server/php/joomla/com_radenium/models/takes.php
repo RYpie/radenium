@@ -56,17 +56,34 @@ class RadeniumModelTakes extends JModelForm
     {
         // Construct the parent
         parent::__construct();
-        $this->ffmpeg = new RadeniumModelPhpffmpeg();
         return True;
     }
 
     
-    public function stopTake( $pid ) {
-        if ( $pid > 0 ) {
-            $pid = exec("kill ".$pid, $out);
-        }
-        
-        return true;
+    /**
+     * @desc Stops currently running take.
+     * @param unknown $id Mysql Id of the take.
+     */
+    public function stopTake( $id ) {
+    	// Get a db connection:
+    	$db = JFactory::getDbo();
+    	// Create a new query object:
+    	$query = $db->getQuery(true);
+    	// Prepare table data:
+    	$fields = array(
+    			$db->quoteName('state') . ' = 2'
+    	);
+    	// Conditions for which records should be updated:
+    	$conditions = array(
+    			$db->quoteName('id') .' = '. $id
+    	);
+    	// Prepare the insert query.
+    	$query->update($db->quoteName( '#__radenium_takes'))
+    	->set($fields)
+    	->where($conditions);
+    	// Set the query using our newly populated query object and execute it...
+    	$db->setQuery($query);
+    	$db->execute();
     }
     
     

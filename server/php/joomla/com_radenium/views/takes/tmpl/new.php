@@ -51,5 +51,6 @@ foreach ( $xml->fieldset as $f ) {
     <input type="hidden" name="task" value="save" />
     <br />
     <button type="submit" class="button"><?php echo JText::_('Take!'); ?></button>
+    <button type="submit" name="task" value="" class="button"><?php echo JText::_('Cancel'); ?></button>
     </form>
 </div>

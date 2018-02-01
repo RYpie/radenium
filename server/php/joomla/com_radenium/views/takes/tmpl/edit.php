@@ -16,11 +16,22 @@ $vidurl = "media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/playli
 //echo "<a href=\"".$vidurl."\">".$vidurl."</a>";
 echo "<div>";
 //echo "<video controls width=\"320\" height=\"240\">";
-echo "<video controls autoplay=\"1\">";
+//echo "<video controls autoplay=\"1\">";
+echo "<video controls width=\"700\" autoplay=\"1\">";
 echo "  <source src=\"".$vidurl."\" type=\"video/mp4\">";
 echo "</video>";
 echo "</div>";
+?>
 
+<script>
+
+function checkIfLive() {
+	retVal = performCall("checkiflive");
+	
+}
+setTimeout(checkIfLive, 1000);
+</script>
+<?php 
 
 $xml = $this->form->getXml();
 foreach ( $xml->fieldset as $f ) {
@@ -49,12 +60,12 @@ $format= $format->getOptions(); // works only if you set your field getOptions o
 
 
 $info = array(
-		"Video Input Device"=>$vdevs[$this->entry_data[0]->vid]
-		, "Audio Input Device"=>$adevs[$this->entry_data[0]->aid]
-		, "Screen Resolution" => $res[$this->entry_data[0]->resolution]
-		, "Recording Format" => $format[$this->entry_data[0]->format]
-		, "Take date" => $this->entry_data[0]->takedate
-		, "Process ID"=> $this->entry_data[0]->pid
+	"Video Input Device"=>$vdevs[$this->entry_data[0]->vid]
+	, "Audio Input Device"=>$adevs[$this->entry_data[0]->aid]
+	, "Screen Resolution" => $res[$this->entry_data[0]->resolution]
+	, "Recording Format" => $format[$this->entry_data[0]->format]
+	, "Take date" => $this->entry_data[0]->takedate
+	, "Process ID"=> $this->entry_data[0]->pid
 );
 
 
@@ -94,7 +105,8 @@ function performCall(task) {
 
 
 </script>
-
+<div id="take_control_buttons">
+<?php if ($this->entry_data[0]->state < 2 ) {?>
 <?php if (strpos($info["Recording Format"], "HLS")) { ?>
 <?php 
 $pub = array( 
@@ -106,18 +118,29 @@ $pub = array(
 <?php } ?>
 
 <button onclick="performCall('stoptake')">Stop Take</button>
+<br />
+<?php } ?>
+</div>
+<br />
+<div "take_details" style="background-color:#f3f3ee;padding:5px;">
+
+<?php 
+foreach ($info as $key => $val ) {
+	echo "<strong>".$key."</strong> : ". $val." <br />";
+	
+}
+
+?>
+</div>
 
 <form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="radenium_takes" name="radenium_takes">
 
-<h2>Take information:</h2>
+
     <div class="form_rendered_container">
+    	<h3>Take information:</h3>
         <div class="form_rendered_container_form">
             <?php echo $this->form->renderFieldSet("taketitle"); ?>
-        </div>
-    </div>
-	<?php print_r($info); ?>
-    <br />      
-    <div class="form_rendered_container">
+        </div>    
         <h3><?php echo JText::_('COM_RADENIUM_VIEW_TAKES_FIELDSET_NOTES'); ?></h3>
         <div class="form_rendered_container_form">
             <?php echo $this->form->renderFieldSet("information"); ?>

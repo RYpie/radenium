@@ -23,7 +23,8 @@ class JFormFieldScreenResolution extends JFormFieldList {
 		$list_options = array(
 			0 => "Screen Resolution"
 		    , 1 => "VGA 680x420"
-			, 2 => "HD 1920x1080"
+		    , 2 => "HD 960x540"
+			, 3 => "HD 1920x1080"
 		);
 		
 		/*

@@ -101,14 +101,16 @@ class RadeniumControllerTakes extends JControllerForm
 		$option = JFactory::getApplication()->input->get('option','string');
 		$take_id = JFactory::getApplication()->input->get('takes_id',false);
 		$model = $this->getModel("takes");
+		
 		$data = $model->getEntry_Entry_Id()[0];
 		$retVal = array();
 		if ( $data->pid != 0 ) {
-			$model_ffmpeg = $this->getModel("phpffmpeg");
+			$model_ffmpeg = $this->getModel("ffmpeg");
 			$model_ffmpeg->stopTake($data->pid);
 			$retVal["take_id"] = $take_id;
 			$retVal["result"] = "OK";
 			$retVal["msg"] = "Take stopped.";
+			$model->stopTake($take_id);
 			
 		} else {
 			$retVal["result"] = "NOK";
@@ -151,11 +153,24 @@ class RadeniumControllerTakes extends JControllerForm
             $option = JFactory::getApplication()->input->get('option','string');
             $id = JFactory::getApplication()->input->get('takes_id')[0];
             
-            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=edit&takes_id='.$id, false));
+            // If at least one was selected when we come here:
+            if ( $id != "" ) {
+            	$this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=edit&takes_id='.$id, false));
+        
+            } else {
+            	$this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=default', false));
+            	
+            }
+        
         }
 
     }
 
+    public function checkiflive() {
+    	$option = JFactory::getApplication()->input->get('option','string');
+    	$take_id = JFactory::getApplication()->input->get('takes_id',false);
+    	
+    }
 
     public function delete($multiple=array())
     {
@@ -163,19 +178,28 @@ class RadeniumControllerTakes extends JControllerForm
             $option = JFactory::getApplication()->input->get('option','string');
             $model = $this->getModel("takes");
             $id_arr = JFactory::getApplication()->input->get('takes_id');
-            foreach( $id_arr as $id ) {
-            	'id_' . $id . DIRECTORY_SEPARATOR . 'sampledirtree';
-            	$vid_url = DIRECTORY_SEPARATOR ."Applications"
-            			. DIRECTORY_SEPARATOR ."MAMP"
-						. DIRECTORY_SEPARATOR ."htdocs/radenium/media/com_radenium/media/takes/id_".$id;
-				if ( file_exists($vid_url)) {
-					$this->removeDir($vid_url);
-				}
-            	$model->delete($id);
             
-            }
-            
-            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=default', false));
+            // If at least one was selected when we come here:
+            if ( count($id_arr) > 0) {
+	            foreach( $id_arr as $id ) {
+	            	'id_' . $id . DIRECTORY_SEPARATOR . 'sampledirtree';
+	            	$vid_url = DIRECTORY_SEPARATOR ."Applications"
+	            			. DIRECTORY_SEPARATOR ."MAMP"
+							. DIRECTORY_SEPARATOR ."htdocs/radenium/media/com_radenium/media/takes/id_".$id;
+					if ( file_exists($vid_url)) {
+						$this->removeDir($vid_url);
+						
+					}
+	            	$model->delete($id);
+	            
+	            }
+	            $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=default', false));
+	        
+	        } else {
+	        	$this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=default', false));
+	        	
+	        }
+        
         }
         
     }
