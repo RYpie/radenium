@@ -134,49 +134,35 @@ jQueryRepresentatives(document.body).on('click','#button_togglelive', function()
 	
 });
 </script>
-<div "take_details" style="background-color:#f3f3ee;padding:5px;">
-<table><tr><td valign="top">
-<?php
-$row_counter = 0;
-
-foreach ($info as $key => $val ) {
-	if ( fmod( $row_counter, 3 ) == 0) {
-
-	}
-	echo "<strong>".$key."</strong> : ". $val." <br />";
-	$row_counter += 1;
-	
-	if ( fmod( $row_counter,3 ) == 0) {
-		echo "</td>";
-		echo "<td>&nbsp;</td>";
-		echo "<td valign=\"top\">";
-	}
-	
-	
-}
-?>
-</td></tr></table>
-</div> 
 
 <form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="radenium_takes" name="radenium_takes">
-
-
-    <div class="form_rendered_container">
-    	<h3>Take Information &amp; Notes:</h3>
-    	
+    <div class="form_rendered_container_take_info">
+		<table><tr><td valign="top">
+		<?php
+		$row_counter = 0;
+		
+		foreach ($info as $key => $val ) {
+			if ( fmod( $row_counter, 3 ) == 0) {
+		
+			}
+			echo "<strong>".$key."</strong> : ". $val." <br />";
+			$row_counter += 1;
+			if ( fmod( $row_counter,3 ) == 0) {
+				echo "</td>";
+				echo "<td>&nbsp;</td>";
+				echo "<td valign=\"top\">";
+			}
+		}
+		?>
+		</td></tr></table>
+		<br />
         <div class="form_rendered_container_form">
             <?php echo $this->form->renderFieldSet("taketitle"); ?>
-        </div> 
-        
-
-   
-       
+        </div>
         <div class="form_rendered_container_form">
             <?php echo $this->form->renderFieldSet("information"); ?>
         </div>
     </div>
-    
-    
 	<?php echo $this->form->renderFieldSet("hidden"); ?>
     <?php echo JHtml::_('form.token'); ?>
     <input type="hidden" name="jform[pid]" value="<?php echo $this->entry_data[0]->pid; ?>" />

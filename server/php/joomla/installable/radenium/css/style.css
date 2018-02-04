@@ -24,11 +24,15 @@ tr.radenium_table_row0, tr.radenium_table_row1 {
 table.radenium_table {
     width:100%;
 }
-table.radenium_table td {
+table.radenium_table td,th {
     padding:7px;
 }
 
-
+.form_rendered_container_take_info {
+    background-color: #fafafa;
+    padding:10px;
+    padding-bottom:40px;
+}
 
 /*********** administer_application *****/
 .administer_application_members_tab_subscription_list {
@@ -278,8 +282,11 @@ button.view_details_button {
 }
 .control-label {
     float:left;
-    width:50%;
+    width:39%;
     margin-bottom:10px;
+}
+#jform_title {
+width:58%;
 }
 /*********************Checkout **********************/
 #checkout_right_column_amount, #checkout_right_column_subtotal, #checkout_right_column_title {

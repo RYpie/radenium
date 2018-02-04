@@ -17,7 +17,7 @@ defined('_JEXEC') or die('Restricted access');
 <br />
 	<div style="width:100%;">
 	<table class="radenium_table">
-		<tr style=""><th>Id</th><th>Name</th><th>Type</th><th>System ID</th><th>ID String</th></tr>
+		<tr style="text-align:left;"><th>Id</th><th>Name</th><th>Type</th><th>System ID</th><th>ID String</th></tr>
 	    <?php
 	    $rowcount = 0;
 	    foreach ( $this->systemdevices_entries as $entry ) {
