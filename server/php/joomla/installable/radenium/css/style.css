@@ -11,6 +11,22 @@ body, html {
     padding:0px;
 }
 
+
+tr.radenium_table_row0 {
+    background-color: #fafafa;
+
+}
+tr.radenium_table_row0, tr.radenium_table_row1 {
+
+    border-top:1pt solid #ddd;
+    }
+
+table.radenium_table td {
+    padding:7px;
+}
+
+
+
 /*********** administer_application *****/
 .administer_application_members_tab_subscription_list {
 	text-align: center;

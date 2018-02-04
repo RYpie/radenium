@@ -43,16 +43,23 @@ $liveinfo=array(
 	</div>
 <br />
 	<div style="width:100%;">
-	<table style="width:100%;">
-		<tr style="text-align:left;"><th>Select</th><th>Id</th><th>Title</th><th>Date</th><th>Resolution</th><th>State</th><th>Live</th></tr>
+	<table class="radenium_table" style="width:100%;">
+		<tr style="text-align:left;"><th></th><th>Id</th><th>Title</th><th>Date</th><th>Resolution</th><th>State</th><th>Live</th></tr>
 		<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 	
 	    <?php
-	
+	    $rowcount = 0;
 	    foreach ( $this->takes_entries as $entry ) {
-	            $takes_id = $entry->id;        ?>
-	   		<tr>
-	        <td><input type="checkbox" name="takes_id[]" value="<?php echo $takes_id; ?>" /> </td>
+	            $takes_id = $entry->id;
+	            if (fmod($rowcount,2) == 0 ) {
+	            	$row = 0;
+	            } else {
+	            	$row = 1;
+	            }
+	            
+	        ?>
+	   		<tr class="radenium_table_row<?php echo $row; ?>">
+	        <td valign="top"> <input type="checkbox" name="takes_id[]" value="<?php echo $takes_id; ?>" /> </td>
 	        <?php
 	        //print_r($entry);
 	        echo "<td>".$entry->id." </td>";
@@ -64,7 +71,8 @@ $liveinfo=array(
 	        ?>
 			</tr>
 
-	    <?php
+	    	<?php
+	    	$rowcount += 1;
 	    }
 	
 	    ?>

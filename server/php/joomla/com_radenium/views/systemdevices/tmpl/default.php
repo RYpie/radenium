@@ -17,29 +17,38 @@ defined('_JEXEC') or die('Restricted access');
 <h1><?php echo JText::_('COM_RADENIUM_VIEW_SYSTEMDEVICES_LAYOUT_NEW_TITLE'); ?></h1>
 <br />
 	<div style="width:100%;">
-	<table style="width:100%;">
+	<table class="radenium_table">
 		<tr style="text-align:left;"><th>Id</th><th>Name</th><th>Type</th><th>System ID</th><th>ID String</th></tr>
 		<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td></tr>
 	
 
-<div>
-    <?php
 
+    <?php
+    $rowcount = 0;
     foreach ( $this->systemdevices_entries as $entry ) {
-        $systemdevices_id = $entry->id;  
+        $systemdevices_id = $entry->id;
+        if (fmod($rowcount,2) == 0 ) {
+        	$row = 0;
+        } else {
+        	$row = 1;
+        }
         //print_r($entry);
         //echo "<br />";
-        echo "<tr>";
+        ?><tr class="radenium_table_row<?php echo $row; ?>">
+        <?php 
         echo "<td>".$entry['id']."</td>";
         echo "<td>".$entry['name']."</td>";
         echo "<td>".$entry['type']."</td>";
         echo "<td>".$entry['sysid']."</td>";
         echo "<td>".$entry['idstr']."</td>";
         echo "</tr>";
+        $rowcount += 1;
     }
-
+    
     ?>
     	</table>
-	</div>
+
 
 </div>
+</div>
+<br /><br />
