@@ -21,7 +21,10 @@ class JFormFieldScreenResolution extends JFormFieldList {
 	
 	public function getOptions() {		
 		$list_options = array(
-		    "680x420" => "680 x 420"
+			0 => "Screen Resolution"
+		    , 1 => "VGA 680x420"
+		    , 2 => "HD 960x540"
+			, 3 => "HD 1920x1080"
 		);
 		
 		/*
@@ -47,7 +50,7 @@ class JFormFieldScreenResolution extends JFormFieldList {
 	}
 	
 	public function getLabel() {
-		return "Select Screen Resolution";
+		return "Select Output Resolution";
 	}
 	
 	// getLabel() left out

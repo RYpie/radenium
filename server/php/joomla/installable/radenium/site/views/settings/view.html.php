@@ -23,7 +23,7 @@ class RadeniumViewSettings extends JViewLegacy
 	{
 		parent::__construct();
 		$document = JFactory::getDocument();
-		$document->addStyleSheet(JUri::root() . 'media/com_ministry/css/style.css');
+		$document->addStyleSheet(JUri::root() . 'media/com_radenium/css/style.css');
 	}
 
 	/**
@@ -65,6 +65,11 @@ class RadeniumViewSettings extends JViewLegacy
 
             case "remote":
                 $this->remote_data = $this->get("remote");
+                $this->form = $this->get("Form");
+                break;
+
+            case "rtsp_server":
+                $this->rtsp_server_data = $this->get("rtsp_server");
                 $this->form = $this->get("Form");
                 break;
 

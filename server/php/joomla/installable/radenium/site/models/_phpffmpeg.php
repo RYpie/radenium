@@ -21,6 +21,8 @@ class RadeniumModelPhpffmpeg extends JModelItem
 	 * @var string message
 	 */
 	protected $message;
+	protected $noterminal = " </dev/null >/dev/null 2>ffmpeg.log & echo $!";
+	
 
 	/**
 	 * Get the message
@@ -37,12 +39,24 @@ class RadeniumModelPhpffmpeg extends JModelItem
 		return $this->message;
 	}
 	
+	public function publishLive( $id ) {
+		
+		//$pid = exec("python ".$comand.$this->noterminal, $out);		
+		//echo $pid;
+		
+		exec("python components/com_radenium/models/python/phppublishremote.py -id ".$id." 2>&1", $out);
+		//print_r($out);
+		
+		return $out;
+	}
+	
+	
 	public function startTake( $id, $data, $devices ) {
 		
 		$noterminal = " </dev/null >/dev/null 2>ffmpeg.log & echo $!";
 		$ffmpeg = "/usr/local/bin/ffmpeg";
-		
-		mkdir("/Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."", 0757);
+		$vid_url = "/Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id;
+		mkdir($vid_url, 0757);
 		$devstr="";
 		// Do we have to start audio as well?
 		if ( $devices["audio"]["sysid"] == "" ) {
@@ -68,7 +82,7 @@ class RadeniumModelPhpffmpeg extends JModelItem
 		$ffmpeg = "/usr/local/bin/ffmpeg";
 		
 		mkdir("/Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."", 0757);
-		$ffmpegcom = "-r 30 -f avfoundation -i 0:0 -pix_fmt yuv420p -s 640X320 -hls_flags round_durations -hls_time 3 -hls_init_time 3 /Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."/playlist.m3u8";
+		$ffmpegcom = "-r 30 -f avfoundation -i 0:0 -pix_fmt yuv420p -s 640X320 -hls_flags round_durations -hls_time 3 -hls_init_time 3 ".$vid_url."/playlist.m3u8";
 		
 		ini_set('max_execution_time', 0);
 		

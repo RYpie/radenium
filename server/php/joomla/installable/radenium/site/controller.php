@@ -19,5 +19,9 @@ defined('_JEXEC') or die('Restricted access');
  */
 class radeniumController extends JControllerLegacy
 {
+	public function __construct() {
+
+	}
+	
 
 }

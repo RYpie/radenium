@@ -55,6 +55,14 @@ foreach ( $xml->fieldset as $f ) {
     
     <br />
     <div class="form_rendered_container">
+        <h3><?php echo JText::_('COM_RADENIUM_VIEW_SETTINGS_FIELDSET_RTSP_SERVER'); ?></h3>
+        <div class="form_rendered_container_form">
+            <?php echo $this->form->renderFieldSet("rtsp_server"); ?>
+        </div>
+    </div>
+    
+    <br />
+    <div class="form_rendered_container">
         <h3><?php echo JText::_('COM_RADENIUM_VIEW_SETTINGS_FIELDSET_HIDDEN'); ?></h3>
         <div class="form_rendered_container_form">
             <?php echo $this->form->renderFieldSet("hidden"); ?>

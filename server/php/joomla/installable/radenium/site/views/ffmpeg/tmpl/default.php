@@ -15,6 +15,7 @@ defined('_JEXEC') or die('Restricted access');
 
 <div id="view_ffmpeg_layout_default">
     <h1><?php echo JText::_('COM_RADENIUM_VIEW_FFMPEG_LAYOUT_NEW_TITLE'); ?></h1>
+    <hr />
     <form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="ffmpeg" name="ffmpeg">
 
     <input type="hidden" name="view" value="ffmpeg" />

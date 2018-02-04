@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form name = "takes">
+	<fieldset name="information">
+		<field
+			name="notes"
+			type="editor"
+			filter="safehtml"
+			label="COM_RADENIUM_FIELD_TAKE_NOTES"
+			description="COM_RADENIUM_FIELD_TAKE_NOTES"
+			default=""
+		/>
+	</fieldset>
+	<fieldset name="taketitle">
+			<field
+			name="title"
+			type="text"
+			label="COM_RADENIUM_FIELD_TAKE_TITLE"
+			description="COM_RADENIUM_FIELD_TAKE_TITLE"
+			default="New Take"
+		/>
+	</fieldset>
 	<fieldset name="take">
 		<field
 			name="selectsource"
@@ -10,6 +29,7 @@
 			description="COM_RADENIUM_FIELD_TASK_SELECT_SOURCE">
                 <option value="0">System Devices</option>
                 <option value="1">File System</option>
+                <option value="2">Upload</option>
 		</field>
 		<field
 		    showon="selectsource:0"
@@ -32,6 +52,18 @@
 			label="COM_RADENIUM_FIELD_TASK_AID"
 			description="COM_RADENIUM_FIELD_TASK_AID"
 		/>
+		
+		<field
+		    showon="selectsource:2"
+			name="uploaded"
+			type="file"
+			enctype="multipart/form-data"
+			accept="audio/*,video/*,image/*"
+			label="COM_RADENIUM_FIELD_TASK_AID"
+			description="COM_RADENIUM_FIELD_TASK_AID"
+		/>
+		
+		
 		<field
 			name="resolution"
 			type="screenresolution"
@@ -44,6 +76,8 @@
 			label="COM_RADENIUM_FIELD_TASK_FORMAT"
 			description="COM_RADENIUM_FIELD_TASK_FORMAT"
 		/>
+	</fieldset>
+    <fieldset name="takedate">
 		<field
 			name="takedate"
 			type="calendar"

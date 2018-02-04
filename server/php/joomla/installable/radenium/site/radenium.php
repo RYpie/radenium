@@ -25,13 +25,18 @@ $japp = JFactory::getApplication();
 // fetch the view
 $view = $japp->input->get('view');
 
-if ( ($view == 'radenium')) {
+if ( 
+		($view == 'radenium')
+		//|| ($view== 'm3u8')
+		) {
 	// If view is default component, then include the default controller and reset the $view.
 	require_once JPATH_COMPONENT.DS.'controller.php';
 	$view = '';
+	
 } else {
 	// Use the view to fetch the right controller
 	require_once JPATH_COMPONENT.DS.'controllers'.DS.$view.'.php';
+	
 }
 
 // initiate the contoller class and execute the controller

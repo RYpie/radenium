@@ -26,10 +26,15 @@ jimport('joomla.event.dispatcher');
  * Radenium Model Project
  *
  * @since  0.0.1
+ * 
+ * @desc help links:
+ * https://www.wowza.com/docs/how-to-use-ffmpeg-with-wowza-media-server-mpeg-ts#restreamrtsp
+ * 
  */
 class RadeniumModelFfmpeg extends JModelForm
 {
-		
+	protected $noterminal = " </dev/null >/dev/null 2>ffmpeg.log & echo $!";
+	
     public function getForm($data = array(), $loadData = true)
     {
 		
@@ -73,12 +78,16 @@ class RadeniumModelFfmpeg extends JModelForm
         $columns = array(
             name
             , command
+            , platform
+            , category
 
         );
 
         $values = array(
             $db->quote($data["name"])
             , $db->quote($data["command"])
+            , $db->quote($data["platform"])
+            , intval($data["category"])
 
         );
 
@@ -113,6 +122,8 @@ class RadeniumModelFfmpeg extends JModelForm
         $fields = array(
             $db->quoteName('name') . ' = ' . $db->quote($data["name"])
             , $db->quoteName('command') . ' = ' . $db->quote($data["command"])
+            , $db->quoteName('platform') . ' = ' . $db->quote($data["platform"])
+            , $db->quoteName('category') . ' = ' . intval($data["category"])
 
         );
 
@@ -212,7 +223,7 @@ class RadeniumModelFfmpeg extends JModelForm
             $query->where($conditions);
             $db->setQuery($query);
             $db->execute();
-            $results = $db->loadObjectList();
+            $results = $db->loadAssocList();
         }
         else {
             $results = false;
@@ -265,45 +276,153 @@ class RadeniumModelFfmpeg extends JModelForm
     }
 
         
-    /**
-     * @name getcommands
-     * @desc Function description.
-     */
-    public function getcommands()
-    {
-        // Returns a particular fieldset to render as form. 
+	public function publishLive( $id ) {
+		
+		//$pid = exec("python ".$comand.$this->noterminal, $out);		
+		//echo $pid;
+		
+		exec("python components/com_radenium/models/python/phppublishremote.py -id ".$id." 2>&1", $out);
+		//print_r($out);
+		
+		return $out;
+	}
+	
+	
+	public function startTake( $id, $data, $devices ) {
+		$noterminal = " </dev/null >/dev/null 2>ffmpeg.log & echo $!";
+		$ffmpeg = "/usr/local/bin/ffmpeg";
+		$vid_url = "/Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id;
+		mkdir($vid_url, 0757);
+		//mkdir($vid_url."_copy", 0757);
 
-        // should return a form with only the fieldset 
-/*Array
-(
-    [name] => commands
-    [variables] => Array
-        (
-            [0] => Array
-                (
-                    [name] => name
-                    [type] => text
-                    [label] => COM_RADENIUM_FIELD_FFMPEG_TEMPLATE_NAME_LABEL
-                    [description] => COM_RADENIUM_FIELD_FFMPEG_TEMPLATE_NAME_DESC
-                )
+		$devstr="";
+		// Do we have to start audio as well?
+		if ( $devices["audio"]["sysid"] == "" ) {
+			$devstr = $devices["video"]["sysid"];
+		} else {
+			$devstr = $devices["video"]["sysid"].":".$devices["audio"]["sysid"];
+		}
+		
+		$command = $this->getEntry($data['format'], $where=array("category"=>"takes"))[0];
+		
+		JFormHelper::addFieldPath(JPATH_COMPONENT . '/models/fields');
+		$res = JFormHelper::loadFieldType('ScreenResolution', false);
+		$res = $res->getOptions(); // works only if you set your field getOptions on public!!
+		
+		
+		$ffmpegcom= str_replace("{\$DEVICES}", $devstr, $command["command"]);
+		$ffmpegcom= str_replace("{\$OUT_DIR}", $vid_url."/", $ffmpegcom);
+		$ffmpegcom= str_replace("{\$OUT_NAME_M3U8}", "playlist.m3u8", $ffmpegcom);
+		
+		if ( strpos(strtolower($res[$data["resolution"]]), "screen") === False ) {
+			$resolution = explode(" ", $res[$data["resolution"]]);
+			$resolution = $resolution[1];
+			
+		} else {
+			$resolution = "640x380";
+			
+		}
+		
+		$ffmpegcom = str_replace("{\$OUT_RES}", $resolution, $ffmpegcom);
+		
+		//Rtsp settings
+		$ffmpegcom = str_replace("{\$RTSP_USER_NAME}", $data["settings"]["rtsp_user"], $ffmpegcom);
+		$ffmpegcom = str_replace("{\$RTSP_USER_PASSWORD}", $data["settings"]["rtsp_password"], $ffmpegcom);
+		$ffmpegcom = str_replace("{\$RTSP_SERVER_URL}", $data["settings"]["rtsp_url"], $ffmpegcom);
+		$ffmpegcom = str_replace("{\$RTSP_SERVER_PORT}", $data["settings"]["rtsp_port"], $ffmpegcom);
+		$ffmpegcom = str_replace("{\$RTSP_KEY}", $data["settings"]["rtsp_key"], $ffmpegcom);
+		//$ffmpegcom .= " copy ".$vid_url."_copy/copy.mp4";
+		/*
+		
+		print_r($ffmpegcom);
+		
+		echo "<pre>";
+		
+		echo "<br />";
+		print_r($data["settings"]);
+		echo "</pre>";
+		
+		
+		die;
+		*/
+		
+		
+		//$ffmpegcom = "-r 30 -f avfoundation -i ".$devstr." -pix_fmt yuv420p -s 640X320 -hls_flags round_durations -hls_time 3 -hls_init_time 3 /Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."/playlist.m3u8";
+		//$ffmpegcom = "-r 30 -f avfoundation -i 0:0 -pix_fmt yuv420p -s 640X320 -hls_flags round_durations -hls_time 3 -hls_init_time 3 /Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id."/playlist.m3u8";
+		
+		ini_set('max_execution_time', 0);
+		
+		//echo $ffmpeg." ".$ffmpegcom.$noterminal;
+		
+		$pid = exec($ffmpeg." ".$ffmpegcom.$noterminal, $out);
+		
+		return $pid;
+	}
+	
+	
+	public function stopTake( $pid ) {
+		if ( $pid > 0 ) {
+			$pid = exec("kill ".$pid, $out);
+		}
+		
+		return true;
+	}
+	
+	private function parseSystemDeviceOutputLine( $line ) {
+		$device = array();
+		$d = explode("] [", $line);
+		$d = explode("] ", $d[1]);
+		$device["sysid"] = $d[0];
+		$device["name"] = $d[1];
+		$device["idstr"] = $device["sysid"]."_".strtolower(str_replace(" ", "_", $device["name"]));
 
-            [1] => Array
-                (
-                    [name] => command
-                    [type] => text
-                    [label] => COM_RADENIUM_FIELD_FFMPEG_TEMPLATE_COMMAND_LABEL
-                    [description] => COM_RADENIUM_FIELD_FFMPEG_TEMPLATE_COMMAND_DESC
-                )
+		return $device;
+	}
+	
+    public function getSystemDevices() {
+        //ini_set('max_execution_time', 0);
+        $noterminal = " </dev/null >/dev/null 2>python.log & echo $!";
+        $noterminal = " </dev/null >/dev/null 2>python.log &";
+        //$result = exec("python components/com_radenium/models/python/getsystemdevices.py".$noterminal, $out);
+        //$result = exec("/usr/local/bin/python3.6 components/com_radenium/models/python/getsystemdevices.py".$noterminal, $out);
 
-        )
+//"/usr/local/bin/ffmpeg", "-f", "avfoundation", "-list_devices", "true", "-i", ""
+        //$result = shell_exec("/usr/local/bin/ffmpeg -f avfoundation -list_devices true -i \"\"");
 
-)
-
-*/
-
+        exec("/usr/local/bin/ffmpeg -f avfoundation -list_devices true -i \"\" 2>&1", $out);
+		$devs = array();
+		$parsevideodevicesnow = false;
+		$parseaudiodevicesnow = false;
         
-
-        return True;
+        foreach( $out as $l ) {
+            if (strpos($l, ":") !== false){ // Otherwise it parses the ': input output error' as well.
+            	if (strpos($l, "video")) {
+               		$parsevideodevicesnow = true;
+               		$parseaudiodevicesnow = false; // you never know...
+               		
+            	} else if ( strpos($l, "audio")){
+	            	$parseaudiodevicesnow = true;
+	            	$parsevideodevicesnow = false;
+	            	
+            	}
+            } else if ($parsevideodevicesnow) {
+            	$devs['video'][] = $this->parseSystemDeviceOutputLine($l);
+            	
+            } else if ($parseaudiodevicesnow) {
+            	$devs['audio'][] = $this->parseSystemDeviceOutputLine($l);
+            	
+            }
+        }
+        
+        $devs['audio'][] = array("sysid"=>"", "name"=>"No Audio", "idstr"=>"no_audio");
+        $devs['video'][] = array("sysid"=>"", "name"=>"No Video", "idstr"=>"no_video");
+        
+/*
+$output = shell_exec('ffprobe -v quiet -print_format json -show_format -show_streams "path/to/yourfile.ext"');
+$parsed = json_decode($output, true);
+*/
+        return $devs;
+        
     }
 
 }

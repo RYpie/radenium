@@ -77,6 +77,12 @@ class RadeniumModelSettings extends JModelForm
             , remote_url
             , remote_user
             , remote_password
+            , rtsp_enable
+            , rtsp_url
+            , rtsp_user
+            , rtsp_password
+            , rtsp_port
+            , rtsp_key
             , user_id
 
         );
@@ -88,6 +94,12 @@ class RadeniumModelSettings extends JModelForm
             , $db->quote($data["remote_url"])
             , $db->quote($data["remote_user"])
             , $db->quote($data["remote_password"])
+            , intval($data["rtsp_enable"])
+            , $db->quote($data["rtsp_url"])
+            , $db->quote($data["rtsp_user"])
+            , $db->quote($data["rtsp_password"])
+            , intval($data["rtsp_port"])
+            , $db->quote($data["rtsp_key"])
             , intval($data["user_id"])
 
         );
@@ -127,6 +139,12 @@ class RadeniumModelSettings extends JModelForm
             , $db->quoteName('remote_url') . ' = ' . $db->quote($data["remote_url"])
             , $db->quoteName('remote_user') . ' = ' . $db->quote($data["remote_user"])
             , $db->quoteName('remote_password') . ' = ' . $db->quote($data["remote_password"])
+            , $db->quoteName('rtsp_enable') . ' = ' . intval($data["rtsp_enable"])
+            , $db->quoteName('rtsp_url') . ' = ' . $db->quote($data["rtsp_url"])
+            , $db->quoteName('rtsp_user') . ' = ' . $db->quote($data["rtsp_user"])
+            , $db->quoteName('rtsp_password') . ' = ' . $db->quote($data["rtsp_password"])
+            , $db->quoteName('rtsp_port') . ' = ' . intval($data["rtsp_port"])
+            , $db->quoteName('rtsp_key') . ' = ' . $db->quote($data["rtsp_key"])
             , $db->quoteName('user_id') . ' = ' . intval($data["user_id"])
 
         );
@@ -199,7 +217,28 @@ class RadeniumModelSettings extends JModelForm
         return $results;
     }
 
-        
+    public function getSettings()
+    {
+
+    		// Get a db connection:
+    		$db = JFactory::getDbo();
+    		// Create a new query object:
+    		$query = $db->getQuery(true);
+    		// Get Entry by id:
+    		$conditions = array(
+    				$db->quoteName('user_id') . ' = '.JFactory::getUser()->id
+    		);
+    		$query->select('*');
+    		$query->from($db->quoteName('#__radenium_settings'));
+    		$query->where($conditions);
+    		$db->setQuery($query);
+    		$db->execute();
+    		$results = $db->loadAssocList();
+
+    	
+    	return $results;
+    }
+    
     /**
      * @name getEntry
      * @desc Gets an entry by id from the database.
@@ -392,6 +431,80 @@ class RadeniumModelSettings extends JModelForm
                     [type] => text
                     [label] => COM_RADENIUM_FIELD_SETTINGS_REMOTE_PASSWORD_LBL
                     [description] => COM_RADENIUM_FIELD_SETTINGS_REMOTE_PASSWORD_DESC
+                )
+
+        )
+
+)
+
+*/
+
+        
+
+        return True;
+    }
+
+        
+    /**
+     * @name getrtsp_server
+     * @desc Function description.
+     */
+    public function getrtsp_server()
+    {
+        // Returns a particular fieldset to render as form. 
+
+        // should return a form with only the fieldset 
+/*Array
+(
+    [name] => rtsp_server
+    [variables] => Array
+        (
+            [0] => Array
+                (
+                    [name] => rtsp_enable
+                    [type] => radio
+                    [label] => COM_RADENIUM_FIELD_SETTINGS_RTSP_ENABLE_LBL
+                    [description] => COM_RADENIUM_FIELD_SETTINGS_RTSP_ENABLE_DESC
+                )
+
+            [1] => Array
+                (
+                    [name] => rtsp_url
+                    [type] => text
+                    [label] => COM_RADENIUM_FIELD_SETTINGS_RTSP_URL_LBL
+                    [description] => COM_RADENIUM_FIELD_SETTINGS_RTSP_URL_DESC
+                )
+
+            [2] => Array
+                (
+                    [name] => rtsp_user
+                    [type] => text
+                    [label] => COM_RADENIUM_FIELD_SETTINGS_RTSP_USER_LBL
+                    [description] => COM_RADENIUM_FIELD_SETTINGS_RTSP_USER_DESC
+                )
+
+            [3] => Array
+                (
+                    [name] => rtsp_password
+                    [type] => text
+                    [label] => COM_RADENIUM_FIELD_SETTINGS_RTSP_PASSWORD_LBL
+                    [description] => COM_RADENIUM_FIELD_SETTINGS_RTSP_PASSWORD_DESC
+                )
+
+            [4] => Array
+                (
+                    [name] => rtsp_port
+                    [type] => number
+                    [label] => COM_RADENIUM_FIELD_SETTINGS_RTSP_PORT_LBL
+                    [description] => COM_RADENIUM_FIELD_SETTINGS_RTSP_PORT_DESC
+                )
+
+            [5] => Array
+                (
+                    [name] => rtsp_key
+                    [type] => text
+                    [label] => COM_RADENIUM_FIELD_SETTINGS_RTSP_KEY_LBL
+                    [description] => COM_RADENIUM_FIELD_SETTINGS_RTSP_KEY_DESC
                 )
 
         )

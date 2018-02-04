@@ -10,37 +10,38 @@
  		
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
- 		
+		
 ?>
-
 <div id="view_systemdevices_layout_default">
-    <h1><?php echo JText::_('COM_RADENIUM_VIEW_SYSTEMDEVICES_LAYOUT_NEW_TITLE'); ?></h1>
-    <form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="systemdevices" name="systemdevices">
+<h1><?php echo JText::_('COM_RADENIUM_VIEW_SYSTEMDEVICES_LAYOUT_NEW_TITLE'); ?></h1>
+<br />
+	<div style="width:100%;">
+	<table class="radenium_table">
+		<tr style=""><th>Id</th><th>Name</th><th>Type</th><th>System ID</th><th>ID String</th></tr>
+	    <?php
+	    $rowcount = 0;
+	    foreach ( $this->systemdevices_entries as $entry ) {
+	        $systemdevices_id = $entry->id;
+	        if (fmod($rowcount,2) == 0 ) {
+	        	$row = 0;
+	        } else {
+	        	$row = 1;
+	        }
+	        ?>
+	        	<tr class="radenium_table_row<?php echo $row; ?>">
+	        <?php 
+	        echo "<td>".$entry['id']."</td>";
+	        echo "<td>".$entry['name']."</td>";
+	        echo "<td>".$entry['type']."</td>";
+	        echo "<td>".$entry['sysid']."</td>";
+	        echo "<td>".$entry['idstr']."</td>";
+	        echo "</tr>";
+	        $rowcount += 1;
+	    }
+	    ?>
+    </table>
 
-    <input type="hidden" name="view" value="systemdevices" />
-<div>
-    <button type="submit" name="layout" value="new" class="button"><?php echo JText::_('COM_RADENIUM_VIEW_BUTTON_NEW_ENTRY'); ?></button>
-    &nbsp;<button type="submit" name="task" value="edit" class="button"><?php echo JText::_('COM_RADENIUM_VIEW_BUTTON_EDIT_ENTRY'); ?></button>
-    &nbsp;<button type="submit" name="task" value="delete" class="button"><?php echo JText::_('COM_RADENIUM_VIEW_BUTTON_DELETE_ENTRY'); ?></button>
 
 </div>
-
-<div>
-
-    <?php
-
-    foreach ( $this->systemdevices_entries as $entry ) {
-            $systemdevices_id = $entry->id;        ?>
-        <input type="checkbox" name="systemdevices_id" value="<?php echo $systemdevices_id; ?>" />
-
-        <?php
-        print_r($entry);
-        echo "<br />";
-        ?>
-        <div class="clr">&nbsp;</div><?php
-    }
-
-    ?>
-</div>    <?php echo JHtml::_('form.token'); ?>
-    </form>
 </div>
+<br /><br />

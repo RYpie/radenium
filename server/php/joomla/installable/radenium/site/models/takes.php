@@ -56,17 +56,34 @@ class RadeniumModelTakes extends JModelForm
     {
         // Construct the parent
         parent::__construct();
-        $this->ffmpeg = new RadeniumModelPhpffmpeg();
         return True;
     }
 
     
-    public function stopTake( $pid ) {
-        if ( $pid > 0 ) {
-            $pid = exec("kill ".$pid, $out);
-        }
-        
-        return true;
+    /**
+     * @desc Stops currently running take.
+     * @param unknown $id Mysql Id of the take.
+     */
+    public function stopTake( $id ) {
+    	// Get a db connection:
+    	$db = JFactory::getDbo();
+    	// Create a new query object:
+    	$query = $db->getQuery(true);
+    	// Prepare table data:
+    	$fields = array(
+    			$db->quoteName('state') . ' = 2'
+    	);
+    	// Conditions for which records should be updated:
+    	$conditions = array(
+    			$db->quoteName('id') .' = '. $id
+    	);
+    	// Prepare the insert query.
+    	$query->update($db->quoteName( '#__radenium_takes'))
+    	->set($fields)
+    	->where($conditions);
+    	// Set the query using our newly populated query object and execute it...
+    	$db->setQuery($query);
+    	$db->execute();
     }
     
     
@@ -91,6 +108,28 @@ class RadeniumModelTakes extends JModelForm
         $db->setQuery($query);
         $db->execute();
     }
+    
+    public function setlivepublish($value, $id) {
+    	// Get a db connection:
+    	$db = JFactory::getDbo();
+    	// Create a new query object:
+    	$query = $db->getQuery(true);
+    	// Prepare table data:
+    	$fields = array(
+    			$db->quoteName('publish') . ' = ' . intval($value)
+    	);
+    	// Conditions for which records should be updated:
+    	$conditions = array(
+    			$db->quoteName('id') .' = '. $id
+    	);
+    	// Prepare the insert query.
+    	$query->update($db->quoteName( '#__radenium_takes'))
+    	->set($fields)
+    	->where($conditions);
+    	// Set the query using our newly populated query object and execute it...
+    	$db->setQuery($query);
+    	$db->execute();
+    }
             
     /**
      * @name save
@@ -99,6 +138,7 @@ class RadeniumModelTakes extends JModelForm
      */
     public function save($data)
     {
+    	
         //Set the joomla platform user id:
         $data["user_id"] = JFactory::getUser()->id;
         // Get a db connection:
@@ -118,6 +158,8 @@ class RadeniumModelTakes extends JModelForm
             , state
             , pid
             , user_id
+        	, title
+        	, notes
 
         );
 
@@ -133,6 +175,8 @@ class RadeniumModelTakes extends JModelForm
             , intval($data["state"])
             , intval($data["pid"])
             , intval($data["user_id"])
+        	, $db->quote($data["title"])
+        	, $db->quote($data["notes"])
 
         );
 
@@ -149,6 +193,40 @@ class RadeniumModelTakes extends JModelForm
         return $lastRowId;
     }
 
+    /**
+     * @name edit
+     * @desc Edits a new form entry in the database.
+     * @param id
+     * @param data
+     */
+    public function editNotes($id, $data)
+    {
+    	//Set the joomla platform user id:
+    	$data["user_id"] = JFactory::getUser()->id;
+    	// Get a db connection:
+    	$db = JFactory::getDbo();
+    	// Create a new query object:
+    	$query = $db->getQuery(true);
+    	// Prepare table data:
+    	$fields = array(
+    			$db->quoteName('title') . ' = ' . $db->quote($data["title"])
+    			, $db->quoteName('notes') . ' = ' . $db->quote($data["notes"])	
+    	);
+    	
+    	// Conditions for which records should be updated:
+    	$conditions = array(
+    			$db->quoteName('id') .' = '. $id
+    	);
+    	// Prepare the insert query.
+    	$query->update($db->quoteName( '#__radenium_takes'))
+    	->set($fields)
+    	->where($conditions);
+    	// Set the query using our newly populated query object and execute it...
+    	$db->setQuery($query);
+    	$db->execute();
+    	
+    	return True;
+    }
         
     /**
      * @name edit
@@ -177,6 +255,8 @@ class RadeniumModelTakes extends JModelForm
             , $db->quoteName('state') . ' = ' . intval($data["state"])
             , $db->quoteName('pid') . ' = ' . intval($data["pid"])
             , $db->quoteName('user_id') . ' = ' . intval($data["user_id"])
+        	, $db->quoteName('title') . ' = ' . $db->quote($data["title"])
+        	, $db->quoteName('notes') . ' = ' . $db->quote($data["notes"])
 
         );
         
