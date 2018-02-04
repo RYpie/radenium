@@ -42,24 +42,48 @@ class m3u8
 		$media=array();
 		//Get a list of all the media files:
 		$this->getDirContents($this->mediadir."id_".$id, $media, $findfile ="playlist.m3u8");
+		
+		//print_r($media);
 
 		if ( count($media) > 0 ) {
 			//echo "playlist ready...";
-			return "#EXTM3U
-#EXT-X-VERSION:3
-#EXT-X-TARGETDURATION:9
-#EXT-X-MEDIA-SEQUENCE:27
-#EXTINF:1,
-media/com_radenium/media/takes/id_140/playlist27.ts
-#EXTINF:2,
-media/com_radenium/media/takes/id_140/playlist28.ts
-#EXTINF:8,
-media/com_radenium/media/takes/id_140/playlist29.ts
-#EXTINF:3,
-media/com_radenium/media/takes/id_140/playlist30.ts
-#EXTINF:3,
-media/com_radenium/media/takes/id_140/playlist31.ts
-#EXT-X-ENDLIST";
+			
+			$read = file_get_contents($media[0]);
+			$lines= explode("\n",$read);
+			$new_m3u8 = "";
+			
+			//echo "<pre>";
+			$addit = False;
+			foreach( $lines as $l ){
+				//print_r($l."\n");
+				
+				if ( !$addit ) {
+					$new_m3u8 .= $l;
+					
+				} else {
+					//echo "adding directory\n";
+					$new_m3u8 .= "media/com_radenium/media/takes/id_".$id."/".$l;
+					$addit = false;
+					
+				}
+				$new_m3u8 .= "\n";
+				
+				//echo "testing line ". $l."\n";
+				if ( strpos($l, "#EXTINF:") !== false ) {
+					//echo "\nnext line is one.\n";
+					$addit = true;
+					
+				}
+			}
+			/*
+			echo "<hr />";
+			echo $new_m3u8;
+			echo "</pre>";
+			*/
+			
+			//die;
+			return $new_m3u8;
+			
 			
 		} else {
 			//echo "create a fake list...";
@@ -69,7 +93,16 @@ media/com_radenium/media/takes/id_140/playlist31.ts
 "#EXT-X-TARGETDURATION:9".PHP_EOL.
 "#EXT-X-MEDIA-SEQUENCE:1".PHP_EOL.
 "#EXTINF:1,".PHP_EOL.
-"../id_140/playlist1.ts".PHP_EOL;
+"media/com_radenium/media/takes/startup/playlist1.ts".PHP_EOL. 
+"#EXTINF:2,".PHP_EOL.
+"media/com_radenium/media/takes/startup/playlist2.ts".PHP_EOL.
+"#EXTINF:3,".PHP_EOL.
+"media/com_radenium/media/takes/startup/playlist3.ts".PHP_EOL.
+"#EXTINF:4,".PHP_EOL.
+"media/com_radenium/media/takes/startup/playlist4.ts".PHP_EOL.
+"#EXTINF:5,".PHP_EOL.
+"media/com_radenium/media/takes/startup/playlist5.ts".PHP_EOL;
+
 			
 		}
 	}

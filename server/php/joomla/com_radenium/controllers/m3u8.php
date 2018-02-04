@@ -27,7 +27,17 @@ class RadeniumControllerM3u8 extends JControllerForm
 
     }
 
-
+    
+    /**
+     * @desc Json with status: None, stopped, running
+     */
+	public function getstatus() {
+		$view = $this->getView( "m3u8", "raw" );
+		$retVal = array("status"=>"None");
+		
+		$view->controlout($retVal);
+	}
+	
     public function execute($task)
     {
         //

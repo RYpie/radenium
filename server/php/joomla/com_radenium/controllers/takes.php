@@ -19,7 +19,7 @@ jimport('joomla.application.component.controllerform');
 
 class RadeniumControllerTakes extends JControllerForm
 {
-
+	private $mediadir="media/com_radenium/media/takes/";
 
     public function __construct($config=array())
     {
@@ -41,33 +41,48 @@ class RadeniumControllerTakes extends JControllerForm
             		&& ($take_id !== null)
             		&& (intval($data["pid"]) < 1) // take not already has a pid...
             	) {
-            		// Get the systemdevice that have been selected for this take.
-		            $model_systemdevices = $this->getModel("systemdevices");
-		            $vid = $model_systemdevices->getEntry($data['vid'])[0];
-		            $aid = $model_systemdevices->getEntry($data['aid'])[0];
-					//start the take...
-					// @todo this is via the model, I should do it here via the ffmpeg model. I think i can get that as well..
-		            
-		            $settings_model = $this->getModel("settings");
-		            $data["settings"] = $settings_model->getSettings()[0];
-		            
-		            $model_ffmpeg = $this->getModel("ffmpeg");
-		            
-		            //$model_phpffmpeg = $this->getModel("phpffmpeg");
-		            //$model_phpffmpeg = $this->getModel("phpffmpeg");
-		            
-		            $data["pid"] = $model_ffmpeg->startTake($take_id, $data, array("video"=>$vid, "audio"=>$aid));
-		            
-		            $model->setPid($take_id, $data["pid"]);
+            		
+            		if ( intval($data["selectsource"]) == 0 ) {
+            			//0 = A recording from systemdevices.
+	            		// Get the systemdevice that have been selected for this take.
+			            $model_systemdevices = $this->getModel("systemdevices");
+			            $vid = $model_systemdevices->getEntry($data['vid'])[0];
+			            $aid = $model_systemdevices->getEntry($data['aid'])[0];
+						//start the take...
+						// @todo this is via the including the model, I should do it  via the joomla method of loading the ffmpeg model...
+			            $settings_model = $this->getModel("settings");
+			            $data["settings"] = $settings_model->getSettings()[0];
+			            $model_ffmpeg = $this->getModel("ffmpeg");
+			            $data["pid"] = $model_ffmpeg->startTake($take_id, $data, array("video"=>$vid, "audio"=>$aid));
+			            $model->setPid($take_id, $data["pid"]);
+
+			            JFactory::getApplication()->enqueueMessage("Take has started with PID ".$data["pid"], $message="message");
+			            
+			            
+            		} else if ( intval($data["selectsource"]) == 1 ) {
+            			// 1 = Files from a volume://radenium/raw/ directory
+            			// Those files next should be encoded into hls.
+            			
+            			JFactory::getApplication()->enqueueMessage("Copying files from USB sticks has not yet been implemented", $message="error");
+            			
+            		} else if ( intval($data["selectsource"]) == 2 ) {
+            			// 2 = This guy is uploading a movie! into the media/com_radenium/media/raw/ directory
+            			// Those files next should be encoded into hls.
+            			
+            			JFactory::getApplication()->enqueueMessage("Uploading files has not yet been implemented", $message="error");
+            			
+            		}
 
             }
-            
             $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=takes&layout=edit&takes_id='.$take_id, false));
         }
 
     }
-
+	
     
+    /**
+     * @desc To be called by a javascript AJAX function.
+     */
 	public function togglepublishlive() {
 		$option = JFactory::getApplication()->input->get('option','string');
 		$take_id = JFactory::getApplication()->input->get('takes_id',false);
@@ -97,6 +112,9 @@ class RadeniumControllerTakes extends JControllerForm
 	}
 	
 	
+	/**
+	 * @desc To be called by a javascript AJAX function.
+	 */
 	public function stoptake() {
 		$option = JFactory::getApplication()->input->get('option','string');
 		$take_id = JFactory::getApplication()->input->get('takes_id',false);
@@ -117,10 +135,13 @@ class RadeniumControllerTakes extends JControllerForm
 			$retVal["msg"] = "No proper pid found";
 			
 		}
+		$this->createFinalPlaylist();
+		
 		$view = $this->getView( "takes", "raw" );
 		$view->display_json($retVal);
 	}
     
+	
     public function modify()
     {
         if ($this->checkToken($method = 'post', $redirect = true)) {
@@ -165,11 +186,68 @@ class RadeniumControllerTakes extends JControllerForm
         }
 
     }
-
-    public function checkiflive() {
+	
+    
+    public function createFinalPlaylist() {
+    	$model_system = $this->getModel("phpsystem");
+    	
+    	$media = array();
+    	//    	$this->getDirContents($this->mediadir."id_".$take_id, $media, $findfile ="playlist.m3u8");
+    	
+    	
+    }
+    
+    
+    public function m3u8status() {
     	$option = JFactory::getApplication()->input->get('option','string');
     	$take_id = JFactory::getApplication()->input->get('takes_id',false);
     	
+    	$media=array();
+
+
+    	if ( count($media) == 0 ){
+    		$retVal["status"] = "None";
+    		
+    	} else {
+    		
+    		$retVal["status"] = "Running";
+    		
+    	}
+    	$view = $this->getView( "takes", "raw" );
+    	$view->display_json($retVal);
+    	
+    }
+    
+    
+    /*
+     * @todo should by done through the system model.
+     */
+    private function getDirContents($dir, &$results = array(), $findfile = False){
+
+    	if(substr($dir, -1) == '/') {
+    		$dir = substr($dir, 0, -1);
+    	}
+    	$files = scandir($dir);
+    	foreach($files as $key => $value){
+    		$path = $dir.DIRECTORY_SEPARATOR.$value;//realpath($dir.DIRECTORY_SEPARATOR.$value);
+    		
+    		if(!is_dir($path)) {
+    			if ( $findfile !== False ){
+    				if ($value == $findfile) {
+    					$results[] = $path;
+    				}
+    			} else {
+    				$results[] = $path;
+    			}
+    		} else if($value != "." && $value != ".." && $value != ".DS_Store") {
+    			$this->getDirContents($path, $results, $findfile);
+    			if ( $findfile == False ){
+    				$results[] = $path;
+    			}
+    		}
+    	}
+    	
+    	return $results;
     }
 
     public function delete($multiple=array())

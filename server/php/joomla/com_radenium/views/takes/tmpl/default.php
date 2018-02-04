@@ -44,9 +44,8 @@ $liveinfo=array(
 <br />
 	<div style="width:100%;">
 	<table style="width:100%;">
-		<tr style="text-align:left;"><th>Select</th><th>Title</th><th>Date</th><th>Resolution</th><th>State</th><th>Live</th></tr>
-	
-		<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>
+		<tr style="text-align:left;"><th>Select</th><th>Id</th><th>Title</th><th>Date</th><th>Resolution</th><th>State</th><th>Live</th></tr>
+		<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
 	
 	    <?php
 	
@@ -56,6 +55,7 @@ $liveinfo=array(
 	        <td><input type="checkbox" name="takes_id[]" value="<?php echo $takes_id; ?>" /> </td>
 	        <?php
 	        //print_r($entry);
+	        echo "<td>".$entry->id." </td>";
 	        echo "<td><a href=\"index.php?index.php?option=com_radenium&view=takes&layout=edit&takes_id=".$takes_id."&Itemid=105\">".$entry->title."</a> </td>";
 	        echo "<td>".$entry->takedate." </td>";
 	        echo "<td>".$res[$entry->resolution]." </td>";

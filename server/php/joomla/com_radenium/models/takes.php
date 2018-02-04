@@ -138,6 +138,7 @@ class RadeniumModelTakes extends JModelForm
      */
     public function save($data)
     {
+    	
         //Set the joomla platform user id:
         $data["user_id"] = JFactory::getUser()->id;
         // Get a db connection:

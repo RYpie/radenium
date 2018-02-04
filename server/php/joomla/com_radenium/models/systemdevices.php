@@ -21,8 +21,9 @@ jimport('joomla.application.component.modelitem');
 // Include dependancy of the dispatcher
 jimport('joomla.event.dispatcher');
 
-include_once("components/com_radenium/models/phpffmpeg.php");	
+include_once("components/com_radenium/models/ffmpeg.php");	
 include_once("components/com_radenium/models/phpsystem.php");
+
 /**
  * Radenium Model Project
  *
@@ -55,7 +56,8 @@ class RadeniumModelSystemdevices extends JModelForm
     {
         // Construct the parent
         parent::__construct();
-        $this->ffmpeg = new RadeniumModelPhpffmpeg();
+        $this->ffmpeg = new RadeniumModelffmpeg();
+        //$this->ffmpeg = $this->getModel("ffmpeg");
         $this->system = new RadeniumModelPhpsystem();
         
         $devices = $this->ffmpeg->getSystemDevices();

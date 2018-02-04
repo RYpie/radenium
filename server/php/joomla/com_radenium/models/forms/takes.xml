@@ -29,6 +29,7 @@
 			description="COM_RADENIUM_FIELD_TASK_SELECT_SOURCE">
                 <option value="0">System Devices</option>
                 <option value="1">File System</option>
+                <option value="2">Upload</option>
 		</field>
 		<field
 		    showon="selectsource:0"
@@ -51,6 +52,18 @@
 			label="COM_RADENIUM_FIELD_TASK_AID"
 			description="COM_RADENIUM_FIELD_TASK_AID"
 		/>
+		
+		<field
+		    showon="selectsource:2"
+			name="uploaded"
+			type="file"
+			enctype="multipart/form-data"
+			accept="audio/*,video/*,image/*"
+			label="COM_RADENIUM_FIELD_TASK_AID"
+			description="COM_RADENIUM_FIELD_TASK_AID"
+		/>
+		
+		
 		<field
 			name="resolution"
 			type="screenresolution"

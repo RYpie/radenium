@@ -23,6 +23,12 @@ include_once 'components/com_radenium/views/m3u8/m3u8.php';
 class RadeniumViewM3u8 extends JViewLegacy
 {
 	
+	
+	function controlout($status) {
+		header("Content-Type: application/json");
+		echo json_encode($status);
+	}
+	
 	/**
 	 * Display the Takes view
 	 *
