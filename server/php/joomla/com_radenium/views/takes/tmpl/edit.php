@@ -19,15 +19,6 @@ $vidurl = "media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/playli
 $m3u8_file = "index.php?option=com_radenium&view=m3u8&format=raw&take_id=".$this->entry_data[0]->id;
 $m3u8_file = "media/com_radenium/playlist.php?take_id=".$this->entry_data[0]->id;
 
-//echo "<a href=\"".$vidurl."\">".$vidurl."</a>";
-echo "<div>";
-//echo "<video controls width=\"320\" height=\"240\">";
-//echo "<video controls autoplay=\"1\">";
-echo "<video controls width=\"100%\" autoplay=\"1\">";
-echo "  <source src=\"".$vidurl."\" type=\"video/mp4\">";
-echo "</video>";
-echo "</div>"; 
-
 $xml = $this->form->getXml();
 foreach ( $xml->fieldset as $f ) {
 	if ( strtolower( (string)$f->attributes()->name) == "hidden" ) {
@@ -53,7 +44,6 @@ $res = $res->getOptions(); // works only if you set your field getOptions on pub
 $format = JFormHelper::loadFieldType('ffmpeg', false);
 $format= $format->getOptions(); // works only if you set your field getOptions on public!!
 
-
 $info = array(
 		"Video Input Device"=>$vdevs[$this->entry_data[0]->vid]
 		, "Audio Input Device"=>$adevs[$this->entry_data[0]->aid]
@@ -64,9 +54,7 @@ $info = array(
 		, "Take ID" => $this->entry_data[0]->id
 );
 
-
-foreach( $this->entry_data[0] as $key => $val )
-{
+foreach( $this->entry_data[0] as $key => $val ) {
 	$this->form->setValue( $key, null, $val);
 }
 //print_R($this->entry_data[0]->id);
@@ -81,8 +69,37 @@ $jformpublish=array(
 );
 
 
+        ?>
 
-        ?><div id="takes_new">
+<div id="player_area">
+	<div style="float:left;">
+		<video controls width="100%" autoplay="1" >
+			<source src="<?php echo $vidurl; ?>" type="video/mp4">
+		</video>
+	</div>
+	<div style="float:left;">
+		<table><tr><td valign="top">
+		<?php
+		$row_counter = 0;
+		
+		foreach ($info as $key => $val ) {
+			if ( fmod( $row_counter, 3 ) == 0) {
+		
+			}
+			echo "<strong>".$key."</strong> : ". $val." <br />";
+			$row_counter += 1;
+			if ( fmod( $row_counter,3 ) == 0) {
+				//echo "</td>";
+				//echo "<td>&nbsp;</td>";
+				//echo "<td valign=\"top\">";
+			}
+		}
+		?>
+		</td></tr></table>
+	</div>	
+</div>
+<div style="clear:both;"></div>
+
 
 <div id="take_control_buttons">
 <?php if ($this->entry_data[0]->state < 2 ) { ?>
@@ -93,11 +110,8 @@ $pub = array(
 	, 1 => "Stop publishing"
 	);
 ?>
-
-
 <button id="button_togglelive"><?php echo $pub[intval($this->entry_data[0]->publish)]; ?> Live!</button> 
 <?php } ?>
-
 <button id="button_stoptake">Stop Take</button>
 <br /><br />
 <?php } ?>
@@ -136,25 +150,10 @@ jQueryRepresentatives(document.body).on('click','#button_togglelive', function()
 </script>
 
 <form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="radenium_takes" name="radenium_takes">
-    <div class="form_rendered_container_take_info">
-		<table><tr><td valign="top">
-		<?php
-		$row_counter = 0;
-		
-		foreach ($info as $key => $val ) {
-			if ( fmod( $row_counter, 3 ) == 0) {
-		
-			}
-			echo "<strong>".$key."</strong> : ". $val." <br />";
-			$row_counter += 1;
-			if ( fmod( $row_counter,3 ) == 0) {
-				echo "</td>";
-				echo "<td>&nbsp;</td>";
-				echo "<td valign=\"top\">";
-			}
-		}
-		?>
-		</td></tr></table>
+    
+    
+    <div class="form_rendered_container_take_info_">
+
 		<br />
         <div class="form_rendered_container_form">
             <?php echo $this->form->renderFieldSet("taketitle"); ?>
@@ -171,5 +170,5 @@ jQueryRepresentatives(document.body).on('click','#button_togglelive', function()
     <input type="hidden" name="takes_id" value="<?php echo $this->takes_id; ?>" />
     <br />
     <button type="submit" class="button"><?php echo JText::_('Save & Close'); ?></button>
-    </form>
-</div>
+</form>
+

@@ -291,7 +291,7 @@ class RadeniumModelFfmpeg extends JModelForm
 	public function startTake( $id, $data, $devices ) {
 		$noterminal = " </dev/null >/dev/null 2>ffmpeg.log & echo $!";
 		$ffmpeg = "/usr/local/bin/ffmpeg";
-		$vid_url = "/Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id;
+		$vid_url = getcwd()."/media/com_radenium/media/takes/id_".$id;
 		mkdir($vid_url, 0757);
 		//mkdir($vid_url."_copy", 0757);
 

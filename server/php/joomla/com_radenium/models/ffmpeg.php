@@ -291,7 +291,7 @@ class RadeniumModelFfmpeg extends JModelForm
 	public function startTake( $id, $data, $devices ) {
 		$noterminal = " </dev/null >/dev/null 2>ffmpeg.log & echo $!";
 		$ffmpeg = "/usr/local/bin/ffmpeg";
-		$vid_url = "/Applications/MAMP/htdocs/radenium/media/com_radenium/media/takes/id_".$id;
+		$vid_url = getcwd()."/media/com_radenium/media/takes/id_".$id;
 		mkdir($vid_url, 0757);
 		//mkdir($vid_url."_copy", 0757);
 
@@ -377,14 +377,6 @@ class RadeniumModelFfmpeg extends JModelForm
 		$device["idstr"] = $device["sysid"]."_".strtolower(str_replace(" ", "_", $device["name"]));
 
 		return $device;
-	}
-	
-	public function getFrameRates( $dev ) {
-        exec("/usr/local/bin/ffmpeg -r 1 -f avfoundation -i ".$dev." 2>&1", $out);
-        foreach( $out as $l ) {
-            // That's a line containing a framerate.
-            
-        }
 	}
 	
     public function getSystemDevices() {

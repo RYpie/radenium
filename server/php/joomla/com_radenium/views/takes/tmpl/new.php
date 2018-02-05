@@ -46,7 +46,8 @@ foreach ( $xml->fieldset as $f ) {
 
     <?php 
     //echo $this->form->renderFieldSet("runningtake");
-	//echo $this->form->renderFieldSet("hidden"); ?>
+	echo $this->form->renderFieldSet("hidden"); 
+	?>
     <?php echo JHtml::_('form.token'); ?>
     <input type="hidden" name="task" value="save" />
     <br />

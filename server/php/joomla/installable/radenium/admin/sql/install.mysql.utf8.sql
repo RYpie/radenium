@@ -99,7 +99,7 @@ ALTER TABLE `#__radenium_settings`
 DROP TABLE IF EXISTS `#__radenium_takes`;
 CREATE TABLE `#__radenium_takes` (
   `id` int(11) NOT NULL,
-  `selectsource` int(11) NOT NULL,
+  `selectsource` int(1) NOT NULL,
   `vid` int(11) NOT NULL,
   `aid` int(11) NOT NULL,
   `files` int(11) NOT NULL,
@@ -109,7 +109,9 @@ CREATE TABLE `#__radenium_takes` (
   `publish` int(11) NOT NULL,
   `state` int(11) NOT NULL,
   `pid` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL
+  `user_id` int(11) NOT NULL,
+  `title` text,
+  `notes` text
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

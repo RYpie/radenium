@@ -22,9 +22,6 @@ jimport('joomla.application.component.modelitem');
 jimport('joomla.event.dispatcher');
 
 
-include_once("components/com_radenium/models/phpffmpeg.php");	
-
-
 /**
  * Radenium Model Project
  *
@@ -147,19 +144,18 @@ class RadeniumModelTakes extends JModelForm
         $query = $db->getQuery(true);
         // Prepare table data:
         $columns = array(
-            selectsource
-            , vid
-            , aid
-            , files
-            , resolution
-            , format
-            //, takedate
-            , publish
-            , state
-            , pid
-            , user_id
-        	, title
-        	, notes
+            'selectsource'
+            , 'vid'
+            , 'aid'
+            , 'files'
+            , 'resolution'
+            , 'format'
+            , 'publish'
+            , 'state'
+            , 'pid'
+            , 'user_id'
+        	, 'title'
+        	, 'notes'
 
         );
 
@@ -170,7 +166,6 @@ class RadeniumModelTakes extends JModelForm
             , intval($data["files"])
             , intval($data["resolution"])
             , intval($data["format"])
-            //, $db->quote($data["takedate"])
             , intval($data["publish"])
             , intval($data["state"])
             , intval($data["pid"])

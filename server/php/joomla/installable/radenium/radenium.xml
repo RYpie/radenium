@@ -45,6 +45,8 @@
     <media folder="media" destination="com_radenium">
         <folder>css</folder>
         <folder>js</folder>
+        <folder>takes</folder>
+        <folder>raw</folder>
     </media>
     <administration>
         <!-- Administration Menu Section -->
