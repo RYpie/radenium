@@ -379,6 +379,14 @@ class RadeniumModelFfmpeg extends JModelForm
 		return $device;
 	}
 	
+	public function getFrameRates( $dev ) {
+        exec("/usr/local/bin/ffmpeg -r 1 -f avfoundation -i ".$dev." 2>&1", $out);
+        foreach( $out as $l ) {
+            // That's a line containing a framerate.
+            
+        }
+	}
+	
     public function getSystemDevices() {
         //ini_set('max_execution_time', 0);
         $noterminal = " </dev/null >/dev/null 2>python.log & echo $!";
