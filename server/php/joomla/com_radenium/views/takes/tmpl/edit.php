@@ -12,6 +12,8 @@
 defined('_JEXEC') or die('Restricted access');
  		
 $vidurl = "media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/playlist.m3u8";
+$posterurl = "media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/thumbs/thumb.jpg";
+
 //$vidurl = "index.php?option=com_radenium&view=m3u8&format=raw&take_id=".$this->entry_data[0]->id;
 //$m3u8_status = "index.php?option=com_radenium&view=m3u8&task=getstatus&format=raw&take_id=".$this->entry_data[0]->id;
 //$m3u8_status = "index.php?option=com_radenium&view=takes&task=m3u8status&format=raw&take_id=".$this->entry_data[0]->id;
@@ -103,9 +105,12 @@ jQueryRepresentatives(document.body).on('click','#button_togglelive', function()
 });
 
 jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
+	var vid = document.getElementById("myVideo");
+	//vid.currentTime = 5;
+	alert(vid.currentTime);
 	jQueryRepresentatives.ajax({
 		type: 'GET',
-		url: "http://localhost:8888/radenium/index.php?option=com_radenium&amp;view=ffmpeg&amp;format=raw&amp;task=createthumbs&amp;takes_id=<?php echo $this->entry_data[0]->id; ?>",
+		url: "http://localhost:8888/radenium/index.php?option=com_radenium&amp;view=ffmpeg&amp;format=raw&amp;task=createthumbs&amp;takes_id=<?php echo $this->entry_data[0]->id; ?>&amp;position="+vid.currentTime,
 		success:function(data){
 			//jQueryRepresentatives('#results').html(data);
 			
@@ -125,7 +130,7 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 
 	<div id="player_area">
 		<div style="float:left;">
-			<video controls width="600px" autoplay="1" >
+			<video id="myVideo" controls width="600px" poster="<?php echo $posterurl; ?>">
 				<source src="<?php echo $vidurl; ?>" type="video/mp4">
 			</video>
 		</div>
