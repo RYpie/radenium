@@ -91,7 +91,16 @@ class m3u8
 			return "#EXTM3U".PHP_EOL.
 "#EXT-X-VERSION:3".PHP_EOL.
 "#EXT-X-TARGETDURATION:9".PHP_EOL.
-"#EXT-X-MEDIA-SEQUENCE:1".PHP_EOL.
+"#EXT-X-MEDIA-SEQUENCE:0".PHP_EOL.
+"#EXT-X-GAP".PHP_EOL.
+"media/com_radenium/media/takes/startup/playlist1.ts".PHP_EOL;
+			
+
+/*
+"#EXTINF:1,".PHP_EOL.
+"media/com_radenium/media/takes/startup/playlist1.ts".PHP_EOL;
+		*/	
+/*
 "#EXTINF:1,".PHP_EOL.
 "media/com_radenium/media/takes/startup/playlist1.ts".PHP_EOL. 
 "#EXTINF:2,".PHP_EOL.
@@ -102,7 +111,7 @@ class m3u8
 "media/com_radenium/media/takes/startup/playlist4.ts".PHP_EOL.
 "#EXTINF:5,".PHP_EOL.
 "media/com_radenium/media/takes/startup/playlist5.ts".PHP_EOL;
-
+*/
 			
 		}
 	}

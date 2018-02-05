@@ -16,8 +16,7 @@ $vidurl = "media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/playli
 //$m3u8_status = "index.php?option=com_radenium&view=m3u8&task=getstatus&format=raw&take_id=".$this->entry_data[0]->id;
 //$m3u8_status = "index.php?option=com_radenium&view=takes&task=m3u8status&format=raw&take_id=".$this->entry_data[0]->id;
 
-$m3u8_file = "index.php?option=com_radenium&view=m3u8&format=raw&take_id=".$this->entry_data[0]->id;
-$m3u8_file = "media/com_radenium/playlist.php?take_id=".$this->entry_data[0]->id;
+$vidurl = "index.php?option=com_radenium&view=m3u8&format=raw&take_id=".$this->entry_data[0]->id;
 
 $xml = $this->form->getXml();
 foreach ( $xml->fieldset as $f ) {
@@ -68,54 +67,7 @@ $jformpublish=array(
 	,1=>""
 );
 
-
-        ?>
-
-<div id="player_area">
-	<div style="float:left;">
-		<video controls width="100%" autoplay="1" >
-			<source src="<?php echo $vidurl; ?>" type="video/mp4">
-		</video>
-	</div>
-	<div style="float:left;">
-		<table><tr><td valign="top">
-		<?php
-		$row_counter = 0;
-		
-		foreach ($info as $key => $val ) {
-			if ( fmod( $row_counter, 3 ) == 0) {
-		
-			}
-			echo "<strong>".$key."</strong> : ". $val." <br />";
-			$row_counter += 1;
-			if ( fmod( $row_counter,3 ) == 0) {
-				//echo "</td>";
-				//echo "<td>&nbsp;</td>";
-				//echo "<td valign=\"top\">";
-			}
-		}
-		?>
-		</td></tr></table>
-	</div>	
-</div>
-<div style="clear:both;"></div>
-
-
-<div id="take_control_buttons">
-<?php if ($this->entry_data[0]->state < 2 ) { ?>
-<?php if (strpos($info["Recording Format"], "HLS")) { ?>
-<?php 
-$pub = array( 
-	0 => "Start publishing"
-	, 1 => "Stop publishing"
-	);
 ?>
-<button id="button_togglelive"><?php echo $pub[intval($this->entry_data[0]->publish)]; ?> Live!</button> 
-<?php } ?>
-<button id="button_stoptake">Stop Take</button>
-<br /><br />
-<?php } ?>
-</div>
 
 <script type="text/javascript">
 var jQueryRepresentatives = jQuery.noConflict();
@@ -140,6 +92,8 @@ jQueryRepresentatives(document.body).on('click','#button_togglelive', function()
 		url: "http://localhost:8888/radenium/index.php?option=com_radenium&amp;view=takes&amp;format=raw&amp;task=togglepublishlive&amp;takes_id=<?php echo $this->entry_data[0]->id; ?>",
 		success:function(data){
 			//jQueryRepresentatives('#results').html(data);
+			
+			jQueryRepresentatives('#button_togglelive').html("Live Now!");
 		},
 		error:function(){
 			//jQueryRepresentatives('#results').html('<p class="error">An error was encountered while retrieving the representatives from the database.</p>');
@@ -147,19 +101,64 @@ jQueryRepresentatives(document.body).on('click','#button_togglelive', function()
 	});
 	
 });
+
+jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
+	jQueryRepresentatives.ajax({
+		type: 'GET',
+		url: "http://localhost:8888/radenium/index.php?option=com_radenium&amp;view=ffmpeg&amp;format=raw&amp;task=createthumbs&amp;takes_id=<?php echo $this->entry_data[0]->id; ?>",
+		success:function(data){
+			//jQueryRepresentatives('#results').html(data);
+			
+			//jQueryRepresentatives('#button_togglelive').html("Live Now!");
+		},
+		error:function(){
+			//jQueryRepresentatives('#results').html('<p class="error">An error was encountered while retrieving the representatives from the database.</p>');
+		}
+	});
+	
+});
+
+
 </script>
 
 <form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="radenium_takes" name="radenium_takes">
-    
-    
-    <div class="form_rendered_container_take_info_">
 
-		<br />
-        <div class="form_rendered_container_form">
-            <?php echo $this->form->renderFieldSet("taketitle"); ?>
-        </div>
-        <div class="form_rendered_container_form">
-            <?php echo $this->form->renderFieldSet("information"); ?>
+	<div id="player_area">
+		<div style="float:left;">
+			<video controls width="600px" autoplay="1" >
+				<source src="<?php echo $vidurl; ?>" type="video/mp4">
+			</video>
+		</div>
+		<div style="float:left;">
+			<div style="padding-left:10px;">
+				<input style="width:200px;" type="text" name="jform[title]" id="jform_title" value="<?php echo $this->entry_data[0]->title;?>" /> <button type="submit" class="button"><?php echo JText::_('V'); ?></button>
+				<br />
+				<hr />
+				<?php
+				foreach ($info as $key => $val ) {
+					echo "<strong>".$key."</strong> : ". $val." <br />";
+				}
+				?>
+				<hr />
+				<div id="take_control_buttons">
+					<?php if ($this->entry_data[0]->state < 2 ) { ?>
+					<?php if (strpos($info["Recording Format"], "HLS")) { ?>
+					<div id="button_togglelive">Go Live!</div> 
+					<?php } ?>
+					<br />
+					<div id="button_stoptake">Stop Take</div>
+					
+					<?php } ?>
+					<div id="create_thumbs">Create Thumbs</div>
+					
+				</div>
+			</div>
+		</div>	
+	</div>
+	<div style="clear:both;"></div>
+    <div class="form_rendered_container_take_info_">
+        <div style="width:600px;" class="form_rendered_container_form_">
+            <?php echo $this->form->renderFieldSet("information"); ?> <button type="submit" class="button"><?php echo JText::_('Save And Close'); ?></button>
         </div>
     </div>
 	<?php echo $this->form->renderFieldSet("hidden"); ?>
@@ -169,6 +168,5 @@ jQueryRepresentatives(document.body).on('click','#button_togglelive', function()
     <input type="hidden" name="task" value="modify" />
     <input type="hidden" name="takes_id" value="<?php echo $this->takes_id; ?>" />
     <br />
-    <button type="submit" class="button"><?php echo JText::_('Save & Close'); ?></button>
 </form>
 

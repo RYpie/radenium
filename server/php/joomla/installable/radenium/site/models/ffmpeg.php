@@ -293,6 +293,8 @@ class RadeniumModelFfmpeg extends JModelForm
 		$ffmpeg = "/usr/local/bin/ffmpeg";
 		$vid_url = getcwd()."/media/com_radenium/media/takes/id_".$id;
 		mkdir($vid_url, 0757);
+		mkdir($vid_url."/thumbs", 0757);
+		
 		//mkdir($vid_url."_copy", 0757);
 
 		$devstr="";
@@ -357,6 +359,29 @@ class RadeniumModelFfmpeg extends JModelForm
 		$pid = exec($ffmpeg." ".$ffmpegcom.$noterminal, $out);
 		
 		return $pid;
+	}
+	
+	public function getFrameRates( $dev ) {
+		exec("/usr/local/bin/ffmpeg -r 1 -f avfoundation -i ".$dev." 2>&1", $out);
+		foreach( $out as $l ) {
+			// That's a line containing a framerate.
+			
+		}
+	}
+	
+	public function getThumbNails( $dir, $file ){
+		$tardir = getcwd()."/".$dir;
+
+		exec("/usr/local/bin/ffmpeg -ss 3 -i ".$tardir.$file." -vf \"select=gt(scene\,0.4)\" -frames:v 5 -vsync vfr -vf fps=fps=1/600 ".$tardir."thumbs/out%02d.jpg 2>&1", $out);
+		//ffmpeg -ss 3 -i input.mp4 -vf "select=gt(scene\,0.4)" -frames:v 5 -vsync vfr -vf fps=fps=1/600 out%02d.jpg
+		echo "<pre>";
+		print_r($out);
+		echo "</pre>";
+		
+		exec("/usr/local/bin/ffmpeg -i ".$tardir.$file." -ss 00:00:01.000 -frames:v 1 ".$tardir."thumbs/thumb.jpg 2>&1", $out);
+		echo "<pre>";
+		print_r($out);
+		echo "</pre>";
 	}
 	
 	
