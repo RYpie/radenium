@@ -118,6 +118,11 @@ CREATE TABLE `#__radenium_takes` (
 ALTER TABLE `#__radenium_takes`
   ADD PRIMARY KEY (`id`);
 
+ALTER TABLE `#__radenium_takes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+
+
 DROP TABLE IF EXISTS `#__radenium_systemdevices`;
 CREATE TABLE `#__radenium_systemdevices` (
   `id` int(11) NOT NULL,
