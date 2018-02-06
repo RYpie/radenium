@@ -146,8 +146,8 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 				?>
 				<hr />
 				<div id="take_control_buttons">
-					<?php if ($this->entry_data[0]->state < 2 ) { ?>
-					<?php if (strpos($info["Recording Format"], "HLS")) { ?>
+					<?php if ( $this->entry_data[0]->state < 2 ) { ?>
+					<?php if ( strpos($info["Recording Format"], "HLS") !== false ) { ?>
 					<div id="button_togglelive">Go Live!</div> 
 					<?php } ?>
 					<br />
