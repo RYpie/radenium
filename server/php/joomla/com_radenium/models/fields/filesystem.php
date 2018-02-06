@@ -26,7 +26,7 @@ class JFormFieldFilesystem extends JFormFieldList {
 		$db = JFactory::getDbo();
 		
 		$query = $db->getQuery(true);
-		$query->select('id,name')->from('`#__radenium_encdck_mediadevices`')->where('type = "drive"');
+		$query->select('id,name')->from('`#__radenium_systemdevices`')->where('type = "drive"');
 		$rows = $db->setQuery($query)->loadObjectlist();
 		
 		foreach($rows as $row){
