@@ -21,7 +21,7 @@ defined('_JEXEC') or die('Restricted access');
 	    <?php
 	    $rowcount = 0;
 	    foreach ( $this->systemdevices_entries as $entry ) {
-	        $systemdevices_id = $entry->id;
+	        $systemdevices_id = $entry['id'];
 	        if (fmod($rowcount,2) == 0 ) {
 	        	$row = 0;
 	        } else {
