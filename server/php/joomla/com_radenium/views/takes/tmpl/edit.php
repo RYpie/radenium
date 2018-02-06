@@ -18,7 +18,7 @@ $posterurl = "media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/thu
 //$m3u8_status = "index.php?option=com_radenium&view=m3u8&task=getstatus&format=raw&take_id=".$this->entry_data[0]->id;
 //$m3u8_status = "index.php?option=com_radenium&view=takes&task=m3u8status&format=raw&take_id=".$this->entry_data[0]->id;
 
-$vidurl = "index.php?option=com_radenium&view=m3u8&format=raw&take_id=".$this->entry_data[0]->id;
+//$vidurl = "index.php?option=com_radenium&view=m3u8&format=raw&take_id=".$this->entry_data[0]->id;
 
 $xml = $this->form->getXml();
 foreach ( $xml->fieldset as $f ) {
