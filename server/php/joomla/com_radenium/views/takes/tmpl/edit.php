@@ -130,41 +130,49 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 
 	<div id="player_area">
 		<div style="float:left;">
-			<video id="myVideo" controls width="600px" poster="<?php echo $posterurl; ?>">
-				<source src="<?php echo $vidurl; ?>" type="video/mp4">
-			</video>
+		    <div>
+                <video id="myVideo" controls width="600px" height="360px" poster="<?php echo $posterurl; ?>">
+                    <source src="<?php echo $vidurl; ?>" type="video/mp4">
+                </video>
+			</div>
+			<div style="width:600px;" class="form_rendered_container_form_">
+                <?php echo $this->form->renderFieldSet("information"); ?> <button type="submit" class="button"><?php echo JText::_('Save And Close'); ?></button>
+            </div>
+			
 		</div>
+
 		<div style="float:left;">
 			<div style="padding-left:10px;">
-				<input style="width:200px;" type="text" name="jform[title]" id="jform_title" value="<?php echo $this->entry_data[0]->title;?>" /> <button type="submit" class="button"><?php echo JText::_('V'); ?></button>
-				<br />
-				<hr />
+			    <h2>Take title</h2>
+				<input style="width:100%;" type="text" name="jform[title]" id="jform_title" value="<?php echo $this->entry_data[0]->title;?>" /> 
+				<br /><h2>Information</h2><hr />
 				<?php
 				foreach ($info as $key => $val ) {
 					echo "<strong>".$key."</strong> : ". $val." <br />";
 				}
 				?>
-				<hr />
-				<div id="take_control_buttons">
-					<?php if ( $this->entry_data[0]->state < 2 ) { ?>
+				<br /><h2>Control</h2><hr />
+				<div id="take_control_buttons" style="text-align:right;">
+					<?php if ($this->entry_data[0]->state < 2 ) { ?>
 					<?php if ( strpos($info["Recording Format"], "HLS") !== false ) { ?>
-					<div id="button_togglelive">Go Live!</div> 
+					<strong>Publish to remote server: </strong><input id="button_togglelive" type="button" value="Go Live!" /> 
 					<?php } ?>
-					<br />
-					<div id="button_stoptake">Stop Take</div>
+					<br /><hr />
+					<strong>Stop recording: </strong> <input id="button_stoptake" type="button" value="Stop Take" />
 					
 					<?php } ?>
-					<div id="create_thumbs">Create Thumbs</div>
-					
+					<br /><hr />
+					<strong>Create a thumb: </strong><input id="create_thumbs" type="button" value="Create Thumb" />
+
 				</div>
 			</div>
+			<br /><br />
+			<button style="width:100%;" type="submit" class="button"><?php echo JText::_('Save Title, Notes & Close'); ?></button>
 		</div>	
 	</div>
 	<div style="clear:both;"></div>
     <div class="form_rendered_container_take_info_">
-        <div style="width:600px;" class="form_rendered_container_form_">
-            <?php echo $this->form->renderFieldSet("information"); ?> <button type="submit" class="button"><?php echo JText::_('Save And Close'); ?></button>
-        </div>
+
     </div>
 	<?php echo $this->form->renderFieldSet("hidden"); ?>
     <?php echo JHtml::_('form.token'); ?>
