@@ -151,11 +151,19 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 					echo "<strong>".$key."</strong> : ". $val." <br />";
 				}
 				?>
+
 				<br /><h2>Control</h2><hr />
 				<div id="take_control_buttons" style="text-align:right;">
 					<?php if ($this->entry_data[0]->state < 2 ) { ?>
 					<?php if ( strpos($info["Recording Format"], "HLS") !== false ) { ?>
 					<strong>Publish to remote server: </strong><input id="button_togglelive" type="button" value="Go Live!" /> 
+
+				<hr />
+				<div id="take_control_buttons">
+					<?php if ( $this->entry_data[0]->state < 2 ) { ?>
+					<?php if ( strpos($info["Recording Format"], "HLS") !== false ) { ?>
+					<div id="button_togglelive">Go Live!</div> 
+
 					<?php } ?>
 					<br /><hr />
 					<strong>Stop recording: </strong> <input id="button_stoptake" type="button" value="Stop Take" />
