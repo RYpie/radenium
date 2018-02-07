@@ -141,8 +141,8 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 			
 		</div>
 
-		<div style="float:left;">
-			<div style="padding-left:10px;">
+		<div style="float:left;padding-left:10px;">
+			<div>
 			    <h2>Take title</h2>
 				<input style="width:100%;" type="text" name="jform[title]" id="jform_title" value="<?php echo $this->entry_data[0]->title;?>" /> 
 				<br /><h2>Information</h2><hr />
