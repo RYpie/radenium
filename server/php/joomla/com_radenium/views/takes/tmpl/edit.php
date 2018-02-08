@@ -110,10 +110,10 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 	alert(vid.currentTime);
 	jQueryRepresentatives.ajax({
 		type: 'GET',
-		url: "http://localhost:8888/radenium/index.php?option=com_radenium&amp;view=ffmpeg&amp;format=raw&amp;task=createthumbs&amp;takes_id=<?php echo $this->entry_data[0]->id; ?>&amp;position="+vid.currentTime,
+		url: "http://localhost:8888/radenium/index.php?option=com_radenium&amp;view=ffmpeg&amp;format=raw&amp;task=createthumbs&amp;takes_id=<?php echo $this->entry_data[0]->id; ?>&amp;player_position="+vid.currentTime,
 		success:function(data){
 			//jQueryRepresentatives('#results').html(data);
-			
+			//alert(data);
 			//jQueryRepresentatives('#button_togglelive').html("Live Now!");
 		},
 		error:function(){
@@ -152,26 +152,36 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 				}
 				?>
 
-				<br /><h2>Control</h2><hr />
-				<div id="take_control_buttons" style="text-align:right;">
-					<?php if ($this->entry_data[0]->state < 2 ) { ?>
-					<?php if ( strpos($info["Recording Format"], "HLS") !== false ) { ?>
-					<strong>Publish to remote server: </strong><input id="button_togglelive" type="button" value="Go Live!" /> 
-
-				<hr />
-				<div id="take_control_buttons">
-					<?php if ( $this->entry_data[0]->state < 2 ) { ?>
-					<?php if ( strpos($info["Recording Format"], "HLS") !== false ) { ?>
-					<div id="button_togglelive">Go Live!</div> 
-
-					<?php } ?>
-					<br /><hr />
-					<strong>Stop recording: </strong> <input id="button_stoptake" type="button" value="Stop Take" />
+				<br /><h2>Control</h2>
+				<div id="take_control_buttons" style="text-align:left;">
+					<?php if ($this->entry_data[0]->state <= 2 ) { ?>
 					
+						<?php if ( strpos($info["Recording Format"], "HLS") !== false ) { ?>
+							<?php if ( $this->settings["remote_url"] != "" ) { ?>
+								<hr />
+								<strong>Publish to remote server</strong>
+								<br />
+								<strong>Publishing to: </strong><?php echo $this->settings["remote_url"]; ?>
+								<br />
+								<br />
+								
+								<div style="text-align:right;">
+									<input id="button_togglelive" type="button" value="Go Live!" />
+								</div>
+							<?php } ?>
+						<?php } ?>
+						<br /><hr />
+						<strong>Stop recording: </strong>
+						<div style="text-align:right;">
+							<input id="button_stoptake" type="button" value="Stop Take" />
+						</div>
+						
 					<?php } ?>
-					<br /><hr />
-					<strong>Create a thumb: </strong><input id="create_thumbs" type="button" value="Create Thumb" />
-
+					<hr />
+					<strong>Create a thumb: </strong>
+					<div style="text-align:right;">
+						<input id="create_thumbs" type="button" value="Create Thumb" />
+					</div>
 				</div>
 			</div>
 			<br /><br />
@@ -179,15 +189,15 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 		</div>	
 	</div>
 	<div style="clear:both;"></div>
-    <div class="form_rendered_container_take_info_">
 
-    </div>
 	<?php echo $this->form->renderFieldSet("hidden"); ?>
     <?php echo JHtml::_('form.token'); ?>
     <input type="hidden" name="jform[pid]" value="<?php echo $this->entry_data[0]->pid; ?>" />
     <input type="hidden" name="view" value="takes" />
     <input type="hidden" name="task" value="modify" />
     <input type="hidden" name="takes_id" value="<?php echo $this->takes_id; ?>" />
-    <br />
+
 </form>
+
+
 

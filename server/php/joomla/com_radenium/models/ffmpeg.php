@@ -369,19 +369,33 @@ class RadeniumModelFfmpeg extends JModelForm
 		}
 	}
 	
-	public function getThumbNails( $dir, $file ){
+	
+	/**
+	 * @todo Thumbs are created from .ts files, however, they are segmented so when a time is given I should
+	 *  find out which .ts file to pick.
+	 * @param unknown $dir
+	 * @param unknown $file
+	 * @param string $time
+	 */
+	public function getThumbNails( $dir, $file, $time="00:00:01.000" ){
+		$time="00:00:9.000";
 		$tardir = getcwd()."/".$dir;
 
 		exec("/usr/local/bin/ffmpeg -ss 3 -i ".$tardir.$file." -vf \"select=gt(scene\,0.4)\" -frames:v 5 -vsync vfr -vf fps=fps=1/600 ".$tardir."thumbs/out%02d.jpg 2>&1", $out);
 		//ffmpeg -ss 3 -i input.mp4 -vf "select=gt(scene\,0.4)" -frames:v 5 -vsync vfr -vf fps=fps=1/600 out%02d.jpg
-		echo "<pre>";
-		print_r($out);
-		echo "</pre>";
 		
-		exec("/usr/local/bin/ffmpeg -i ".$tardir.$file." -ss 00:00:01.000 -frames:v 1 ".$tardir."thumbs/thumb.jpg 2>&1", $out);
+		/*
 		echo "<pre>";
 		print_r($out);
 		echo "</pre>";
+		 */
+		
+		$ffmpeg_com="/usr/local/bin/ffmpeg -i ".$tardir.$file." -ss ".$time." -frames:v 1 ".$tardir."thumbs/thumb.jpg";
+		
+		//echo "<p>".$ffmpeg_com."</p>";
+		
+		exec($ffmpeg_com." 2>&1", $out);
+
 	}
 	
 	

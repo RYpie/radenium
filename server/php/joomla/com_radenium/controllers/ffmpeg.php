@@ -85,6 +85,18 @@ class RadeniumControllerFfmpeg extends JControllerForm
 	public function createthumbs() {
 		$take_id = JFactory::getApplication()->input->get('takes_id');
 		$model = $this->getModel("ffmpeg");
+		
+		$pos = JFactory::getApplication()->input->get('player_position');
+		$tparts = explode(".", $pos);
+		
+		if (strpos($tparts[0],":") === false ) {
+			$time_t = "00:00:".$tparts[0].".".$tparts[1];
+		}
+		
+		
+		$time_t="00:00:02.000";
+		//echo $time_t."<br />";
+		//, $time=$time_t
 		$model->getThumbNails("media/com_radenium/media/takes/id_".$take_id."/", "playlist0.ts");
 		$retVal = array("result"=>"thumbs created");
 		$view = $this->getView( "ffmpeg", "raw" );

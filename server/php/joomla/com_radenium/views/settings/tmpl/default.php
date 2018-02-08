@@ -30,7 +30,7 @@ defined('_JEXEC') or die('Restricted access');
     <?php
 
     foreach ( $this->settings_entries as $entry ) {
-            $settings_id = $entry->id;        ?>
+            $settings_id = $entry["id"];        ?>
         <input type="checkbox" name="settings_id" value="<?php echo $settings_id; ?>" />
 
         <?php

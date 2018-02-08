@@ -26,11 +26,12 @@ foreach ( $xml->fieldset as $f ) {
 		}
 	}
 }
+
 foreach( $this->entry_data[0] as $key => $val )
-        {
-            $this->form->setValue( $key, null, $val);
-        }
-        ?><div id="settings_new">
+{
+	$this->form->setValue( $key, null, $val);
+}
+?><div id="settings_new">
 <h1><?php echo JText::_('COM_radenium_VIEW_EDIT_ENTRY'); ?></h1>
     <form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="radenium_settings" name="radenium_settings">
     <div class="form_rendered_container">
@@ -76,6 +77,7 @@ foreach( $this->entry_data[0] as $key => $val )
 
     <?php echo JHtml::_('form.token'); ?>
     <input type="hidden" name="task" value="modify" />
+    
     <input type="hidden" name="settings_id" value="<?php echo $this->settings_id; ?>" />
     <br />
     <button type="submit" class="button"><?php echo JText::_('Submit'); ?></button>
