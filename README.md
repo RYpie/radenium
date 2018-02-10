@@ -4,7 +4,6 @@
 # Welcome To Radenium, Home Of The Great Radeniums
 
 
-
 Idea of Radenium is to implement an HLS livestreaming application based on FFMPEG, wrapped by a python application.
 
 Development status is definitely prototype, works only on my mac...
