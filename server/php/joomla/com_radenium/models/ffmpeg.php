@@ -275,13 +275,26 @@ class RadeniumModelFfmpeg extends JModelForm
         return $results;
     }
 
-        
-	public function publishLive( $id ) {
-		
+   
+	public function publishLive( $id, $options=array() ) {
+		$pid = "";
+
+		//print_r($options);
+
+		if ( array_key_exists("pid", $options) ) {
+			$pid = " -pid ". $options->pid;
+		}
+		$out ="";
 		//$pid = exec("python ".$comand.$this->noterminal, $out);		
 		//echo $pid;
+		//$noterminal = " </dev/null >/dev/null 2>python.log & echo $!";
 		
-		exec("python components/com_radenium/models/python/phppublishremote.py -id ".$id." 2>&1", $out);
+		//$noterminal = " </dev/null >/dev/null 2>python.log &";
+		
+		//exec("python components/com_radenium/models/python/phppublishremote.py -id ".$id."".$noterminal, $out);
+		
+		//dit is de originele:
+		exec("python components/com_radenium/models/python/phppublishremote.py -id ".$id." -caller joomla".$pid." 2>&1", $out);
 		//print_r($out);
 		
 		return $out;

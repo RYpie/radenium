@@ -15,6 +15,50 @@ SERVER_API_PATH__                         = "/radenium/publishlive.php"
 RADENIUM_API_KEY__                       = "testkey"
 RADENIUM_API_UNAME__                       = "student2"
 
+class pids:
+    def check_pid(self, pid):        
+        """ Check For the existence of a unix pid. """
+        try:
+            os.kill(pid, 0)
+        except OSError:
+            return False
+        else:
+            return True
+
+    def pid_running(self, pid):
+        """Check whether pid exists in the current process table.
+        UNIX only.
+        """
+        if pid < 0:
+            return False
+        
+        if pid == 0:
+            # According to "man 2 kill" PID 0 refers to every process
+            # in the process group of the calling process.
+            # On certain systems 0 is a valid PID but we have no way
+            # to know that in a portable fashion.
+            raise ValueError('invalid PID 0')
+        try:
+            os.kill(pid, 0)
+        
+        except OSError as err:
+            if err.errno == errno.ESRCH:
+                # ESRCH == No such process
+                return False
+            
+            elif err.errno == errno.EPERM:
+                # EPERM clearly means there's a process to deny access to
+                return True
+            
+            else:
+                # According to "man 2 kill" possible error values are
+                # (EINVAL, EPERM, ESRCH)
+                raise
+            
+        else:
+            return True
+
+
 class post_request:
     
     def __init__( self,
@@ -44,26 +88,41 @@ class post_request:
         
         return r
 
+m3u8_directories={
+'joomla':'media/com_radenium/media/takes/id_'
+, 'python':'../../../../media/com_radenium/media/takes/id_'
+}
 
 class phppublish:
     def __init__(self, config={}):
         #print("phppublish created...")
         signal.signal(signal.SIGTERM, self.signal_term_handler)
         signal.signal(signal.SIGINT, self.signal_term_handler)
+        self.handle_pid = None
+        
         argcount=0
+        #print(config)
+        
+        self.m3u8_dir = m3u8_directories['python']
         for arg in config:
             if arg == '-id':
                 self.id = config[argcount + 1]
+                
+            elif arg == '-caller':
+                self.m3u8_dir = m3u8_directories[config[argcount + 1]]
+                
+            elif arg == '-pid':
+                self.handle_pid = config[argcount + 1]
             
             argcount += 1
             
-        self.runalways = True
-        self.m3u8tool = m3u8()
-        self.m3u8_dir = "../../../../media/com_radenium/media/takes/id_" + str(self.id)
+        self.m3u8_dir += str(self.id)
         self.m3u8_file = self.m3u8_dir + "/playlist.m3u8" #livedeck.getM3u8File()
-        
+        print( self.m3u8_dir, self.m3u8_file)
         #print(os.getcwd(), "publishing ID:"+self.id, self.m3u8_file)
         
+        self.runalways = True
+        self.m3u8tool = m3u8()
         #! Keep track of the publishing status in self.publishStatus.
         self.publishStatus = {}
         self.publishStatus['m3u8_now'] = []
@@ -71,6 +130,7 @@ class phppublish:
         self.post = post_request()
         
         print( self.get_m3u8() )
+        
         self.post_hls()
         
         
@@ -79,6 +139,7 @@ class phppublish:
         self.runalways = False
 
     def get_m3u8(self):
+        
         if os.path.isfile( self.m3u8_file ):
             f = open(self.m3u8_file,'r')
             m3u8_text = f.read()
@@ -116,7 +177,7 @@ class phppublish:
         for file in m3u8_data['files']:
             upload = False
             #print "Volgende file gevonden: "+ file['name']
-                #! Trying to fetch the name from self.publishStatus, if its in there it is already uploaded.
+            #! Trying to fetch the name from self.publishStatus, if its in there it is already uploaded.
             if file['name'] in self.publishStatus['m3u8_prev']:
                 print( ">>> Fille already uploaded <<<" )
                 pass
@@ -142,6 +203,7 @@ class phppublish:
     def main(self):
         while self.runalways:
             pass
+            #! Should check for self.handle_pid because that is the pid of the livestreaming process
             
         sys.exit(0)
         
