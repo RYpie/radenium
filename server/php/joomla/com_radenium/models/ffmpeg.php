@@ -276,27 +276,43 @@ class RadeniumModelFfmpeg extends JModelForm
     }
 
    
+    /**
+     * @todo This function suffers quite some error handling, or I could filter the settings in order to get the proper input there as well.
+     * @param unknown $id
+     * @param array $options
+     * @return string[]
+     */
 	public function publishLive( $id, $options=array() ) {
 		$pid = "";
-
+		$out = array();
+		
 		//print_r($options);
-
-		if ( array_key_exists("pid", $options) ) {
-			$pid = " -pid ". $options->pid;
+		
+		if ( array_key_exists("settings", $options) ) {
+			if ( array_key_exists("pid", $options) ) {
+				$pid = " -pid ". $options['pid']." ";
+				
+			}
+			if ( array_key_exists("remote_url", $options['settings']) ) {
+				$url = " -url ". $options['settings']['remote_url']. " ";
+				
+			}
+			
+			$noterminal = "";
+			$noterminal = " </dev/null >/dev/null 2>components/com_radenium/models/python/python.log & echo $!";
+			$exec_com = "python components/com_radenium/models/python/phppublishremote.py -id "
+					. $id." -caller joomla"
+					. $pid
+					. $url
+					. $noterminal;
+			
+			//echo "<p>".$exec_com."</p>";
+			$pid = exec($exec_com, $out);
+			
+		} else {
+			$out[] = "An error occured, did you provide settings?";
+			
 		}
-		$out ="";
-		//$pid = exec("python ".$comand.$this->noterminal, $out);		
-		//echo $pid;
-		//$noterminal = " </dev/null >/dev/null 2>python.log & echo $!";
-		
-		//$noterminal = " </dev/null >/dev/null 2>python.log &";
-		
-		//exec("python components/com_radenium/models/python/phppublishremote.py -id ".$id."".$noterminal, $out);
-		
-		//dit is de originele:
-		exec("python components/com_radenium/models/python/phppublishremote.py -id ".$id." -caller joomla".$pid." 2>&1", $out);
-		//print_r($out);
-		
 		return $out;
 	}
 	
@@ -307,23 +323,23 @@ class RadeniumModelFfmpeg extends JModelForm
 		$vid_url = getcwd()."/media/com_radenium/media/takes/id_".$id;
 		mkdir($vid_url, 0757);
 		mkdir($vid_url."/thumbs", 0757);
-		
-		//mkdir($vid_url."_copy", 0757);
 
 		$devstr="";
 		// Do we have to start audio as well?
 		if ( $devices["audio"]["sysid"] == "" ) {
 			$devstr = $devices["video"]["sysid"];
+			
 		} else {
 			$devstr = $devices["video"]["sysid"].":".$devices["audio"]["sysid"];
+			
 		}
 		
+		//Get the proper entry
 		$command = $this->getEntry($data['format'], $where=array("category"=>"takes"))[0];
 		
 		JFormHelper::addFieldPath(JPATH_COMPONENT . '/models/fields');
 		$res = JFormHelper::loadFieldType('ScreenResolution', false);
 		$res = $res->getOptions(); // works only if you set your field getOptions on public!!
-		
 		
 		$ffmpegcom= str_replace("{\$DEVICES}", $devstr, $command["command"]);
 		$ffmpegcom= str_replace("{\$OUT_DIR}", $vid_url."/", $ffmpegcom);
@@ -411,12 +427,15 @@ class RadeniumModelFfmpeg extends JModelForm
 
 	}
 	
-	
+	public function stopProcessWithId($pid){
+		$this->stopTake($pid);
+	}
+		
 	public function stopTake( $pid ) {
 		if ( $pid > 0 ) {
 			$pid = exec("kill ".$pid, $out);
 		}
-		
+
 		return true;
 	}
 	

@@ -111,7 +111,8 @@ CREATE TABLE `#__radenium_takes` (
   `pid` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `title` text,
-  `notes` text
+  `notes` text,
+  live_pid int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --

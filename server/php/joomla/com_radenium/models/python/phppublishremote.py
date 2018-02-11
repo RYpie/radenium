@@ -4,6 +4,7 @@ import signal
 import sys, os
 import httplib, mimetypes
 import requests
+import time
 
 #! cd /Applications/MAMP/htdocs/radenium/components/com_radenium/models/python/
 
@@ -13,7 +14,7 @@ SERVER_PORT__                             = 8888
 SERVER_API_PATH__                         = "/radenium/publishlive.php"
 
 RADENIUM_API_KEY__                       = "testkey"
-RADENIUM_API_UNAME__                       = "student2"
+RADENIUM_API_UNAME__                       = "student25"
 
 class pids:
     def check_pid(self, pid):        
@@ -65,15 +66,18 @@ class post_request:
                  host = SERVER_HOST__,
                  port = SERVER_PORT__,
                  path = SERVER_API_PATH__,
+                 url = None,
                  secure = False ):
         
-        
-        self.secure = secure
-        if self.secure:
-            self.posturl = "https://" + host + path
+        if url == None:
+            self.secure = secure
+            if self.secure:
+                self.posturl = "https://" + host + path
+            else:
+                self.posturl = "http://" + host + ":" + str( port ) + path
+    
         else:
-            self.posturl = "http://" + host + ":" + str( port ) + path
-
+            self.posturl = url
 
     def post(self, files=[], payload={}):
         files_dict = {}
@@ -114,6 +118,9 @@ class phppublish:
             elif arg == '-pid':
                 self.handle_pid = config[argcount + 1]
             
+            elif arg == '-url':
+                self.url = config[argcount + 1]
+            
             argcount += 1
             
         self.m3u8_dir += str(self.id)
@@ -127,15 +134,16 @@ class phppublish:
         self.publishStatus = {}
         self.publishStatus['m3u8_now'] = []
         self.publishStatus['m3u8_prev'] = []
-        self.post = post_request()
+        self.post = post_request(url=self.url)
         
-        print( self.get_m3u8() )
+        #print( self.get_m3u8() )
         
-        self.post_hls()
+        #self.post_hls()
         
         
     def signal_term_handler(self, signal, frame):
         #print ('Closed gracefully, have a nice day!')
+        print ("Closing gracefully, one moment please...")
         self.runalways = False
 
     def get_m3u8(self):
@@ -202,10 +210,12 @@ class phppublish:
             
     def main(self):
         while self.runalways:
-            pass
+            self.post_hls()
+            time.sleep(1)
+            #self.runalways = False
             #! Should check for self.handle_pid because that is the pid of the livestreaming process
             
-        sys.exit(0)
+        # sys.exit(0)
         
         
 class m3u8:
@@ -265,9 +275,9 @@ class m3u8:
 
 
 print("Starting PHP Publisher")
-
+print("python phppublishremote.py -id 188 -caller python -pid 65813 -url http://localhost:8888/radlive")
 phpub = phppublish(config=sys.argv)
-#phpub.main()
+phpub.main()
 #print("Ending phppublish")
 sys.exit(0)
 

@@ -89,11 +89,16 @@ jQueryRepresentatives(document.body).on('click','#button_stoptake', function(){
 });
 
 jQueryRepresentatives(document.body).on('click','#button_togglelive', function(){
+	info = ["Stopped publishing", "Publishing Right Now!"];
+	// Example url:
+	// http://localhost:8888/radenium/index.php?option=com_radenium&amp;view=takes&amp;format=raw&amp;task=publishlive&amp;takes_id=188
 	jQueryRepresentatives.ajax({
 		type: 'GET',
-		url: "http://localhost:8888/radenium/index.php?option=com_radenium&amp;view=takes&amp;format=raw&amp;task=togglepublishlive&amp;takes_id=<?php echo $this->entry_data[0]->id; ?>",
-		success:function(data){
-			//jQueryRepresentatives('#results').html(data);
+		url: "http://localhost:8888/radenium/index.php?option=com_radenium&amp;view=takes&amp;format=raw&amp;task=publishlive&amp;takes_id=<?php echo $this->entry_data[0]->id; ?>",
+		success:function(jdata){
+			data = JSON.parse(jdata);
+
+			jQueryRepresentatives('#publishlive_info').html(info[data['publish']]);
 			
 			jQueryRepresentatives('#button_togglelive').html("Live Now!");
 		},
@@ -143,10 +148,10 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 
 		<div style="float:left;padding-left:10px;">
 			<div>
-			    <h2>Take title</h2>
+			    <h2>Information</h2>
 			    <hr />
-				<input style="width:100%;" type="text" name="jform[title]" id="jform_title" value="<?php echo $this->entry_data[0]->title;?>" /> 
-				<br /><h2>Information</h2><hr />
+				<strong>Title</strong><input style="width:100%;" type="text" name="jform[title]" id="jform_title" value="<?php echo $this->entry_data[0]->title;?>" /> 
+				<br />
 				<?php
 				foreach ($info as $key => $val ) {
 					echo "<strong>".$key."</strong> : ". $val." <br />";
@@ -163,6 +168,7 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 								<strong>Publish to remote server</strong>
 								<br />
 								<strong>Publishing to: </strong><?php echo $this->settings["remote_url"]; ?>
+								<div id="publishlive_info"></div>
 								<br />
 								<br />
 								
