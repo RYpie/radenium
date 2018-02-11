@@ -71,19 +71,19 @@ class RadeniumModelSettings extends JModelForm
         $query = $db->getQuery(true);
         // Prepare table data:
         $columns = array(
-            name
-            , video_out_size
-            , frame_rate
-            , remote_url
-            , remote_user
-            , remote_password
-            , rtsp_enable
-            , rtsp_url
-            , rtsp_user
-            , rtsp_password
-            , rtsp_port
-            , rtsp_key
-            , user_id
+            'name'
+            , 'video_out_size'
+            , 'frame_rate'
+            , 'remote_url'
+            , 'remote_user'
+            , 'remote_password'
+            , 'rtsp_enable'
+            , 'rtsp_url'
+            , 'rtsp_user'
+            , 'rtsp_password'
+            , 'rtsp_port'
+            , 'rtsp_key'
+            , 'user_id'
 
         );
 
@@ -181,7 +181,7 @@ class RadeniumModelSettings extends JModelForm
         $db->setQuery($query);
         $db->execute();
 
-        $results = $db->loadObjectList();
+        $results = $db->loadAssocList();
 
         return $results;
     }

@@ -18,7 +18,7 @@ $posterurl = "media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/thu
 //$m3u8_status = "index.php?option=com_radenium&view=m3u8&task=getstatus&format=raw&take_id=".$this->entry_data[0]->id;
 //$m3u8_status = "index.php?option=com_radenium&view=takes&task=m3u8status&format=raw&take_id=".$this->entry_data[0]->id;
 
-$vidurl = "index.php?option=com_radenium&view=m3u8&format=raw&take_id=".$this->entry_data[0]->id;
+//$vidurl = "index.php?option=com_radenium&view=m3u8&format=raw&take_id=".$this->entry_data[0]->id;
 
 $xml = $this->form->getXml();
 foreach ( $xml->fieldset as $f ) {
@@ -89,11 +89,16 @@ jQueryRepresentatives(document.body).on('click','#button_stoptake', function(){
 });
 
 jQueryRepresentatives(document.body).on('click','#button_togglelive', function(){
+	info = ["Stopped publishing", "Publishing Right Now!"];
+	// Example url:
+	// http://localhost:8888/radenium/index.php?option=com_radenium&amp;view=takes&amp;format=raw&amp;task=publishlive&amp;takes_id=188
 	jQueryRepresentatives.ajax({
 		type: 'GET',
-		url: "http://localhost:8888/radenium/index.php?option=com_radenium&amp;view=takes&amp;format=raw&amp;task=togglepublishlive&amp;takes_id=<?php echo $this->entry_data[0]->id; ?>",
-		success:function(data){
-			//jQueryRepresentatives('#results').html(data);
+		url: "http://localhost:8888/radenium/index.php?option=com_radenium&amp;view=takes&amp;format=raw&amp;task=publishlive&amp;takes_id=<?php echo $this->entry_data[0]->id; ?>",
+		success:function(jdata){
+			data = JSON.parse(jdata);
+
+			jQueryRepresentatives('#publishlive_info').html(info[data['publish']]);
 			
 			jQueryRepresentatives('#button_togglelive').html("Live Now!");
 		},
@@ -110,10 +115,10 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 	alert(vid.currentTime);
 	jQueryRepresentatives.ajax({
 		type: 'GET',
-		url: "http://localhost:8888/radenium/index.php?option=com_radenium&amp;view=ffmpeg&amp;format=raw&amp;task=createthumbs&amp;takes_id=<?php echo $this->entry_data[0]->id; ?>&amp;position="+vid.currentTime,
+		url: "http://localhost:8888/radenium/index.php?option=com_radenium&amp;view=ffmpeg&amp;format=raw&amp;task=createthumbs&amp;takes_id=<?php echo $this->entry_data[0]->id; ?>&amp;player_position="+vid.currentTime,
 		success:function(data){
 			//jQueryRepresentatives('#results').html(data);
-			
+			//alert(data);
 			//jQueryRepresentatives('#button_togglelive').html("Live Now!");
 		},
 		error:function(){
@@ -130,48 +135,76 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 
 	<div id="player_area">
 		<div style="float:left;">
-			<video id="myVideo" controls width="600px" poster="<?php echo $posterurl; ?>">
-				<source src="<?php echo $vidurl; ?>" type="video/mp4">
-			</video>
+		    <div>
+                <video id="myVideo" controls width="600px" height="360px" poster="<?php echo $posterurl; ?>">
+                    <source src="<?php echo $vidurl; ?>" type="video/mp4">
+                </video>
+			</div>
+			<div style="width:600px;" class="form_rendered_container_form_">
+                <?php echo $this->form->renderFieldSet("information"); ?> <button type="submit" class="button"><?php echo JText::_('Save And Close'); ?></button>
+            </div>
+			
 		</div>
-		<div style="float:left;">
-			<div style="padding-left:10px;">
-				<input style="width:200px;" type="text" name="jform[title]" id="jform_title" value="<?php echo $this->entry_data[0]->title;?>" /> <button type="submit" class="button"><?php echo JText::_('V'); ?></button>
+
+		<div style="float:left;padding-left:10px;">
+			<div>
+			    <h2>Information</h2>
+			    <hr />
+				<strong>Title</strong><input style="width:100%;" type="text" name="jform[title]" id="jform_title" value="<?php echo $this->entry_data[0]->title;?>" /> 
 				<br />
-				<hr />
 				<?php
 				foreach ($info as $key => $val ) {
 					echo "<strong>".$key."</strong> : ". $val." <br />";
 				}
 				?>
-				<hr />
-				<div id="take_control_buttons">
-					<?php if ($this->entry_data[0]->state < 2 ) { ?>
-					<?php if (strpos($info["Recording Format"], "HLS")) { ?>
-					<div id="button_togglelive">Go Live!</div> 
-					<?php } ?>
-					<br />
-					<div id="button_stoptake">Stop Take</div>
+
+				<br /><h2>Control</h2>
+				<div id="take_control_buttons" style="text-align:left;">
+					<?php if ($this->entry_data[0]->state <= 2 ) { ?>
 					
+						<?php if ( strpos($info["Recording Format"], "HLS") !== false ) { ?>
+							<?php if ( $this->settings["remote_url"] != "" ) { ?>
+								<hr />
+								<strong>Publish to remote server</strong>
+								<br />
+								<strong>Publishing to: </strong><?php echo $this->settings["remote_url"]; ?>
+								<div id="publishlive_info"></div>
+								<br />
+								<br />
+								
+								<div style="text-align:right;">
+									<input id="button_togglelive" type="button" value="Go Live!" />
+								</div>
+							<?php } ?>
+						<?php } ?>
+						<br /><hr />
+						<strong>Stop recording: </strong>
+						<div style="text-align:right;">
+							<input id="button_stoptake" type="button" value="Stop Take" />
+						</div>
+						
 					<?php } ?>
-					<div id="create_thumbs">Create Thumbs</div>
-					
+					<hr />
+					<strong>Create a thumb: </strong>
+					<div style="text-align:right;">
+						<input id="create_thumbs" type="button" value="Create Thumb" />
+					</div>
 				</div>
 			</div>
+			<br /><br />
+			<button style="width:100%;" type="submit" class="button"><?php echo JText::_('Save Title, Notes & Close'); ?></button>
 		</div>	
 	</div>
 	<div style="clear:both;"></div>
-    <div class="form_rendered_container_take_info_">
-        <div style="width:600px;" class="form_rendered_container_form_">
-            <?php echo $this->form->renderFieldSet("information"); ?> <button type="submit" class="button"><?php echo JText::_('Save And Close'); ?></button>
-        </div>
-    </div>
+
 	<?php echo $this->form->renderFieldSet("hidden"); ?>
     <?php echo JHtml::_('form.token'); ?>
     <input type="hidden" name="jform[pid]" value="<?php echo $this->entry_data[0]->pid; ?>" />
     <input type="hidden" name="view" value="takes" />
     <input type="hidden" name="task" value="modify" />
     <input type="hidden" name="takes_id" value="<?php echo $this->takes_id; ?>" />
-    <br />
+
 </form>
+
+
 

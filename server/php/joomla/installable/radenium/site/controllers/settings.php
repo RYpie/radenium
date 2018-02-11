@@ -30,6 +30,7 @@ class RadeniumControllerSettings extends JControllerForm
 
     public function save($key = NULL, $urlVar = NULL)
     {
+    	
         if ($this->checkToken($method = 'post', $redirect = true)) {
             $option = JFactory::getApplication()->input->get('option','string');
             $model = $this->getModel("settings");
@@ -47,7 +48,9 @@ class RadeniumControllerSettings extends JControllerForm
         if ($this->checkToken($method = 'post', $redirect = true)) {
             $option = JFactory::getApplication()->input->get('option','string');
             $model = $this->getModel("settings");
+            
             $data = JFactory::getApplication()->input->get('jform','', 'array');
+            
             $model->edit( JFactory::getApplication()->input->get("settings_id"),$data );
             
             $this->setRedirect( JRoute::_('index.php?option='.$option.'&view=settings&layout=default', false));

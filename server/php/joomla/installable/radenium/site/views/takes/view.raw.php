@@ -22,7 +22,14 @@ class RadeniumViewTakes extends JViewLegacy
 
 	function display_json($data = array())
 	{
+		if ( false ){
+			echo "<pre>";
+			print_r($data);
+			echo "</pre>";
+		}
+		header("Content-Type: application/json");
 		echo json_encode($data);
+		
 	}
 	
 	/**

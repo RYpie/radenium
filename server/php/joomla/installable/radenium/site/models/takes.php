@@ -106,7 +106,7 @@ class RadeniumModelTakes extends JModelForm
         $db->execute();
     }
     
-    public function setlivepublish($value, $id) {
+    public function setlivepublish($value, $options) {
     	// Get a db connection:
     	$db = JFactory::getDbo();
     	// Create a new query object:
@@ -114,10 +114,11 @@ class RadeniumModelTakes extends JModelForm
     	// Prepare table data:
     	$fields = array(
     			$db->quoteName('publish') . ' = ' . intval($value)
+    			, $db->quoteName('live_pid') . ' = ' . intval($options['pid'])
     	);
     	// Conditions for which records should be updated:
     	$conditions = array(
-    			$db->quoteName('id') .' = '. $id
+    			$db->quoteName('id') .' = '. $options['take_id']
     	);
     	// Prepare the insert query.
     	$query->update($db->quoteName( '#__radenium_takes'))

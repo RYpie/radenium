@@ -51,6 +51,20 @@ class RadeniumViewTakes extends JViewLegacy
                 $this->form = $this->get("Form");
                 $this->entry_data = $this->get("Entry_Entry_Id");
                 $this->takes_id = JFactory::getApplication()->input->get("takes_id");
+                /*
+                 * 
+                JModelLegacy::addIncludePath(JPATH_SITE . '/components/com_ministry/models', 'MinistryModel');
+                $orders = JModelLegacy::getInstance('specialfunctions', 'MinistryModel');
+                //$orders->sayHello();
+                $this->all_orders = $orders->getApplicationAdministrationData( $this->application_id );
+                 * 
+                 */
+                
+                JModelLegacy::addIncludePath(JPATH_SITE . '/components/com_ministry/models', 'RadeniumModel');
+                $settings_model = JModelLegacy::getInstance('settings', 'RadeniumModel');
+                
+                $this->settings = $settings_model->getAllEntries()[0];
+                
                 break;
 
             case "take":
@@ -72,8 +86,6 @@ class RadeniumViewTakes extends JViewLegacy
                 $this->hidden_data = $this->get("hidden");
                 $this->form = $this->get("Form");
                 break;
-
-
 
             default:
                 $this->takes_entries = $this->get("AllEntries");

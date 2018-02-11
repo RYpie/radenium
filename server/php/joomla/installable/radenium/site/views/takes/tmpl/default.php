@@ -55,7 +55,7 @@ $liveinfo=array(
 	        <td valign="top"> <input type="checkbox" name="takes_id[]" value="<?php echo $takes_id; ?>" /> </td>
 	        <?php
 		        echo "<td>".$entry->id." </td>";
-		        echo "<td><a href=\"index.php?index.php?option=com_radenium&view=takes&layout=edit&takes_id=".$takes_id."&Itemid=105\">".$entry->title."</a> </td>";
+		        echo "<td><a href=\"index.php?option=com_radenium&view=takes&layout=edit&takes_id=".$takes_id."&Itemid=105\">".$entry->title."</a> </td>";
 		        echo "<td>".$entry->takedate." </td>";
 		        echo "<td>".$res[$entry->resolution]." </td>";
 		        echo "<td>".$stateinfo[intval($entry->state)]["caption"]." </td>";

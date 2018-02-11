@@ -27,7 +27,13 @@ class RadeniumControllerTakes extends JControllerForm
 
     }
 
-
+	private function getRadeniumSettings() {
+		$settings_model = $this->getModel("settings");
+		$set = $settings_model->getSettings()[0];
+		return $set;
+		
+	}
+    
     public function save($key = NULL, $urlVar = NULL)
     {
         if ($this->checkToken($method = 'post', $redirect = true)) {
@@ -83,32 +89,39 @@ class RadeniumControllerTakes extends JControllerForm
     /**
      * @desc To be called by a javascript AJAX function.
      */
-	public function togglepublishlive() {
+	public function publishlive() {
+		//http://localhost:8888/radenium/index.php?option=com_radenium&amp;view=takes&amp;format=raw&amp;task=publishlive&amp;takes_id=188
+		
 		$option = JFactory::getApplication()->input->get('option','string');
 		$take_id = JFactory::getApplication()->input->get('takes_id',false);
 		
 		$model = $this->getModel("takes");
-		$data = $model->getEntry_Entry_Id()[0];
-
+		$data = (array)$model->getEntry_Entry_Id()[0];
+		//print_r($data);
 		$view = $this->getView( "takes", "raw" );
 		$retVal = array();
 		$retVal["take_id"] = $take_id;
+		$model_ffmpeg = $this->getModel("ffmpeg");
+		
+		$data["settings"] = $this->getRadeniumSettings();
 
-		if (intval($data->publish) == 0) {
-			$model_ffmpeg = $this->getModel("phpffmpeg");
-			$linesout = $model_ffmpeg->publishLive($take_id);
+		if (intval($data['publish']) == 0) {
+			$linesout = $model_ffmpeg->publishLive($take_id, $options=$data);
 			$retVal["output"] = $linesout;
-			$model->setlivepublish(1,$take_id);
+			$retVal["pid"] = $linesout[0];
+			$model->setlivepublish(1,$retVal);
 			$retVal["publish"] = 1;
 			
-		} else {
-			$model->setlivepublish(0,$take_id);
+		} else {			
+			$linesout = $model_ffmpeg->stopProcessWithId($data['live_pid']);
+			$model->setlivepublish(0,$retVal);
 			$retVal["publish"] = 0;
 			
 		}
 		//echo "<a href=\"index.php?option=com_radenium&view=takes&format=raw&Itemid=105&task=publishlive&takes_id=58\">test</a>";
-		
+			
 		$view->display_json($retVal);
+
 	}
 	
 	

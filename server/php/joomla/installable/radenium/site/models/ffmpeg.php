@@ -275,15 +275,44 @@ class RadeniumModelFfmpeg extends JModelForm
         return $results;
     }
 
-        
-	public function publishLive( $id ) {
+   
+    /**
+     * @todo This function suffers quite some error handling, or I could filter the settings in order to get the proper input there as well.
+     * @param unknown $id
+     * @param array $options
+     * @return string[]
+     */
+	public function publishLive( $id, $options=array() ) {
+		$pid = "";
+		$out = array();
 		
-		//$pid = exec("python ".$comand.$this->noterminal, $out);		
-		//echo $pid;
+		//print_r($options);
 		
-		exec("python components/com_radenium/models/python/phppublishremote.py -id ".$id." 2>&1", $out);
-		//print_r($out);
-		
+		if ( array_key_exists("settings", $options) ) {
+			if ( array_key_exists("pid", $options) ) {
+				$pid = " -pid ". $options['pid']." ";
+				
+			}
+			if ( array_key_exists("remote_url", $options['settings']) ) {
+				$url = " -url ". $options['settings']['remote_url']. " ";
+				
+			}
+			
+			$noterminal = "";
+			$noterminal = " </dev/null >/dev/null 2>components/com_radenium/models/python/python.log & echo $!";
+			$exec_com = "python components/com_radenium/models/python/phppublishremote.py -id "
+					. $id." -caller joomla"
+					. $pid
+					. $url
+					. $noterminal;
+			
+			//echo "<p>".$exec_com."</p>";
+			$pid = exec($exec_com, $out);
+			
+		} else {
+			$out[] = "An error occured, did you provide settings?";
+			
+		}
 		return $out;
 	}
 	
@@ -294,23 +323,23 @@ class RadeniumModelFfmpeg extends JModelForm
 		$vid_url = getcwd()."/media/com_radenium/media/takes/id_".$id;
 		mkdir($vid_url, 0757);
 		mkdir($vid_url."/thumbs", 0757);
-		
-		//mkdir($vid_url."_copy", 0757);
 
 		$devstr="";
 		// Do we have to start audio as well?
 		if ( $devices["audio"]["sysid"] == "" ) {
 			$devstr = $devices["video"]["sysid"];
+			
 		} else {
 			$devstr = $devices["video"]["sysid"].":".$devices["audio"]["sysid"];
+			
 		}
 		
+		//Get the proper entry
 		$command = $this->getEntry($data['format'], $where=array("category"=>"takes"))[0];
 		
 		JFormHelper::addFieldPath(JPATH_COMPONENT . '/models/fields');
 		$res = JFormHelper::loadFieldType('ScreenResolution', false);
 		$res = $res->getOptions(); // works only if you set your field getOptions on public!!
-		
 		
 		$ffmpegcom= str_replace("{\$DEVICES}", $devstr, $command["command"]);
 		$ffmpegcom= str_replace("{\$OUT_DIR}", $vid_url."/", $ffmpegcom);
@@ -369,27 +398,44 @@ class RadeniumModelFfmpeg extends JModelForm
 		}
 	}
 	
-	public function getThumbNails( $dir, $file ){
+	
+	/**
+	 * @todo Thumbs are created from .ts files, however, they are segmented so when a time is given I should
+	 *  find out which .ts file to pick.
+	 * @param unknown $dir
+	 * @param unknown $file
+	 * @param string $time
+	 */
+	public function getThumbNails( $dir, $file, $time="00:00:01.000" ){
+		$time="00:00:9.000";
 		$tardir = getcwd()."/".$dir;
 
 		exec("/usr/local/bin/ffmpeg -ss 3 -i ".$tardir.$file." -vf \"select=gt(scene\,0.4)\" -frames:v 5 -vsync vfr -vf fps=fps=1/600 ".$tardir."thumbs/out%02d.jpg 2>&1", $out);
 		//ffmpeg -ss 3 -i input.mp4 -vf "select=gt(scene\,0.4)" -frames:v 5 -vsync vfr -vf fps=fps=1/600 out%02d.jpg
-		echo "<pre>";
-		print_r($out);
-		echo "</pre>";
 		
-		exec("/usr/local/bin/ffmpeg -i ".$tardir.$file." -ss 00:00:01.000 -frames:v 1 ".$tardir."thumbs/thumb.jpg 2>&1", $out);
+		/*
 		echo "<pre>";
 		print_r($out);
 		echo "</pre>";
+		 */
+		
+		$ffmpeg_com="/usr/local/bin/ffmpeg -i ".$tardir.$file." -ss ".$time." -frames:v 1 ".$tardir."thumbs/thumb.jpg";
+		
+		//echo "<p>".$ffmpeg_com."</p>";
+		
+		exec($ffmpeg_com." 2>&1", $out);
+
 	}
 	
-	
+	public function stopProcessWithId($pid){
+		$this->stopTake($pid);
+	}
+		
 	public function stopTake( $pid ) {
 		if ( $pid > 0 ) {
 			$pid = exec("kill ".$pid, $out);
 		}
-		
+
 		return true;
 	}
 	
