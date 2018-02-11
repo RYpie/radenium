@@ -1,8 +1,7 @@
 ![GitHub license](https://img.shields.io/badge/license-GPL-blue.svg)
 
 
-# Welcome To Radenium, Home Of The Great Radeniums
-
+# Welcome To Radenium, Home Of The Great Radeniums!
 
 Idea of Radenium is to implement an HLS livestreaming application based on FFMPEG, wrapped by a python application.
 
