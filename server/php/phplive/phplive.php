@@ -2,6 +2,9 @@
 
 include_once('configuration.php');
 
+/**
+* @desc Parses m3u8 files in a manner relevant to HLS update/post functionality.
+*/
 class m3u8Parser {
 	private $playlist_txt;
 	private $playlist_pieces;
@@ -35,10 +38,22 @@ class m3u8Parser {
 	}
 }
 
-class HLSUpdater {
-	private $streamdirectory;
-	private $db=False; // Object to a database
+/**
+* @desc Class used to update a HLS stream on the server. 
+* 	To get the best out of this class, it requires to meet certain upload order requests, namely, first upload .ts files, and finally the .m3u8.
+* 	That is to make sure that the .ts files are available when the updated files are available.
+* @todo Make the class smarter so that it does not matter when which file is uploaded.
+* 	Database connection to register data upload sizes for traffic calculations.
+*/
+class HLS {
+	private $streamdirectory; /*!< Directory in which the HLS stream will be stored. */
+	private $db=False; /*!< Database object for future use, currently not defined. */
 	
+	/**
+	* @desc Constructor.
+	* @param string $targetdir Location where to store the HLS stream.
+	* @param object $db Database object, for future use, currently not defined.
+	*/
 	function __construct( $targetdir, $db = False ) {
 		$this->db = $db;
 		if ( substr($targetdir, -1) != '/' ){
@@ -51,7 +66,7 @@ class HLSUpdater {
 	
 	/**
 	 * @desc Creates a directory if it does not exist.
-	 * @param string $dir
+	 * @param string $dir Directory to be created.
 	 */
 	function CreateDir( $dir ) {
 		if ( !file_exists($dir) ) {
@@ -59,6 +74,9 @@ class HLSUpdater {
 		}
 	}
 	
+	/**
+	* @desc Updates a HLS stream via .m3u8 file. It first receives the .ts files and finally gets the .m3u8 file in order to delete old files.
+	*/
 	function Update() {
 		$totalSizeInFiles = 0;
 		foreach ($_FILES as $file ){
@@ -95,6 +113,10 @@ class HLSUpdater {
 		
 	}
 	
+	/**
+	* @desc Function that deletes files from a directory that are not in the $keepfiles list.
+	* @param array $keepfiles Array that holds the names of files in the streaming directory that should not be deleted.
+	*/
 	function KeepFiles( $keepfiles ) {
 		$dirfiles = glob( $this->streamdirectory.'*' );
 		$pop = explode('/', $this->streamdirectory);
@@ -203,7 +225,7 @@ function printp($p) {
 $rconf = new RConfig();
 //printp($rconf->stream_key);
 $radeniumvalidUser = True;
-$hls = new HLSUpdater( getcwd().'/live/'.$_REQUEST['RADENIUM_API_UNAME']."/" );
+$hls = new HLS( getcwd().'/live/'.$_REQUEST['RADENIUM_API_UNAME']."/" );
 $ical = new icalParser($rconf->ical);
 
 if ( $radeniumvalidUser ) {
