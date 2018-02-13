@@ -5,6 +5,12 @@
 
 Place phplive.php on your remote server and use it to publish a HLS livestream to it.
 
+#todo
+
+Document in the code how to use this module.
+- hls_update
+First upload the .ts files, at last the m3u8 to make sure the .ts files are ready when the m3u8 is ready.
+
 # Copyright
 
 Copyright 2017 Andries Bron
