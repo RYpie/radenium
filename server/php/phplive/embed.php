@@ -1,7 +1,7 @@
 <html>
     <head>
         <title>Embed Video</title>
-        <link rel="stylesheet" type="text/css" href="css/style.css" />
+        <link rel="stylesheet" type="text/css" href="css/embed.css" />
     </head>
     <body>
         <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
