@@ -19,8 +19,6 @@ jimport('joomla.application.component.controllerform');
 
 class RadeniumControllerTakes extends JControllerForm
 {
-	private $mediadir="media/com_radenium/media/takes/";
-
     public function __construct($config=array())
     {
         parent::__construct($config);
@@ -148,8 +146,8 @@ class RadeniumControllerTakes extends JControllerForm
 			$retVal["msg"] = "No proper pid found";
 			
 		}
-		$this->createFinalPlaylist();
-		
+//remove this one later is now for debugging.		
+//$model->stopTake($take_id);
 		$view = $this->getView( "takes", "raw" );
 		$view->display_json($retVal);
 	}
@@ -201,14 +199,7 @@ class RadeniumControllerTakes extends JControllerForm
     }
 	
     
-    public function createFinalPlaylist() {
-    	$model_system = $this->getModel("phpsystem");
-    	
-    	$media = array();
-    	//    	$this->getDirContents($this->mediadir."id_".$take_id, $media, $findfile ="playlist.m3u8");
-    	
-    	
-    }
+
     
     
     public function m3u8status() {
@@ -231,37 +222,7 @@ class RadeniumControllerTakes extends JControllerForm
     	
     }
     
-    
-    /*
-     * @todo should by done through the system model.
-     */
-    private function getDirContents($dir, &$results = array(), $findfile = False){
 
-    	if(substr($dir, -1) == '/') {
-    		$dir = substr($dir, 0, -1);
-    	}
-    	$files = scandir($dir);
-    	foreach($files as $key => $value){
-    		$path = $dir.DIRECTORY_SEPARATOR.$value;//realpath($dir.DIRECTORY_SEPARATOR.$value);
-    		
-    		if(!is_dir($path)) {
-    			if ( $findfile !== False ){
-    				if ($value == $findfile) {
-    					$results[] = $path;
-    				}
-    			} else {
-    				$results[] = $path;
-    			}
-    		} else if($value != "." && $value != ".." && $value != ".DS_Store") {
-    			$this->getDirContents($path, $results, $findfile);
-    			if ( $findfile == False ){
-    				$results[] = $path;
-    			}
-    		}
-    	}
-    	
-    	return $results;
-    }
 
     public function delete($multiple=array())
     {
@@ -295,7 +256,10 @@ class RadeniumControllerTakes extends JControllerForm
         
     }
     
-    
+    /**
+     * @todo should be done in the model, where did I learn to program???
+     * @param string $dir
+     */
     public function removeDir($dir) {
     	//$dir = 'samples' . DIRECTORY_SEPARATOR . 'sampledirtree';
     	$it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);

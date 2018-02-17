@@ -37,8 +37,11 @@ CREATE TABLE `#__radenium_ffmpeg` (
 --
 
 INSERT INTO `#__radenium_ffmpeg` (`id`, `name`, `command`, `platform`, `category`) VALUES
-(1, 'Apple HLS', '-r 30 -f avfoundation -i {$DEVICES} -pix_fmt yuv420p -s {$OUT_RES} -hls_flags round_durations -hls_time 3 -hls_init_time 3 {$OUT_DIR}{$OUT_NAME_M3U8}', 0, 0),
-(2, 'RTSP Push', '-r 30 -f avfoundation -i {$DEVICES} -pix_fmt yuv420p -c:v libx264 -profile:v baseline -level 3.0 -r 24 -g 48 -keyint_min 48 -sc_threshold 0 -vb 310k -c:a mp3 -ab 40k -ar 44100 -ac 2 -f rtsp -muxdelay 0.1 rtsp://{$RTSP_USER_NAME}:{$RTSP_USER_PASSWORD}@{$RTSP_SERVER_URL}:{$RTSP_SERVER_PORT}/{$RTSP_USER_NAME}/{$RTSP_KEY}', 0, 0);
+(1, 'Apple HLS', '-y -r 30 -f avfoundation -i {$DEVICES} -pix_fmt yuv420p -s {$OUT_RES} -hls_flags round_durations -hls_time 3 -hls_init_time 3 -g 48 {$OUT_DIR}{$OUT_NAME_M3U8}', 'all', 'takes'),
+(2, 'RTSP Push', '-r 30 -f avfoundation -i {$DEVICES} -pix_fmt yuv420p -c:v libx264 -profile:v baseline -level 3.0 -r 24 -g 48 -keyint_min 48 -sc_threshold 0 -vb 310k -c:a mp3 -ab 40k -ar 44100 -ac 2 -f rtsp -muxdelay 0.1 rtsp://{$RTSP_USER_NAME}:{$RTSP_USER_PASSWORD}@{$RTSP_SERVER_URL}:{$RTSP_SERVER_PORT}/{$RTSP_USER_NAME}/{$RTSP_KEY}', 'all', 'takes'),
+(3, 'Preview', '-y -r 30 -f avfoundation -i {$DEVICES} -f image2 -updatefirst 1 -r 2 {$PREVIEW_DIR}preview.jpg', 'all', 'preview');
+
+
 
 --
 -- Indexes for dumped tables
@@ -111,7 +114,6 @@ CREATE TABLE `#__radenium_takes` (
   `pid` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `title` text,
-  `notes` text,
   live_pid int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

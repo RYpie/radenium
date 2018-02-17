@@ -10,7 +10,7 @@
  		
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
- 		
+
 $vidurl = "media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/video.m3u8";
 $videom3u8 = "media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/video.m3u8";
 
@@ -19,13 +19,15 @@ if ( !file_exists($vidurl) ) {
 	
 }
 
+
 $posterurl = "media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/thumbs/thumb.jpg";
+
 
 //$vidurl = "index.php?option=com_radenium&view=m3u8&format=raw&take_id=".$this->entry_data[0]->id;
 //$m3u8_status = "index.php?option=com_radenium&view=m3u8&task=getstatus&format=raw&take_id=".$this->entry_data[0]->id;
 //$m3u8_status = "index.php?option=com_radenium&view=takes&task=m3u8status&format=raw&take_id=".$this->entry_data[0]->id;
-
 //$vidurl = "index.php?option=com_radenium&view=m3u8&format=raw&take_id=".$this->entry_data[0]->id;
+
 
 $xml = $this->form->getXml();
 foreach ( $xml->fieldset as $f ) {
@@ -42,7 +44,9 @@ foreach ( $xml->fieldset as $f ) {
 	} else {
 		
 	}
+	
 }
+
 
 //Get the custom field for visualisation of the selected data.
 JFormHelper::addFieldPath(JPATH_COMPONENT . '/models/fields');
@@ -54,6 +58,7 @@ $res = JFormHelper::loadFieldType('ScreenResolution', false);
 $res = $res->getOptions(); // works only if you set your field getOptions on public!!
 $format = JFormHelper::loadFieldType('ffmpeg', false);
 $format= $format->getOptions(); // works only if you set your field getOptions on public!!
+
 
 $info = array(
 		"Video Input Device"=>$vdevs[$this->entry_data[0]->vid]
@@ -67,6 +72,7 @@ $info = array(
 
 foreach( $this->entry_data[0] as $key => $val ) {
 	$this->form->setValue( $key, null, $val);
+	
 }
 //print_R($this->entry_data[0]->id);
 /*
@@ -74,10 +80,6 @@ echo "<pre>";
 print_r($this->entry_data[0]);
 echo "</pre>";
 */
-$jformpublish=array(
-	0=>""
-	,1=>""
-);
 
 ?>
 
@@ -93,7 +95,9 @@ jQueryRepresentatives(document.body).on('click','#button_stoptake', function(){
 		},
 		error:function(){
 			//jQueryRepresentatives('#results').html('<p class="error">An error was encountered while retrieving the representatives from the database.</p>');
+
 		}
+
 	});
 
 	checkForFullPlaylist();
@@ -116,7 +120,9 @@ jQueryRepresentatives(document.body).on('click','#button_togglelive', function()
 		},
 		error:function(){
 			//jQueryRepresentatives('#results').html('<p class="error">An error was encountered while retrieving the representatives from the database.</p>');
+
 		}
+		
 	});
 	
 });
@@ -132,10 +138,13 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 			//jQueryRepresentatives('#results').html(data);
 			//alert(data);
 			//jQueryRepresentatives('#button_togglelive').html("Live Now!");
+			
 		},
 		error:function(){
 			//jQueryRepresentatives('#results').html('<p class="error">An error was encountered while retrieving the representatives from the database.</p>');
+
 		}
+		
 	});
 	
 });
@@ -144,14 +153,17 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 <script type="text/javascript">
 function checkForFullPlaylist() {
     var http = new XMLHttpRequest();
-    var vid = document.getElementById("myVideoSrc");
+    var source = document.getElementById("myVideoSrc");
+    var vid = document.getElementById("myVideo");
     
     http.open('HEAD', "<?php echo $videom3u8;?>", false);
     http.send();
 
 	if(http.status != 404 ) {
 		vid.pause();
-		vid.setAttribute('src', '<?php echo $videom3u8;?>'); 
+		source.setAttribute('src', '<?php echo $videom3u8;?>');
+		vid.load();
+		vid.currentTime = 0;
 		vid.play();
 		
 	} else {
@@ -167,12 +179,17 @@ function checkForFullPlaylist() {
 	<div id="player_area">
 		<div style="float:left;">
 		    <div>
-                <video id="myVideo" controls width="600px" height="360px" poster="<?php echo $posterurl; ?>">
+                <video id="myVideo" controls autoplay="1" width="600px" height="360px" poster="<?php echo $posterurl; ?>">
                     <source id="myVideoSrc" src="<?php echo $vidurl; ?>" type="video/mp4">
                 </video>
 			</div>
 			<div style="width:600px;" class="form_rendered_container_form_">
-			Create clips when take is finished.
+			<h2>Create clip</h2>
+			<div>
+				<input id="clip_set_start" type="button" value="Set Start" />
+				<input id="clip_set_stop" type="button" value="Set Stop" />
+				
+			</div>
             </div>
 			
 		</div>
@@ -180,11 +197,7 @@ function checkForFullPlaylist() {
 		<div style="float:left;padding-left:10px;">
 			<div>
 			    <h2>Title</h2>
-			    
 				<input style="width:100%;" type="text" name="jform[title]" id="jform_title" value="<?php echo $this->entry_data[0]->title;?>" /> 
-				<h3>Description</h3>
-				<textarea style="width:100%;" name="jform[notes]" id="jform_notes"></textarea>
-				
 				<hr />
 				<?php
 				foreach ($info as $key => $val ) {

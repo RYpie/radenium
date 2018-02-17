@@ -33,18 +33,15 @@ $channels = $site->ls("channels");
 $live = $site->ls("live");
 
 $channels_info = array();
-
-//should check for m3u8 file
-foreach ( $channels as $ch ) {
-	$channels_info[$ch] = array();
-	$channels_info[$ch]["live"] = false;
-	foreach ( $live as $l ) { 
-		if ( $l == $ch ) {
-			$channels_info[$ch]["live"] = true;
-		}
+foreach ( $live as $l ) {
+	//if ( $l == $ch ) {
+	echo $l."<br />";
+	if ( file_exists( "live/".$l."/playlist.m3u8" ) ) {
+		$channels_info[$l]["live"] = true;
+		
 	}
-	
 }
+
 
 echo "<pre>";
 print_r( $channels );

@@ -9,13 +9,6 @@ import time
 #! cd /Applications/MAMP/htdocs/radenium/components/com_radenium/models/python/
 
 
-SERVER_HOST__                             = "localhost"
-SERVER_PORT__                             = 8888
-SERVER_API_PATH__                         = "/radenium/publishlive.php"
-
-RADENIUM_API_KEY__                       = "testkey"
-RADENIUM_API_UNAME__                       = "student25"
-
 class pids:
     def check_pid(self, pid):        
         """ Check For the existence of a unix pid. """
@@ -61,32 +54,16 @@ class pids:
 
 
 class post_request:
-    
-    def __init__( self,
-                 host = SERVER_HOST__,
-                 port = SERVER_PORT__,
-                 path = SERVER_API_PATH__,
-                 url = None,
-                 secure = False ):
-        
-        if url == None:
-            self.secure = secure
-            if self.secure:
-                self.posturl = "https://" + host + path
-            else:
-                self.posturl = "http://" + host + ":" + str( port ) + path
-    
-        else:
-            self.posturl = url
+    def __init__( self, url, options={} ):
+        #! todo Should do some url checking here.
+        self.posturl = url
+        self.options = options
 
     def post(self, files=[], payload={}):
         files_dict = {}
             
         for f in files:
             files_dict = {'file': open(f, 'rb')}
-
-        payload['RADENIUM_API_KEY']   = RADENIUM_API_KEY__
-        payload["RADENIUM_API_UNAME"] = RADENIUM_API_UNAME__
         
         r = requests.post(self.posturl.strip(), files=files_dict, data=payload )
         
@@ -98,6 +75,11 @@ m3u8_directories={
 }
 
 class phppublish:
+    """ Publishes an HLS stream to phplive.php, requires command line arguments.
+        -id string Stream id of the stream to publish, is added to the m3u8_directories item to obtain the right directory.
+        -caller string Indicates if the script is called by the joomla system or by python, if python than it should be called from the model directory, for debugging purposes.
+        -pid string process id of the running take, the idea was to monitor that process id, if it stops, than also stop this process.
+        """
     def __init__(self, config={}):
         #print("phppublish created...")
         signal.signal(signal.SIGTERM, self.signal_term_handler)
@@ -107,9 +89,11 @@ class phppublish:
         argcount=0
         #print(config)
         
+        #! Initialize the directory with a reference as if this file was called by hand from the model directory.
         self.m3u8_dir = m3u8_directories['python']
         for arg in config:
             if arg == '-id':
+                #! To obtain the proper stream from this system.
                 self.id = config[argcount + 1]
                 
             elif arg == '-caller':
@@ -120,6 +104,12 @@ class phppublish:
             
             elif arg == '-url':
                 self.url = config[argcount + 1]
+            
+            elif arg == '-uname':
+                self.uname = config[argcount + 1]
+            
+            elif arg == '-ukey':
+                self.ukey = config[argcount + 1]
             
             argcount += 1
             
@@ -134,11 +124,8 @@ class phppublish:
         self.publishStatus = {}
         self.publishStatus['m3u8_now'] = []
         self.publishStatus['m3u8_prev'] = []
-        self.post = post_request(url=self.url)
-        
-        #print( self.get_m3u8() )
-        
-        #self.post_hls()
+        self.post = post_request(self.url)
+    
         
         
     def signal_term_handler(self, signal, frame):
@@ -157,68 +144,88 @@ class phppublish:
             return m3u8_data
             
         else:
-            return False
+            return None
+
             
     def getPostPayload(self, type='hls_update'):
         ''' Prepares a dictionary with data to be posted to the api server.
         '''
         retVal = {'task':type}
         retVal['stream_id'] = self.id
+        retVal['uname'] = self.uname
+        retVal['ukey'] = self.ukey
         
         if type=='hls_update':
-            retVal['scheduled'] = '';
-        elif type == 'announce_live':
-            retVal['preroll'] = 'default';
+            pass
+        
+        elif type == 'announce_live_start':
+            retVal['preroll'] = 'default'
+        
         elif type == 'announce_live_stop':
-            retVal['postroll'] = 'default';
+            retVal['postroll'] = 'default'
+        
         elif type == 'live_metadata':
             #post information during the program
             pass
-        elif type == 'update_system_devices':
-            retVal['RADENIUM_API_INPUT_DEVICES_JSON'] = ""
-        
+    
         return retVal
         
+        
+    def init_hls(self,mode):
+        if mode == "start":
+            print self.post.post([], self.getPostPayload('announce_live_start')).text
+
+        if mode == "stop":
+            print self.post.post([], self.getPostPayload('announce_live_stop')).text
+
+
     def post_hls(self):
         m3u8_data = self.get_m3u8()
-        newFilesUploaded = False
-        for file in m3u8_data['files']:
-            upload = False
-            #print "Volgende file gevonden: "+ file['name']
-            #! Trying to fetch the name from self.publishStatus, if its in there it is already uploaded.
-            if file['name'] in self.publishStatus['m3u8_prev']:
-                print( ">>> Fille already uploaded <<<" )
-                pass
-                
-            else:
-                print( "Uploading the " + file['name'] + "...")
-                files = []
-                files.append( self.m3u8_dir + '/' + file['name'] )
-                #print "\nDoing the post..."
-                print( "POST IT NOW" )
-                print self.post.post(files,self.getPostPayload('hls_update')).text
-                
-                self.publishStatus['m3u8_prev'].append( file['name'] )
-                newFilesUploaded = True
-                
-        if newFilesUploaded:
-            #! Update the m3u8 file
-            print( "Update the remote m3u8 file" )
-            print self.post.post([self.m3u8_file], self.getPostPayload('hls_update')).text
+        if m3u8_data != None:
+            newFilesUploaded = False
+            for file in m3u8_data['files']:
+                upload = False
+                #print "Volgende file gevonden: "+ file['name']
+                #! Trying to fetch the name from self.publishStatus, if its in there it is already uploaded.
+                if file['name'] in self.publishStatus['m3u8_prev']:
+                    print( ">>> Fille already uploaded <<<" )
+                    pass
+                    
+                else:
+                    print( "Uploading the " + file['name'] + "...")
+                    files = []
+                    files.append( self.m3u8_dir + '/' + file['name'] )
+                    #print "\nDoing the post..."
+                    print( "POST IT NOW" )
+                    print self.post.post(files,self.getPostPayload('hls_update')).text
+                    
+                    self.publishStatus['m3u8_prev'].append( file['name'] )
+                    newFilesUploaded = True
+        
+        
+            if newFilesUploaded:
+                #! Update the m3u8 file
+                print( "Update the remote m3u8 file" )
+                print self.post.post([self.m3u8_file], self.getPostPayload('hls_update')).text
             
             
             
     def main(self):
+        #! Initialize the hls stream to start at the php side.
+        self.init_hls(mode="start")
         while self.runalways:
             self.post_hls()
             time.sleep(1)
             #self.runalways = False
             #! Should check for self.handle_pid because that is the pid of the livestreaming process
-            
+
+        #! Initialize the hls stream to stop at the php side. Basically, cleans up everything.
+        self.init_hls(mode="stop")
         # sys.exit(0)
         
         
 class m3u8:
+    """A class to support the hls update functionality."""
     def parse_m3u8(self, m3u8_text):
         #print m3u8_text
         m3u8 = {}
@@ -257,7 +264,8 @@ class m3u8:
         f.close()
         
         return m3u8_text
-        
+    
+    
     def closem3u8file(self, file_location):
         m3u8 = self.getm3u8file(file_location)
         m3u8_c = m3u8.split('\n')
@@ -275,7 +283,7 @@ class m3u8:
 
 
 print("Starting PHP Publisher")
-print("python phppublishremote.py -id 188 -caller python -pid 65813 -url http://localhost:8888/radlive")
+print("python phppublishremote.py -id 188 -caller python -pid 65813 -url http://localhost:8888/radlive -uname student32 -ukey testkey")
 phpub = phppublish(config=sys.argv)
 phpub.main()
 #print("Ending phppublish")

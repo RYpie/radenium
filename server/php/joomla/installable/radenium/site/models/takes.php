@@ -30,10 +30,10 @@ jimport('joomla.event.dispatcher');
 class RadeniumModelTakes extends JModelForm
 {
 	private $ffmpeg;
+	private $mediadir="media/com_radenium/media/takes/";
 	
     public function getForm($data = array(), $loadData = true)
-    {
-		
+    {	
         $app = JFactory::getApplication('site');
 		
         // Get the form.
@@ -43,7 +43,81 @@ class RadeniumModelTakes extends JModelForm
         }
         return $form;
     }
-
+    
+    
+    /**
+     * @todo This is somewhat crappy final playlist, because I add default #EXTINF:3, and not the real length of
+     *  the segment.
+     * @param unknown $id
+     */
+    public function createFinalPlaylist($id) {
+    	$list = array();
+    	$this->getDirContents($this->mediadir."id_".$id, $list);
+    	$ts = array();
+    	foreach( $list as $f ) {
+    		echo $f."<br />";
+    		$fname = explode("/", $f);
+    	 	$fname = $fname[count($fname)-1];
+    	 	$fext = explode(".", $fname);
+			if ( $fext[1] == "ts" ) {
+				$findex =  explode( "playlist", $fext[0] );
+				$ts[$findex[1]] = $fname;
+				
+			}
+    			
+    	}
+    	$ts_rel = fopen( $this->mediadir."id_".$id."/video.m3u8", "w" );
+    	fwrite($ts_rel, "#EXTM3U
+#EXT-X-VERSION:3
+#EXT-X-TARGETDURATION:4
+#EXT-X-MEDIA-SEQUENCE:0\n");
+    	
+    	$counter = 0;
+    	foreach ( $ts as $key => $val ) {
+    		fwrite($ts_rel, "#EXTINF:3,
+".$ts[$counter]."\n");
+    		$counter += 1;
+    		//print_r($ts);
+    		//echo "<br />";
+    	}
+    	
+    	fwrite($ts_rel, "\n#EXT-X-ENDLIST");
+    	fclose($ts_rel);
+    	
+    	//print_r($ts);
+    }
+    
+    
+    /*
+     * @todo should by done through the system model.
+     */
+    private function getDirContents($dir, &$results = array(), $findfile = False){
+    	
+    	if(substr($dir, -1) == '/') {
+    		$dir = substr($dir, 0, -1);
+    	}
+    	$files = scandir($dir);
+    	foreach($files as $key => $value){
+    		$path = $dir.DIRECTORY_SEPARATOR.$value;//realpath($dir.DIRECTORY_SEPARATOR.$value);
+    		
+    		if(!is_dir($path)) {
+    			if ( $findfile !== False ){
+    				if ($value == $findfile) {
+    					$results[] = $path;
+    				}
+    			} else {
+    				$results[] = $path;
+    			}
+    		} else if($value != "." && $value != ".." && $value != ".DS_Store") {
+    			$this->getDirContents($path, $results, $findfile);
+    			if ( $findfile == False ){
+    				$results[] = $path;
+    			}
+    		}
+    	}
+    	
+    	return $results;
+    }
         
     /**
      * @name __construct
@@ -81,6 +155,7 @@ class RadeniumModelTakes extends JModelForm
     	// Set the query using our newly populated query object and execute it...
     	$db->setQuery($query);
     	$db->execute();
+    	$this->createFinalPlaylist($id);
     }
     
     
