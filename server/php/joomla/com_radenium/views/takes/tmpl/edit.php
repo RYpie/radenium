@@ -11,7 +11,14 @@
 // No direct access to this file
 defined('_JEXEC') or die('Restricted access');
  		
-$vidurl = "media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/playlist.m3u8";
+$vidurl = "media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/video.m3u8";
+$videom3u8 = "media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/video.m3u8";
+
+if ( !file_exists($vidurl) ) {
+	$vidurl = "media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/playlist.m3u8";
+	
+}
+
 $posterurl = "media/com_radenium/media/takes/id_".$this->entry_data[0]->id."/thumbs/thumb.jpg";
 
 //$vidurl = "index.php?option=com_radenium&view=m3u8&format=raw&take_id=".$this->entry_data[0]->id;
@@ -27,8 +34,11 @@ foreach ( $xml->fieldset as $f ) {
 			if ((string)$e->attributes()->name != "user_id")
 			{
 				$this->form->setValue( (string)$e->attributes()->name, null, JFactory::getApplication()->input->get( (string)$e->attributes()->name ) );				
+			
 			}
+		
 		}
+		
 	} else {
 		
 	}
@@ -85,6 +95,8 @@ jQueryRepresentatives(document.body).on('click','#button_stoptake', function(){
 			//jQueryRepresentatives('#results').html('<p class="error">An error was encountered while retrieving the representatives from the database.</p>');
 		}
 	});
+
+	checkForFullPlaylist();
 	
 });
 
@@ -127,8 +139,27 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 	});
 	
 });
+</script>
 
+<script type="text/javascript">
+function checkForFullPlaylist() {
+    var http = new XMLHttpRequest();
+    var vid = document.getElementById("myVideoSrc");
+    
+    http.open('HEAD', "<?php echo $videom3u8;?>", false);
+    http.send();
 
+	if(http.status != 404 ) {
+		vid.pause();
+		vid.setAttribute('src', '<?php echo $videom3u8;?>'); 
+		vid.play();
+		
+	} else {
+		setTimeout( checkForFullPlaylist, 3000 );
+
+	}
+	
+}
 </script>
 
 <form class="form-validate" enctype="multipart/form-data" action="<?php echo JRoute::_('index.php'); ?>" method="post" id="radenium_takes" name="radenium_takes">
@@ -137,11 +168,11 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 		<div style="float:left;">
 		    <div>
                 <video id="myVideo" controls width="600px" height="360px" poster="<?php echo $posterurl; ?>">
-                    <source src="<?php echo $vidurl; ?>" type="video/mp4">
+                    <source id="myVideoSrc" src="<?php echo $vidurl; ?>" type="video/mp4">
                 </video>
 			</div>
 			<div style="width:600px;" class="form_rendered_container_form_">
-                <?php echo $this->form->renderFieldSet("information"); ?> <button type="submit" class="button"><?php echo JText::_('Save And Close'); ?></button>
+			Create clips when take is finished.
             </div>
 			
 		</div>
@@ -151,7 +182,9 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 			    <h2>Title</h2>
 			    
 				<input style="width:100%;" type="text" name="jform[title]" id="jform_title" value="<?php echo $this->entry_data[0]->title;?>" /> 
-				<br />
+				<h3>Description</h3>
+				<textarea style="width:100%;" name="jform[notes]" id="jform_notes"></textarea>
+				
 				<hr />
 				<?php
 				foreach ($info as $key => $val ) {
@@ -159,7 +192,7 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 					
 				}
 				?>
-
+				
 				<br /><h2>Control</h2>
 				<div id="take_control_buttons" style="text-align:left;">
 					<?php if ($this->entry_data[0]->state <= 2 ) { ?>

@@ -76,10 +76,10 @@ class RadeniumModelFfmpeg extends JModelForm
         $query = $db->getQuery(true);
         // Prepare table data:
         $columns = array(
-            name
-            , command
-            , platform
-            , category
+            'name'
+            , 'command'
+            , 'platform'
+            , 'category'
 
         );
 
