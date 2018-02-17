@@ -34,7 +34,7 @@ foreach ( $xml->fieldset as $f ) {
 	}
 }
 
-//Get custom field
+//Get the custom field for visualisation of the selected data.
 JFormHelper::addFieldPath(JPATH_COMPONENT . '/models/fields');
 $vdevs = JFormHelper::loadFieldType('Videodevices', false);
 $vdevs = $vdevs->getOptions(); // works only if you set your field getOptions on public!!
@@ -148,13 +148,15 @@ jQueryRepresentatives(document.body).on('click','#create_thumbs', function(){
 
 		<div style="float:left;padding-left:10px;">
 			<div>
-			    <h2>Information</h2>
-			    <hr />
-				<strong>Title</strong><input style="width:100%;" type="text" name="jform[title]" id="jform_title" value="<?php echo $this->entry_data[0]->title;?>" /> 
+			    <h2>Title</h2>
+			    
+				<input style="width:100%;" type="text" name="jform[title]" id="jform_title" value="<?php echo $this->entry_data[0]->title;?>" /> 
 				<br />
+				<hr />
 				<?php
 				foreach ($info as $key => $val ) {
 					echo "<strong>".$key."</strong> : ". $val." <br />";
+					
 				}
 				?>
 

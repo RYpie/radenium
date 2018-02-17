@@ -46,22 +46,69 @@ class m3u8Parser {
 * 	Database connection to register data upload sizes for traffic calculations.
 */
 class HLS {
-	private $streamdirectory; /*!< Directory in which the HLS stream will be stored. */
-	private $db=False; /*!< Database object for future use, currently not defined. */
+	private $streamdirectory; 	/*!< Directory in which the HLS stream will be stored. */
+	private $db=False; 			/*!< Database object for future use, currently not defined. */
 	
 	/**
 	* @desc Constructor.
 	* @param string $targetdir Location where to store the HLS stream.
+	* @param string $task Depending on the task it performs different actions.
 	* @param object $db Database object, for future use, currently not defined.
 	*/
-	function __construct( $targetdir, $db = False ) {
+	function __construct( $targetdir, $task, $db = False ) {
 		$this->db = $db;
 		if ( substr($targetdir, -1) != '/' ){
 			$targetdir = $targetdir.'/';
+			
 		}
 	
 		$this->streamdirectory = $targetdir;
-		$this->CreateDir($this->streamdirectory);
+		
+	}
+	
+	/**
+	 * @todo Perhaps use session variable to keep track of the state, so was it announced etcetera and more of that stuff.
+	 * 
+	 * @param unknown $task
+	 * @return array
+	 */
+	function hls_execute($task) {
+		$retVal = array();
+		switch ( $task ) {
+			case "announce_live_stop":
+			case "announce_live_start":
+				$this->prepareStreamingDirectory();
+				array_push($retVal, array($task => "ok"));
+				break;
+				
+			case 'hls_update':
+				$this->update();
+				array_push($retVal, array($task => "ok"));
+				break;
+				
+			case 'clean_up_stream':
+				$this->prepareStreamingDirectory();
+				array_push($retVal, array($task => "ok"));
+				break;
+				
+			/**
+			 * @todo what is this thing doing here?
+			 */
+			case 'live_events':
+				array_push( $retVal, array('live_events' => "no events" ) );
+				break;
+				
+			default:
+				break;
+				
+		}
+		
+		return $retVal;
+	}
+	
+	private function prepareStreamingDirectory() {
+		$this->MakeOrCleanDirectory($this->streamdirectory);
+		
 	}
 	
 	/**
@@ -71,13 +118,15 @@ class HLS {
 	function CreateDir( $dir ) {
 		if ( !file_exists($dir) ) {
 			mkdir($dir, 0755);
+			
 		}
+		
 	}
 	
 	/**
 	* @desc Updates a HLS stream via .m3u8 file. It first receives the .ts files and finally gets the .m3u8 file in order to delete old files.
 	*/
-	function Update() {
+	function update() {
 		$totalSizeInFiles = 0;
 		foreach ($_FILES as $file ){
 			$filename = $this->streamdirectory.$file['name'];
@@ -103,7 +152,6 @@ class HLS {
 			}
 			
 		}
-		
 		if ( $totalSizeInFiles> 0 ) {
 			
 			$this->DBUpdate_TrafficByUploadedFiles( $this->db, $uploadSize, 0);
@@ -140,6 +188,28 @@ class HLS {
 			}
 			else {
 				// Not deleting file, pass
+				
+			}
+			
+		}
+		
+	}
+	
+	/**
+	 * @desc Prepares an empty directory having name $dir. If it exists, its contents will be deleted.
+	 * @param string $dir Target directory to be cleansed
+	 */
+	private function MakeOrCleanDirectory($dir) {
+		if ( !file_exists($dir) ) {
+			mkdir($dir, 0755);
+			
+		} else {
+			$files = glob($dir.'*'); // get all file names
+			foreach($files as $file){ // iterate files
+				if(is_file($file)){
+					unlink($file); // delete file
+					
+				}
 				
 			}
 			
@@ -188,6 +258,13 @@ class HLS {
 }
 
 class icalParser {
+	/**
+	 * @desc Should return events created on livestreaming server.
+	 *  Not sure yet, where to administer that stuff. Maybe on the livestreaming server.
+	 *  Otherwise you can create them on the radstudio.
+	 *  should return the ical url to be called by python.
+	 * @param unknown $url
+	 */
 	public function __construct( $url ) {
 		
 	}
@@ -195,27 +272,7 @@ class icalParser {
 }
 
 
-/**
- * @desc Cleanses and swipes a complete target directory
- * @param string $dir Target directory to be cleansed
- */
-function MakeOrCleanDirectory($dir) {
-	if ( !file_exists($dir) ) {
-		mkdir($dir, 0755);
-		
-	} else {
-		$files = glob($dir.'*'); // get all file names
-		foreach($files as $file){ // iterate files
-			if(is_file($file)){
-				unlink($file); // delete file
-				
-			}
-			
-		}
-		
-	}
-	
-}
+
 
 function printp($p) {
     print_r( "\n\n<p>".$p."</p>\n\n" );
@@ -225,35 +282,12 @@ function printp($p) {
 $rconf = new RConfig();
 //printp($rconf->stream_key);
 $radeniumvalidUser = True;
-$hls = new HLS( getcwd().'/live/'.$_REQUEST['RADENIUM_API_UNAME']."/" );
+$hls = new HLS( getcwd().'/live/'.$_REQUEST['uname']."/" );
 $ical = new icalParser($rconf->ical);
 
 if ( $radeniumvalidUser ) {
-    $target_dir = getcwd().'/live/'.$_REQUEST['RADENIUM_API_UNAME']."/";
-    $retVal = array();
+    $retVal = $hls->hls_execute($_REQUEST['task']);
     
-    switch ( $_REQUEST['task']) {
-    case 'announce_live':
-        MakeOrCleanDirectory($target_dir);
-        break;
-        
-    case 'hls_update':
-    	$hls->Update();
-        array_push($retVal, array('hls_update' => "ok"));
-        break;
-    
-    case 'clean_up_stream':
-        MakeOrCleanDirectory($target_dir);
-        break;
-        
-    case 'live_events':
-        array_push( $retVal, array('live_events' => "no events" ) );
-        break;
-    
-    default:
-        break;
-    }
-
 	if ( $validDebugUser ) {
         echo '\n>>>REQUEST VARIABLES:<<<\n';
         print_r( $_REQUEST );

@@ -20,6 +20,11 @@ class radlive {
         return $retVal;
         
     }
+    
+    public function livenow() {
+    	
+    	
+    }
 
 }
 
@@ -29,6 +34,7 @@ $live = $site->ls("live");
 
 $channels_info = array();
 
+//should check for m3u8 file
 foreach ( $channels as $ch ) {
 	$channels_info[$ch] = array();
 	$channels_info[$ch]["live"] = false;

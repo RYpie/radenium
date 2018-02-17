@@ -289,6 +289,9 @@ class RadeniumModelFfmpeg extends JModelForm
 		//print_r($options);
 		
 		if ( array_key_exists("settings", $options) ) {
+			
+			$uname = "";
+			$ukey = "";
 			if ( array_key_exists("pid", $options) ) {
 				$pid = " -pid ". $options['pid']." ";
 				
@@ -298,12 +301,24 @@ class RadeniumModelFfmpeg extends JModelForm
 				
 			}
 			
+			
+			if ( array_key_exists("remote_user", $options['settings']) ) {
+				$uname = " -uname ". $options['settings']['remote_user']. " ";
+				
+			}
+			if ( array_key_exists("remote_password", $options['settings']) ) {
+				$ukey = " -ukey ". $options['settings']['remote_password']. " ";
+				
+			}
+			
 			$noterminal = "";
 			$noterminal = " </dev/null >/dev/null 2>components/com_radenium/models/python/python.log & echo $!";
 			$exec_com = "python components/com_radenium/models/python/phppublishremote.py -id "
 					. $id." -caller joomla"
 					. $pid
 					. $url
+					. $uname
+					. $ukey
 					. $noterminal;
 			
 			//echo "<p>".$exec_com."</p>";
