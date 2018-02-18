@@ -12,6 +12,7 @@ Without knowledge on python and mysql I would not put too much effort in this fo
 
 ## Installation
 
+
 Aim is to create a simple, nodatabase required, solution to publish a stream to the web.
 
 ### MAC OSX
