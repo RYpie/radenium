@@ -172,6 +172,8 @@ class phppublish:
         
         
     def init_hls(self,mode):
+        """ todo Create a json file with channel information out of Joomla.
+            """
         if mode == "start":
             print self.post.post([], self.getPostPayload('announce_live_start')).text
 
