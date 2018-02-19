@@ -55,38 +55,29 @@ foreach ( $live as $l ) {
         <link rel="stylesheet" type="text/css" href="css/style.css" />
     </head>
     <body>
-    
+<div id="header"> </div>  
 <div id="container">
-
 <h1>Radenium Live Streaming</h1>
 <div id="nav_height_keeper">
 	<div id="nav" class="nav">
 		<div id="videoplay_bar">
-			<div>
-				<div id="videoplayercontainer"></div>
-				
-			
-			
+			<div id="videoplayercontainer"></div>
 			<div id="videoplayercontainer_right_column">
-				<div style="text-align:right;">
-					<div 
-						id="videoplayercontainer_close" 
-						onclick="hideVideoPlayBar()">
-						Close
+				<div id="videoplayercontainer_right_column_content">
+					<div style="text-align:right;">
+						<div id="videoplayercontainer_close" 
+							onclick="hideVideoPlayBar()">
+							Close
+						</div>
+					</div>
+					<div id="videoplayercontainer_content"></div>
+					<div>
+						Subscribe to our newsletter<br />
+						<input type="text" value="" name="email" /><input type="submit" name="submit" value="Subscribe!" />
 					</div>
 				</div>
-				<div id="videoplayercontainer_content"></div>
-			
-				<div>
-					Subscribe to our newsletter<br />
-					<input type="text" value="" name="email" /><input type="submit" name="submit" value="Subscribe!" />
-				</div>
 			</div>
-			
-			</div>
-			
 		</div>
-		
 		<div class="clr"></div>
 	</div>
 </div>
@@ -98,7 +89,7 @@ foreach ( $live as $l ) {
 <?php 
 foreach ( $channels_info as $key => $ch ){
 	echo "<div class=\"channel_info_badge\" ";
-	echo "onclick=\"playVideo('live/revolution/playlist.m3u8', 460, 320, 'Nice video','Live now')\" ";
+	echo "onclick=\"playVideo('live/".$key."/playlist.m3u8', 460, 320, 'Nice video','Live now')\" ";
 	echo ">";
 	echo "<h3>".$key."</h3>";
 	if ($ch["live"]) {
